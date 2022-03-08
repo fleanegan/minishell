@@ -9,7 +9,7 @@ TEST_PATH = test/
 SRC_NAME =	main.c \
 			init.c \
 			utils.c \
-			parsing.c \
+			parsing/parsing.c \
 			tear_down.c \
 
 TEST_SRC_NAME = test_main.c \
@@ -47,7 +47,7 @@ $(NAME): $(OBJ)
 	@$(CC) -g $(CFLAGS) $(OBJ) -o $(NAME) $(LIBS)
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c
-	mkdir -p $(OBJ_PATH)
+	mkdir -p $(@D)
 	$(CC) $(CFLAGS) -g -I$(SRC_PATH) -o $@ -c $< $(LIBS)
 
 clean:
@@ -62,6 +62,7 @@ fclean:	clean
 test: $(OBJ) $(SRC) $(TEST_SRC) $(TEST_HEADER)
 	@make -C libft/ --no-print-directory
 	@$(CC) $(CFLAGS) $(TEST_FLAGS) -o $(NAME)_test $(OBJ) -I./$(SRC_PATH) $(TEST_SRC) $(LIBS)
+	./minishell_test
 
 re:	fclean all
 

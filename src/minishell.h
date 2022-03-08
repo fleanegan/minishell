@@ -10,14 +10,29 @@
 # include "../libft/libft.h"
 # define SPACE_NULLTERMIN 1
 
+typedef enum	e_token
+{
+	EMPTY = 0
+}		t_token;
+
 typedef struct s_cmd
 {
 	char	*exec_name;
 	char	*args;
 	char	*redir_file_name;
-	char	token;
+	t_token	token;
 }			t_cmd;
 
-t_cmd	*parsing(const char *input);
+/*	Parsing	*/
+
+t_list	*parsing(const char *input);
+
+/*	Utils	*/
+
+t_cmd	*get_content(t_list *in);
+
+/*	Tears_down	*/
+
+void	free_cmd(void *cmd);
 
 #endif //MINISHELL_H
