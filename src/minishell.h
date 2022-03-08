@@ -31,6 +31,9 @@ t_list	*parsing(const char *input);
 
 t_cmd	*get_content(t_list *in);
 char	*strdup_from_to(const char *str, int start, int end);
+void	skip_whitespace(const char *input, int *start, int *current);
+t_cmd	*new_cmd(void);
+
 
 /*	Tears_down	*/
 
