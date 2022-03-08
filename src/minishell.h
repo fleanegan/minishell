@@ -30,6 +30,7 @@ t_list	*parsing(const char *input);
 /*	Utils	*/
 
 t_cmd	*get_content(t_list *in);
+char	*strdup_from_to(const char *str, int start, int end);
 
 /*	Tears_down	*/
 

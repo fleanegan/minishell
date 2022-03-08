@@ -10,6 +10,7 @@ SRC_NAME =	main.c \
 			init.c \
 			utils.c \
 			parsing/parsing.c \
+			parsing/utils.c \
 			tear_down.c \
 
 TEST_SRC_NAME = test_main.c \
