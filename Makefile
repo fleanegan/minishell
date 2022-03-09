@@ -9,14 +9,15 @@ TEST_PATH = test/
 SRC_NAME =	main.c \
 			init.c \
 			utils.c \
+			tear_down.c \
 			parsing/parsing.c \
 			parsing/utils.c \
-			tear_down.c \
+			parsing/split_args.c \
+			parsing/delete_quotes.c \
 
 TEST_SRC_NAME = test_main.c \
 
-TEST_HEADER_NAME =	test_parse.h \
-					test_utils.h \
+TEST_HEADER_NAME =	test_utils.h \
 
 OBJ_NAME = $(SRC_NAME:.c=.o)
 

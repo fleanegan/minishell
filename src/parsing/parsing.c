@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int is_end_of_arg(char c)
+int is_end_of_arg(int c)
 {
 	return (c == '>' || c == '<' || c == '|');
 }
@@ -18,23 +18,46 @@ int	append_new_cmd(t_list **result_cmd, t_list **current_cmd)
 	return (0);
 }
 
-// protect malloc!
-char	*parse_exec_name(const char *input, int *start, int *current)
+//char update_mode(char input, char mode)
+//{
+//	if (mode == 0 && input == '\'')
+//		return (1);
+//	else if (mode == 1 && input == '\'')
+//		return (0);
+//	return (mode);
+//}
+
+char	*trim_result(char *result)
 {
-	skip_whitespace(input, start, current);
-	while (input[(*current)] && !ft_isspace(input[(*current)]))
-		(*current)++;
-	return (strdup_from_to(input, (*start),(*current) - 1));
+	char	*tmp;
+
+	tmp = result;
+	result = ft_strtrim(result, " \n\t");
+	delete_quotes(result);
+	free(tmp);
+	return (result);
 }
 
 // protect malloc!
-char *parse_args(const char *input, int *start, int *current)
+char *parse_until(const char *input, int *start, int *current, int(*stop_condition)(int))
 {
+	char	*result;
+	char	mode;
+
+	mode = 0;
 	skip_whitespace(input, start, current);
-	while (input[(*current)] && ! is_end_of_arg(input[(*current)]))
+	while (input[(*current)])
+	{
+		mode = update_mode((char *)&input[*current], mode);
+		if (mode == NOT_IN_QUOTE && stop_condition(input[(*current)]))
+			break ;
+		// expand env vars here
 		(*current)++;
-	return strdup_from_to(input, (*start), (*current) - 1);
+	}
+	result = strdup_from_to(input, (*start), (*current) - 1);
+	return (trim_result(result));
 }
+
 
 t_token parse_token(const char *input, int *start, int *current)
 {
@@ -61,12 +84,12 @@ t_list *parsing(const char *input)
 	{
 		append_new_cmd(&result_cmd, &current_cmd);
 		get_content(current_cmd)->exec_name = \
-					parse_exec_name(input, &start, &current);
-		get_content(current_cmd)->args = parse_args(input, &start, &current);
+                    parse_until(input, &start, &current, ft_isspace);
+		get_content(current_cmd)->args = parse_until(input, &start, &current, is_end_of_arg);
 		parse_token(input, &start, &current);
 	}
 	return (result_cmd);
 }
-
 //		printf("len: %lu, start: %d, current: %d, current char: %d\n", strlen(input), start, current, input[current-1]);
+
 

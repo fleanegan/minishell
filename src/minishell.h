@@ -9,6 +9,9 @@
 # include <readline/history.h>
 # include "../libft/libft.h"
 # define SPACE_NULLTERMIN 1
+# define DOUBLE_QUOTE '\"'
+# define NOT_IN_QUOTE 0
+# define SINGLE_QUOTE '\''
 
 typedef enum	e_token
 {
@@ -26,6 +29,12 @@ typedef struct s_cmd
 /*	Parsing	*/
 
 t_list	*parsing(const char *input);
+char	*delete_quotes(char *in);
+char	**split_args(char *in);
+int		count_substrings(char *in);
+char	*get_first_quote(char *in);
+char	update_mode(char *input, char mode);
+
 
 /*	Utils	*/
 

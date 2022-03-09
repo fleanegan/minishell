@@ -29,7 +29,46 @@ Test(test_parsing, input_with_pipe_generates_two_commands)
 	cr_expect_str_eq(get_content(result->next)->exec_name, "me");
 }
 
+Test(test_parsing, three_cmds)
+{
+	t_list	*result = parsing("test -option1 arg1 | me -option2 arg2 | now");
+
+	cr_expect_str_eq(get_content(result)->exec_name, "test");
+	cr_expect_str_eq(get_content(result->next)->exec_name, "me");
+	cr_expect_str_eq(get_content(result->next->next)->exec_name, "now");
+	cr_expect_str_eq(get_content(result)->args, "-option1 arg1");
+	cr_expect_str_eq(get_content(result->next)->args, "-option2 arg2");
+	cr_expect_null(get_content(result->next->next)->args);
+}
+
+Test(test_parsing, quotes_at_beginning_creates_one_big_exec_name)
+{
+	t_list	*result = parsing("'echo me test' ");
+
+	cr_expect_str_eq(get_content(result)->exec_name, "echo me test");
+	cr_expect_null(get_content(result)->args);
+}
+
+Test(test_parsing, unterminated_quote_is_char)
+{
+	t_list	*result = parsing("'echo");
+
+	cr_expect_str_eq(get_content(result)->exec_name, "'echo");
+	cr_expect_null(get_content(result)->args);
+}
+
+Test(test_parsing, triple_quotes)
+{
+	t_list	*result = parsing("'ec'ho'");
+
+	cr_expect_str_eq(get_content(result)->exec_name, "echo'");
+	cr_expect_null(get_content(result)->args);
+}
+
+
 // redirection_without_filename_is_error
+// quotes_at_beginning_creates_one_big_exec_name
+// double_quotes
 // redirection in both directions
 // two_angle_brackets_are_not_alone
 // create_input_with_token -> <,>,|,>>
