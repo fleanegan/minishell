@@ -26,7 +26,7 @@ typedef struct s_cmd
 	t_token	token;
 }			t_cmd;
 
-/*	Parsing	*/
+/*	Parsing		*/
 
 t_list	*parsing(const char *input);
 char	*delete_quotes(char *in);
@@ -35,8 +35,11 @@ int		count_substrings(char *in);
 char	*get_first_quote(char *in);
 char	update_mode(char *input, char mode);
 
+/*	Execution	*/
 
-/*	Utils	*/
+void	execution(char *path, char **args, char *env);
+
+/*	Utils		*/
 
 t_cmd	*get_content(t_list *in);
 char	*strdup_from_to(const char *str, int start, int end);
