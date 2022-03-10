@@ -8,7 +8,8 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "../libft/libft.h"
-# define SPACE_NULLTERMIN 1
+# define SPACE_FOR_NULLTERMIN 1
+# define SPACE_FOR_EXEC_NAME 1
 # define DOUBLE_QUOTE '\"'
 # define NOT_IN_QUOTE 0
 # define SINGLE_QUOTE '\''
