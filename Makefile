@@ -11,6 +11,8 @@ SRC_NAME =	main.c \
 			utils.c \
 			tear_down.c \
 			parsing/parsing.c \
+			parsing/init.c \
+			parsing/parse_fields.c \
 			parsing/utils.c \
 			parsing/split_args.c \
 			parsing/delete_quotes.c \

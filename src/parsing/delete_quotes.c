@@ -16,7 +16,7 @@ char	*get_first_quote(char *in)
 	return (first_quote_double);
 }
 
-char *get_second_quote(const char *first_quote)
+char	*get_second_quote(const char *first_quote)
 {
 	char *second_quote;
 	if (*first_quote == SINGLE_QUOTE)
@@ -26,7 +26,7 @@ char *get_second_quote(const char *first_quote)
 	return second_quote;
 }
 
-void remove_by_copying(char *first_quote, char *second_quote)
+void	remove_by_copying(char *first_quote, char *second_quote)
 {
 	if (*first_quote && *second_quote)
 	{

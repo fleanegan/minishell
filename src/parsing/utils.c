@@ -30,20 +30,6 @@ char	*strdup_from_to(const char *str, int start, int end)
 	return (res);
 }
 
-t_cmd *new_cmd(void)
-{
-	t_cmd	*cmd;
-
-	cmd = malloc(sizeof(t_cmd));
-	if (cmd == NULL)
-		return (NULL);
-	cmd->exec_name = NULL;
-	cmd->args = NULL;
-	cmd->redir_file_name = NULL;
-	cmd->token = EMPTY;
-	return (cmd);
-}
-
 static char update_mode_for_type(char *input, char mode, char quote_type)
 {
 	if (mode == 0 && *input == quote_type && ft_strchr(input + 1, quote_type))
@@ -66,4 +52,19 @@ char update_mode(char *input, char mode)
 		return res;
 	}
 	return (update_mode_for_type(input, mode, DOUBLE_QUOTE));
+}
+
+int is_end_of_arg(int c)
+{
+	return (c == '>' || c == '<' || c == '|');
+}
+
+char *trim_result(char *result)
+{
+	char    *tmp;
+
+	tmp = result;
+	result = ft_strtrim(result, " \n\t");
+	free(tmp);
+	return (result);
 }

@@ -16,6 +16,8 @@ void	*free_2d_array(void **mem)
 {
 	void	**sav;
 
+	if (mem == NULL)
+		return (NULL);
 	sav = mem;
 	while (*mem)
 		free(*mem++);

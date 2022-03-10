@@ -9,6 +9,8 @@ int	count_substrings(char *in)
 
 	i = 0;
 	nbr = 0;
+	if (in == NULL)
+		return (0);
 	while (in[i])
 	{
 		i = calc_end_of_sub(in, i);
@@ -26,6 +28,8 @@ char	**fill(char **dest, char *in)
 	int		start;
 	int		current_substring;
 
+	if (in == NULL)
+		return (NULL);
 	current = 0;
 	start = 0;
 	current_substring = 0;
@@ -67,11 +71,11 @@ char	**split_args(char *in)
 	result = malloc(sizeof(char *) * (alloc_size));
 	if (! result)
 		return (NULL);
-	result[0] = ft_strdup("");
+	result[0] = "";
 	if (result[0] == NULL)
 		return (NULL);
 	result[alloc_size - 1] = NULL;
 	if (fill(&result[1], in) == NULL)
-		return (NULL);
+		return (result);
 	return (result);
 }
