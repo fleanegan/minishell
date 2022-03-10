@@ -54,7 +54,7 @@ char update_mode(char *input, char mode)
 	return (update_mode_for_type(input, mode, DOUBLE_QUOTE));
 }
 
-int is_end_of_arg(int c)
+int is_token(int c)
 {
 	return (c == '>' || c == '<' || c == '|');
 }

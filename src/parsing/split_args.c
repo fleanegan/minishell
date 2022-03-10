@@ -71,7 +71,7 @@ char	**split_args(char *in)
 	result = malloc(sizeof(char *) * (alloc_size));
 	if (! result)
 		return (NULL);
-	result[0] = "";
+	result[0] = ft_strdup("");
 	if (result[0] == NULL)
 		return (NULL);
 	result[alloc_size - 1] = NULL;

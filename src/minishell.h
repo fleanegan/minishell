@@ -16,7 +16,8 @@
 
 typedef enum	e_token
 {
-	EMPTY = 0
+	EMPTY = 0,
+	PIPE
 }		t_token;
 
 typedef struct s_cmd
@@ -43,7 +44,7 @@ char	*get_first_quote(char *in);
 char	update_mode(char *input, char mode);
 int     append_new_cmd(t_list **result_cmd, t_list **current_cmd);
 char    *trim_result(char *result);
-int		is_end_of_arg(int c);
+int		is_token(int c);
 
 
 /*	Utils	*/

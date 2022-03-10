@@ -16,7 +16,7 @@ t_list *parsing(const char *input)
 		if ( append_new_cmd(&result_cmd, &current_cmd) \
 			|| parse_exec_name(input, current_cmd, &start, &current) \
 			|| parse_args(input, current_cmd, &start, &current) \
-			|| parse_token(input, &start, &current, 0))
+			|| parse_token(input, &start, &current, current_cmd))
 		{
 			ft_lstclear(&result_cmd, free_cmd);
 			return (NULL);
