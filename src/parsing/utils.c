@@ -43,3 +43,27 @@ t_cmd *new_cmd(void)
 	cmd->token = EMPTY;
 	return (cmd);
 }
+
+static char update_mode_for_type(char *input, char mode, char quote_type)
+{
+	if (mode == 0 && *input == quote_type && ft_strchr(input + 1, quote_type))
+	{
+		if (quote_type == SINGLE_QUOTE)
+			return (SINGLE_QUOTE);
+		else
+			return (DOUBLE_QUOTE);
+	}
+	else if (*input == mode)
+		return (NOT_IN_QUOTE);
+	return (mode);
+}
+
+char update_mode(char *input, char mode)
+{
+	char res = update_mode_for_type(input, mode, SINGLE_QUOTE);
+	if (res)
+	{
+		return res;
+	}
+	return (update_mode_for_type(input, mode, DOUBLE_QUOTE));
+}

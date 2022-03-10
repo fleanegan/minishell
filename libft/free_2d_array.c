@@ -12,7 +12,7 @@
 
 #include "libft.h"
 
-void	free_2d_array(void **mem)
+void	*free_2d_array(void **mem)
 {
 	void	**sav;
 
@@ -20,4 +20,5 @@ void	free_2d_array(void **mem)
 	while (*mem)
 		free(*mem++);
 	free(sav);
+	return (NULL);
 }

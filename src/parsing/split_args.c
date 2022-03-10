@@ -1,45 +1,17 @@
 #include "../minishell.h"
 
-static char update_mode_for_type(char *input, char mode, char quote_type)
-{
-	if (mode == 0 && *input == quote_type && ft_strchr(input + 1, quote_type))
-	{
-		if (quote_type == SINGLE_QUOTE)
-			return (SINGLE_QUOTE);
-		else
-			return (DOUBLE_QUOTE);
-	}
-	else if (*input == mode)
-		return (NOT_IN_QUOTE);
-	return (mode);
-}
+int	calc_end_of_sub(char *in, int current);
 
-char update_mode(char *input, char mode)
-{
-	char res = update_mode_for_type(input, mode, SINGLE_QUOTE);
-	if (res)
-	{
-		return res;
-	}
-	return (update_mode_for_type(input, mode, DOUBLE_QUOTE));
-}
-
-int count_substrings(char *in)
+int	count_substrings(char *in)
 {
 	int		i;
 	int		nbr;
-	char	mode;
 
 	i = 0;
 	nbr = 0;
-	mode = 0;
 	while (in[i])
 	{
-		while (in[i] && (in[i] != ' ' || mode != NOT_IN_QUOTE))
-		{
-			mode = update_mode(&in[i], mode);
-			++i;
-		}
+		i = calc_end_of_sub(in, i);
 		if (i)
 			nbr++;
 		while (in[i] && in[i] == ' ')
@@ -53,32 +25,35 @@ char	**fill(char **dest, char *in)
 	int		current;
 	int		start;
 	int		current_substring;
-	char	mode;
 
 	current = 0;
 	start = 0;
-	mode = 0;
 	current_substring = 0;
 	while (in[current])
 	{
-		while (in[current] && (in[current] != ' ' || mode != NOT_IN_QUOTE))
-		{
-			mode = update_mode(&in[current], mode);
-			++current;
-		}
+		current = calc_end_of_sub(in, current);
 		if (current != start)
 		{
 			dest[current_substring] = strdup_from_to(in, start, current - 1);
 			if (! dest[current_substring])
-			{
-				free_2d_array((void **) dest);
-				return (NULL);
-			}
+				return (free_2d_array((void **) dest));
 			current_substring++;
 		}
 		skip_whitespace(in, &start, &current);
 	}
 	return (dest);
+}
+
+int	calc_end_of_sub(char *in, int current)
+{
+	static char	mode;
+
+	while (in[current] && (in[current] != ' ' || mode != NOT_IN_QUOTE))
+	{
+		mode = update_mode(&in[current], mode);
+		++current;
+	}
+	return (current);
 }
 
 char	**split_args(char *in)
@@ -92,11 +67,11 @@ char	**split_args(char *in)
 	result = malloc(sizeof(char *) * (alloc_size));
 	if (! result)
 		return (NULL);
-	result[0] = NULL;
+	result[0] = ft_strdup("");
+	if (result[0] == NULL)
+		return (NULL);
 	result[alloc_size - 1] = NULL;
-
-	if (! fill(&result[1], in))
+	if (fill(&result[1], in) == NULL)
 		return (NULL);
 	return (result);
-	(void) in;
 }

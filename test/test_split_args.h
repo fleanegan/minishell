@@ -1,5 +1,4 @@
 #include "test_utils.h"
-#include "../libft/libft_auxilliar.h"
 
 Test(test_split_args, empty)
 {
@@ -7,8 +6,8 @@ Test(test_split_args, empty)
 
 	char	**result = split_args(in);
 
-	cr_expect_null(result[0]);
-	cr_expect_null(result[2]);
+	cr_expect_str_eq(result[0], "");
+	cr_expect_null(result[1]);
 }
 
 Test(test_split_args, split_two_words_on_space)
@@ -17,7 +16,7 @@ Test(test_split_args, split_two_words_on_space)
 
 	char	**result = split_args(in);
 
-	cr_expect_null(result[0]);
+	cr_expect_str_eq(result[0], "");
 	cr_expect_str_eq(result[1], "a");
 	cr_expect_str_eq(result[2], "b");
 	cr_expect_null(result[3]);
@@ -29,7 +28,7 @@ Test(test_split_args, do_not_split_two_words_on_space_if_single_quoted)
 
 	char	**result = split_args(in);
 
-	cr_expect_null(result[0]);
+	cr_expect_str_eq(result[0], "");
 	cr_expect_str_eq(result[1], "'a b'");
 	cr_expect_null(result[2]);
 }
@@ -40,7 +39,7 @@ Test(test_split_args, do_not_split_two_words_on_space_if_double_quoted)
 
 	char	**result = split_args(in);
 
-	cr_expect_null(result[0]);
+	cr_expect_str_eq(result[0], "");
 	cr_expect_str_eq(result[1], "\"a b\"");
 	cr_expect_null(result[2]);
 }
@@ -51,7 +50,7 @@ Test(test_split_args, split_two_words_on_space_if_single_quote_is_unclosed)
 
 	char	**result = split_args(in);
 
-	cr_expect_null(result[0]);
+	cr_expect_str_eq(result[0], "");
 	cr_expect_str_eq(result[1], "'a");
 	cr_expect_str_eq(result[2], "b");
 	cr_expect_null(result[3]);
@@ -63,7 +62,7 @@ Test(test_split_args, split_two_words_on_space_if_double_quote_is_unclosed)
 
 	char	**result = split_args(in);
 
-	cr_expect_null(result[0]);
+	cr_expect_str_eq(result[0], "");
 	cr_expect_str_eq(result[1], "\"a");
 	cr_expect_str_eq(result[2], "b");
 	cr_expect_null(result[3]);
@@ -75,7 +74,7 @@ Test(test_split_args, two_unquoted_strings_with_white_space_get_split)
 
 	char	**result = split_args(in);
 
-	cr_expect_null(result[0]);
+	cr_expect_str_eq(result[0], "");
 	cr_expect_str_eq(result[1], "abc");
 	cr_expect_str_eq(result[2], "d");
 	cr_expect_null(result[3]);
@@ -87,7 +86,7 @@ Test(test_split_args, only_unquoted_spaces_split_single)
 
 	char	**result = split_args(in);
 
-	cr_expect_null(result[0]);
+	cr_expect_str_eq(result[0], "");
 	cr_expect_str_eq(result[1], "'a b'");
 	cr_expect_str_eq(result[2], "c");
 	cr_expect_null(result[3]);
@@ -99,7 +98,7 @@ Test(test_split_args, only_unquoted_spaces_split_double)
 
 	char	**result = split_args(in);
 
-	cr_expect_null(result[0]);
+	cr_expect_str_eq(result[0], "");
 	cr_expect_str_eq(result[1], "\"a b\"");
 	cr_expect_str_eq(result[2], "c");
 	cr_expect_null(result[3]);
@@ -111,7 +110,7 @@ Test(test_split_args, three_words_return_three_substrings_if_one_is_unclosed_sin
 
 	char	**result = split_args(in);
 
-	cr_expect_null(result[0]);
+	cr_expect_str_eq(result[0], "");
 	cr_expect_str_eq(result[1], "''a");
 	cr_expect_str_eq(result[2], "b");
 	cr_expect_str_eq(result[3], "c'");
@@ -124,7 +123,7 @@ Test(test_split_args, three_words_return_three_substrings_if_one_is_unclosed_dou
 
 	char	**result = split_args(in);
 
-	cr_expect_null(result[0]);
+	cr_expect_str_eq(result[0], "");
 	cr_expect_str_eq(result[1], "\"\"a");
 	cr_expect_str_eq(result[2], "b");
 	cr_expect_str_eq(result[3], "c\"");

@@ -80,21 +80,21 @@ RM		= rm -f
 CFLAGS	= -Wall -Wextra -Werror
 
 .c.o:
-		@${CC} ${CFLAGS} -c $< -o ${<:.c=.o}
+		${CC} ${CFLAGS} -c $< -o ${<:.c=.o}
 
 ${NAME}:${OBJS} $(SRCS)
-		@ar rc ${NAME} ${OBJS}
+		ar rc ${NAME} ${OBJS}
 
 all:	${NAME}
 
 bonus:	${OBJSB} $(SRCSB)
-		@ar rc ${NAME} ${OBJSB}
+		ar rc ${NAME} ${OBJSB}
 
 clean:
-		@${RM} ${OBJSB}
+		${RM} ${OBJSB}
 
 fclean:	clean
-		@${RM} ${NAME}
+		${RM} ${NAME}
 
 re:		fclean all
 
