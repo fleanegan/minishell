@@ -15,7 +15,7 @@ char	*parse_until(const char *input, int *start, int *current, int(*stop_conditi
 		// expand env vars here
 		(*current)++;
 	}
-	result = strdup_from_to(input, (*start), (*current) - 1);
+	result = strdup_from_to(input, (*start), (*current));
 	return (trim_result(result));
 }
 
@@ -28,14 +28,12 @@ int	parse_token(const char *in, int *start, int *current, t_list *current_cmd)
 	{
 		//if (in[*start + 1] == )
 		if (in[*start] == '|')
-		{
 			get_content(current_cmd)->token = PIPE;
-			//TODO: maybe put this outside if
-			skip_whitespace(in, start, current);
-			if (! in[*current] || ! in[*current + SPACE_FOR_NULLTERMIN])
-				return (1);
-			// <-- until here
-		}
+		if (in[*start] == '>')
+			get_content(current_cmd)->token = REDIR_OUT_SIMPLE;
+		skip_whitespace(in, start, current);
+		if (! in[*current] || ! in[*current + SPACE_FOR_NULLTERMIN])
+			return (1);
 		(*start)++;
 		(*current)++;
 	}

@@ -17,7 +17,8 @@
 typedef enum	e_token
 {
 	EMPTY = 0,
-	PIPE
+	PIPE,
+	REDIR_OUT_SIMPLE
 }		t_token;
 
 typedef struct s_cmd

@@ -38,7 +38,7 @@ char	**fill(char **dest, char *in)
 		current = calc_end_of_sub(in, current);
 		if (current != start)
 		{
-			dest[current_substring] = strdup_from_to(in, start, current - 1);
+			dest[current_substring] = strdup_from_to(in, start, current);
 			if (! dest[current_substring])
 				return (free_2d_array((void **) dest));
 			current_substring++;
