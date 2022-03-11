@@ -1,12 +1,12 @@
 #include "minishell.h"
 
-void skip_whitespace(const char *input, int *start, int *current)
+void move_start_and_end_behind_whitespace(const char *input, int *start, int *current)
 {
 	if (*current)
 		*start = *current;
-	while (input[(*start)] && ft_isspace(input[(*start)]))
+	while (input[*start] && ft_isspace(input[*start]))
 		(*start)++;
-	(*current) = (*start);
+	*current = *start;
 }
 
 char	*strdup_from_to(const char *str, int start, int end)
@@ -14,13 +14,13 @@ char	*strdup_from_to(const char *str, int start, int end)
 	char 	*res;
 	int		i;
 
-	if (str == NULL || start > end)
+	if (str == NULL || start > end - 1)
 		return (NULL);
-	res = malloc((end - start + 2) * sizeof(char));
+	res = malloc((end - start + SPACE_FOR_NULLTERMIN) * sizeof(char));
 	if (res == NULL)
 		return (NULL);
 	i = 0;
-	while (start <= end)
+	while (start <= end - 1)
 	{
 		res[i] = str[start];
 		i++;

@@ -17,15 +17,21 @@
 typedef enum	e_token
 {
 	EMPTY = 0,
-	PIPE
+	PIPE,
+	REDIR_OUT_REPLACE,
+	REDIR_OUT_APPEND,
+	REDIR_IN_FILE,
+	REDIR_IN_HERE_DOC
 }		t_token;
 
 typedef struct s_cmd
 {
 	char	*exec_name;
 	char	**args;
-	char	*redir_file_name;
-	t_token	token;
+	char	*infile;
+	char	*outfile;
+	t_token	intoken;
+	t_token outtoken;
 }			t_cmd;
 
 /*	Parsing		*/
@@ -54,7 +60,7 @@ void	execution(char *path, char **args, char *env);
 
 t_cmd	*get_content(t_list *in);
 char	*strdup_from_to(const char *str, int start, int end);
-void	skip_whitespace(const char *input, int *start, int *current);
+void	move_start_and_end_behind_whitespace(const char *input, int *start, int *current);
 t_cmd	*new_cmd(void);
 
 

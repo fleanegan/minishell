@@ -9,8 +9,10 @@ t_cmd *new_cmd(void)
 		return (NULL);
 	cmd->exec_name = NULL;
 	cmd->args = NULL;
-	cmd->redir_file_name = NULL;
-	cmd->token = EMPTY;
+	cmd->infile = NULL;
+	cmd->outfile = NULL;
+	cmd->intoken = EMPTY;
+	cmd->outtoken = EMPTY;
 	return (cmd);
 }
 

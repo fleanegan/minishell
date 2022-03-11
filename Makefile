@@ -67,7 +67,6 @@ fclean:	clean
 test: $(OBJ) $(SRC) $(TEST_SRC) $(TEST_HEADER)
 	@make -C libft/ --no-print-directory
 	@$(CC) $(CFLAGS) $(TEST_FLAGS) -o $(NAME)_test $(OBJ) -I./$(SRC_PATH) $(TEST_SRC) $(LIBS)
-	./minishell_test
 
 re:	fclean all
 
