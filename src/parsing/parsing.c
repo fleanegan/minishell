@@ -18,6 +18,7 @@ t_list *parsing(const char *input)
 			|| parse_args(input, current_cmd, &start, &current) \
 			|| parse_token(input, &start, &current, current_cmd))
 		{
+			puts("clearing list");
 			ft_lstclear(&result_cmd, free_cmd);
 			return (NULL);
 		}

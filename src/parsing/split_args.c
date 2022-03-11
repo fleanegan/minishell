@@ -43,7 +43,7 @@ char	**fill(char **dest, char *in)
 				return (free_2d_array((void **) dest));
 			current_substring++;
 		}
-		skip_whitespace(in, &start, &current);
+		move_start_and_end_behind_whitespace(in, &start, &current);
 	}
 	return (dest);
 }

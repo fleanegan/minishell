@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void skip_whitespace(const char *input, int *start, int *current)
+void move_start_and_end_behind_whitespace(const char *input, int *start, int *current)
 {
 	if (*current)
 		*start = *current;
