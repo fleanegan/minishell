@@ -5,7 +5,7 @@
 int	main(void)
 {
 	char	*result;
-	t_env	*env;
+	t_list	*env;
 
 	env = init();
 	if (env == NULL)

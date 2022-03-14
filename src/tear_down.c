@@ -9,3 +9,12 @@ void	free_cmd(void *cmd)
 	free(((t_cmd *) cmd)->infile);
 	free(cmd);
 }
+
+void	free_dict_entry(void *dict_entry)
+{
+	if (dict_entry == NULL)
+		return ;
+	free(((t_dict_entry *) dict_entry)->value);
+	free(((t_dict_entry *) dict_entry)->key);
+	free(dict_entry);
+}
