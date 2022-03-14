@@ -8,7 +8,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
-# include "../libft/libft.h"
+# include "../libft/libft_auxilliar.h"
 # define SPACE_FOR_NULLTERMIN 1
 # define SPACE_FOR_EXEC_NAME 1
 # define DOUBLE_QUOTE '\"'
@@ -25,6 +25,12 @@ typedef enum	e_token
 	REDIR_IN_HERE_DOC
 }		t_token;
 
+typedef struct s_dict
+{
+	char	*key;
+	char	*value;
+}	t_dict;
+
 typedef struct s_cmd
 {
 	char	*exec_name;
@@ -36,7 +42,8 @@ typedef struct s_cmd
 }			t_cmd;
 
 /* Init */
-int		init();
+t_list	*init();
+char	*get_value_by_key(t_list *lst, char *key);
 
 /*	Parsing	*/
 t_list	*parsing(const char *input);
@@ -48,7 +55,7 @@ int		parse_exec_name(const char *input, \
 		t_list *current_cmd, int *start, int *current);
 char	*delete_quotes(char *in);
 char	**split_args(char *in);
-int		count_substrings(char *in);
+int		split_count_substrings(char *in);
 char	*get_first_quote(char *in);
 char	update_mode(char *input, char mode);
 int     append_new_cmd(t_list **result_cmd, t_list **current_cmd);

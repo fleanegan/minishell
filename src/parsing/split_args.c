@@ -2,7 +2,7 @@
 
 int	calc_end_of_sub(char *in, int current);
 
-int	count_substrings(char *in)
+int	split_count_substrings(char *in)
 {
 	int		i;
 	int		nbr;
@@ -65,7 +65,7 @@ char	**split_args(char *in)
 	char	**result;
 	size_t	alloc_size;
 
-	alloc_size = count_substrings(in) \
+	alloc_size = split_count_substrings(in) \
 					+ SPACE_FOR_NULLTERMIN \
 					+ SPACE_FOR_EXEC_NAME;
 	result = malloc(sizeof(char *) * (alloc_size));

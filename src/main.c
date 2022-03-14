@@ -4,8 +4,11 @@
 
 int	main(void)
 {
-	char *result;
-	if (init())
+	char	*result;
+	t_env	*env;
+
+	env = init();
+	if (env == NULL)
 		return (1);
 	while (42)
 	{
@@ -15,6 +18,7 @@ int	main(void)
 			handle_ctrl_d(-1, NULL, NULL);
 			return (0);
 		}
+		add_history(result);
 		execution(result, NULL, NULL);
 	}
 	return (0);

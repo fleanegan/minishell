@@ -29,3 +29,10 @@ size_t	calc_min_unsigned(size_t a, size_t b)
 		return (a);
 	return (b);
 }
+
+size_t	calc_max_unsigned(size_t a, size_t b)
+{
+	if (a > b)
+		return (a);
+	return (b);
+}
