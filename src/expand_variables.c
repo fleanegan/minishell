@@ -51,10 +51,10 @@ char	*expand_variables(t_list *env, char *in)
 				result = append_str(result, "",0);
 			}
 			else
-				result = append_str(result, expanded_var->value,current);
+				result = append_str(result, expanded_var->value, ft_strlen(expanded_var->value));//change current by strlen
 			start = current;
 		}
-		if (in[current] && in[current] != '$')
+		if ((in[current] && in[current] != '$') || calc_key_len(&in[current + 1]) == 0)//stop infinite loop with $+ for exemple
 			current++;
 	}
 	result = append_str(result, &in[start],current);

@@ -84,7 +84,7 @@ Test(test_before_parsing, find_var)
 
 Test(test_before_parsing, expand_in_the_middle_of_regular_text)
 {
-//	cr_redirect_stdout();
+	cr_redirect_stdout();
 	t_list *env = init();
 	append_to_dict(&env, "V", "XXX");
 
@@ -132,3 +132,4 @@ Test(test_before_parsing, two_glued_vars)
 // test_without_environment
 // null_input_returns_NULL
 // null_env_return_with_no_expand
+// expand_between_quotes
