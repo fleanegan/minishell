@@ -9,6 +9,7 @@ TEST_PATH = test/
 SRC_NAME =	main.c \
 			init.c \
 			utils.c \
+			signals.c \
 			tear_down.c \
 			parsing/parsing.c \
 			parsing/init.c \
@@ -16,6 +17,7 @@ SRC_NAME =	main.c \
 			parsing/utils.c \
 			parsing/split_args.c \
 			parsing/delete_quotes.c \
+			execution/execution.c \
 
 TEST_SRC_NAME = test_main.c \
 

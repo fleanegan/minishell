@@ -2,13 +2,22 @@
 
 #ifndef IS_TEST
 
-int	main(int argc, char **argv)
+int	main(void)
 {
-	char *result = readline("rocammadour>>:");
-	printf("testmeee: %s\n", result);
+	char *result;
+	if (init())
+		return (1);
+	while (42)
+	{
+		result = readline("minishell$");
+		if (! result)
+		{
+			handle_ctrl_d(-1, NULL, NULL);
+			return (0);
+		}
+		execution(result, NULL, NULL);
+	}
 	return (0);
-	(void) argc;
-	(void) argv;
 }
 
 #endif

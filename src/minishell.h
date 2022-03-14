@@ -7,6 +7,7 @@
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <signal.h>
 # include "../libft/libft.h"
 # define SPACE_FOR_NULLTERMIN 1
 # define SPACE_FOR_EXEC_NAME 1
@@ -34,8 +35,10 @@ typedef struct s_cmd
 	t_token outtoken;
 }			t_cmd;
 
-/*	Parsing	*/
+/* Init */
+int		init();
 
+/*	Parsing	*/
 t_list	*parsing(const char *input);
 int		parse_token(const char *in, \
 		int *start, int *current, t_list *current_cmd);
@@ -52,17 +55,23 @@ int     append_new_cmd(t_list **result_cmd, t_list **current_cmd);
 char    *trim_result(char *result);
 int		is_token(int c);
 
+/* Signal hanling */
+void	handle_ctrl_c(int signal_no, siginfo_t *info, void *hmm);
+void	handle_ctrl_d(int signal_no, siginfo_t *info, void *hmm);
+void	handle_ctrl_backslash(int signal_no, siginfo_t *info, void *hmm);
+int		set_signal_handler(int signal_no, \
+		void (*handler_function)(int, siginfo_t *, void *));
 
-/*	Utils	*/
+/*	Execution	*/
+void	execution(char *path, char **args, char *env);
 
+/*	Utils		*/
 t_cmd	*get_content(t_list *in);
 char	*strdup_from_to(const char *str, int start, int end);
 void	move_start_and_end_behind_whitespace(const char *input, int *start, int *current);
 t_cmd	*new_cmd(void);
 
-
-/*	Tears_down	*/
-
+/*	Tear_down	*/
 void	free_cmd(void *cmd);
 
 #endif //MINISHELL_H
