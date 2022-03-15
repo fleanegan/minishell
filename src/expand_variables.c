@@ -35,30 +35,29 @@ char	*expand_variables(t_list *env, char *in)
 	result = ft_strdup("");
 	if (result == NULL)
 		return (NULL);
-	while(in[current])
+	while(1)
 	{
-		if (in[current] == '$' && calc_key_len(&in[current + 1]) != 0)
+		if (in[current] == '$' || in[current] == 0)
 		{
-			printf("current: %s\n", &in[current]);
 			result = append_str(result, &in[start],current - start);
-			current++;
-			expanded_var = get_value_by_key(env, &in[current]);
-			printf("current: %s\n", &in[current]);
-			current += calc_key_len(&in[current]);
-			if (expanded_var == NULL)
-			{
-				printf("current: %s\n", &in[current]);
-				result = append_str(result, "",0);
-			}
-			else
-				result = append_str(result, expanded_var->value, ft_strlen(expanded_var->value));//change current by strlen
 			start = current;
+			if (!in[current])
+				return (result);
+			current++;
+			if (calc_key_len(&in[current]) != 0)
+			{
+				expanded_var = get_value_by_key(env, &in[current]);
+				current += calc_key_len(&in[current]);
+				if (expanded_var == NULL)
+					result = append_str(result, "",0);
+				else
+					result = append_str(result, expanded_var->value, ft_strlen(expanded_var->value));
+				start = current;
+			}
 		}
-		if ((in[current] && in[current] != '$') || calc_key_len(&in[current + 1]) == 0)//stop infinite loop with $+ for exemple
+		else
 			current++;
 	}
-	result = append_str(result, &in[start],current);
-	return (result);
 }
 //	if (env == NULL || in == NULL)
 //		return (NULL);

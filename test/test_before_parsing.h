@@ -69,29 +69,16 @@ Test(test_before_parsing, existing_key_expands_to_value)
 	free(in);
 }
 
-Test(test_before_parsing, find_var)
-{
-	t_list *env = init();
-	append_to_dict(&env, "V", "XXX");
-
-	char	*in = "ab $V ab";
-	int		current = 3;
-	printf("current: %s\n", &in[current + 1]);
-	cr_assert_eq(calc_key_len(&in[current + 1]), 1);
-	cr_assert_not_null(get_value_by_key(env, &in[current + 1]));
-	//cr_assert_str_eq(get_value_by_key(env, &in[current + 1])->value, "XXX");
-}
-
 Test(test_before_parsing, expand_in_the_middle_of_regular_text)
 {
 	cr_redirect_stdout();
 	t_list *env = init();
-	append_to_dict(&env, "V", "XXX");
+	append_to_dict(&env, "V", "XXXXX");
 
 	char	*in = ft_strdup("ab $V cd");
 	char	*result = expand_variables(env, in);
 
-	cr_assert_str_eq(result, "ab XXX cd");
+	cr_assert_str_eq(result, "ab XXXXX cd");
 	ft_lstclear(&env, free_dict_entry);
 	free(result);
 	free(in);
@@ -111,6 +98,20 @@ Test(test_before_parsing, invalid_var_name_prints_dollar_and_name)
 	free(in);
 }
 
+Test(test_before_parsing, wtf)
+{
+	cr_redirect_stdout();
+	t_list *env = init();
+
+	char	*in = ft_strdup("regular $+");
+	char	*result = expand_variables(env, in);
+
+	cr_assert_str_eq(result, "regular $+");
+	ft_lstclear(&env, free_dict_entry);
+	free(result);
+	free(in);
+}
+
 Test(test_before_parsing, two_glued_vars)
 {
 	cr_redirect_stdout();
@@ -122,6 +123,21 @@ Test(test_before_parsing, two_glued_vars)
 	char	*result = expand_variables(env, in);
 
 	cr_assert_str_eq(result, "regular TESTME");
+	ft_lstclear(&env, free_dict_entry);
+	free(result);
+	free(in);
+}
+
+Test(test_before_parsing, glued_pseudo_var_becomes_empty_string)
+{
+	cr_redirect_stdout();
+	t_list *env = init();
+	append_to_dict(&env, "V2", "ME");
+
+	char	*in = ft_strdup("regular $V1d$V2 text");
+	char	*result = expand_variables(env, in);
+
+	cr_assert_str_eq(result, "regular ME text");
 	ft_lstclear(&env, free_dict_entry);
 	free(result);
 	free(in);
