@@ -61,10 +61,10 @@ char	*expand_variables(t_list *env, char *in)
 		{
 			result = append_str(result, &in[start], current - start);
 			start = current;
-			if (calc_key_len(&in[current + 1]) != 0 && mode != SINGLE_QUOTE)
+			if (calc_key_len(&in[current]) != 0 && mode != SINGLE_QUOTE)
 			{
-				expanded_var = get_value_by_key(env, &in[current + 1]);
-				current += calc_key_len(&in[current + 1]);
+				expanded_var = get_value_by_key(env, &in[current]);
+				current += calc_key_len(&in[current]);
 				result = replace_key(expanded_var, result);
 				start = current + 1;
 			}
