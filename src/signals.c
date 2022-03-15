@@ -8,7 +8,6 @@ void	handle_ctrl_c(int signal_no, siginfo_t *info, void *hmm)
 	(void) signal_no;
 	(void) info;
 	(void) hmm;
-	exit(1);
 }
 
 void	handle_ctrl_d(int signal_no, siginfo_t *info, void *hmm)

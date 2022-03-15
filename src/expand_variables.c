@@ -49,16 +49,19 @@ char	*expand_variables(t_list *env, char *in)
 	char			*result;
 	int				start;
 	int				current;
+	char			mode;
 
+	mode = 0;
 	if (in == NULL || zero_init_vars(&result, &start, &current))
 		return (NULL);
 	while (in[current] || in[current - 1])
 	{
+		mode = update_mode((char *)&in[current], mode);
 		if (in[current] == '$' || in[current] == 0)
 		{
 			result = append_str(result, &in[start], current - start);
 			start = current;
-			if (calc_key_len(&in[current + 1]) != 0)
+			if (calc_key_len(&in[current + 1]) != 0 && mode != SINGLE_QUOTE)
 			{
 				expanded_var = get_value_by_key(env, &in[current + 1]);
 				current += calc_key_len(&in[current + 1]);

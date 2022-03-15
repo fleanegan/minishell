@@ -4,16 +4,13 @@
 
 int	main(void)
 {
-	//char	*result;
+	char	*result;
 	t_list	*env;
 
 	env = init();
 	if (env == NULL)
 		return (1);
-	char	*in = ft_strdup("$ ");
-	//printf("[%s]\n", get_value_by_key(env, "PATH")->value);
-	printf("[%s]\n", expand_variables(env, in));
-/*	while (42)
+	while (42)
 	{
 		result = readline("minishell$");
 		if (! result)
@@ -24,8 +21,6 @@ int	main(void)
 		add_history(result);
 		execution(result, NULL, NULL);
 	}
-*/
-	return (0);
 }
 
 #endif

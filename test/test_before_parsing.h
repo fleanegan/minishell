@@ -169,8 +169,91 @@ Test(test_before_parsing, glued_pseudo_var_becomes_empty_string)
 	free(in);
 }
 
+Test(test_before_parsing, illegal_var)
+{
+	cr_redirect_stdout();
+	t_list *env = init();
 
-// test_without_environment
-//
-// null_env_return_with_no_expand
-// expand_between_quotes
+	char	*in = ft_strdup("$+");
+	char	*result = expand_variables(env, in);
+
+	cr_assert_str_eq(result, "$+");
+	ft_lstclear(&env, free_dict_entry);
+	free(result);
+	free(in);
+}
+
+Test(test_before_parsing, expand_between_double_quotes)
+{
+	cr_redirect_stdout();
+	t_list *env = init();
+	append_to_dict(&env, "V", "XXXXX");
+
+	char	*in = ft_strdup("regular $V \"$V\" text");
+	char	*result = expand_variables(env, in);
+
+	cr_assert_str_eq(result, "regular XXXXX \"XXXXX\" text");
+	ft_lstclear(&env, free_dict_entry);
+	free(result);
+	free(in);
+}
+
+Test(test_before_parsing, expand_between_simple_quotes)
+{
+	cr_redirect_stdout();
+	t_list *env = init();
+	append_to_dict(&env, "V", "XXXXX");
+
+	char	*in = ft_strdup("regular $V '$V' text");
+	char	*result = expand_variables(env, in);
+
+	cr_assert_str_eq(result, "regular XXXXX '$V' text");
+	ft_lstclear(&env, free_dict_entry);
+	free(result);
+	free(in);
+}
+
+Test(test_before_parsing, simple_quotes_inside_double_quotes_expands)
+{
+	cr_redirect_stdout();
+	t_list *env = init();
+	append_to_dict(&env, "V", "XXXXX");
+
+	char	*in = ft_strdup("regular $V \"'$V'\" text");
+	char	*result = expand_variables(env, in);
+
+	cr_assert_str_eq(result, "regular XXXXX \"'XXXXX'\" text");
+	ft_lstclear(&env, free_dict_entry);
+	free(result);
+	free(in);
+}
+
+Test(test_before_parsing, double_quotes_inside_simple_quotes_expands)
+{
+	cr_redirect_stdout();
+	t_list *env = init();
+	append_to_dict(&env, "V", "XXXXX");
+
+	char	*in = ft_strdup("regular $V '\"$V\"' text");
+	char	*result = expand_variables(env, in);
+
+	cr_assert_str_eq(result, "regular XXXXX '\"$V\"' text");
+	ft_lstclear(&env, free_dict_entry);
+	free(result);
+	free(in);
+}
+
+Test(test_before_parsing, mixed_quotes)
+{
+	cr_redirect_stdout();
+	t_list *env = init();
+	append_to_dict(&env, "V", "XXXXX");
+
+	char	*in = ft_strdup("regular $V'\"$V \"text");
+	char	*result = expand_variables(env, in);
+
+	cr_assert_str_eq(result, "regular XXXXX'\"XXXXX \"text");
+	ft_lstclear(&env, free_dict_entry);
+	free(result);
+	free(in);
+}

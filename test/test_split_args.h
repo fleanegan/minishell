@@ -8,6 +8,8 @@ Test(test_split_args, empty)
 
 	cr_expect_str_eq(result[0], "");
 	cr_expect_null(result[1]);
+	free_2d_array((void **)result);
+	free(in);
 }
 
 Test(test_split_args, split_two_words_on_space)
@@ -20,6 +22,8 @@ Test(test_split_args, split_two_words_on_space)
 	cr_expect_str_eq(result[1], "a");
 	cr_expect_str_eq(result[2], "b");
 	cr_expect_null(result[3]);
+free_2d_array((void **)result);
+	free(in);
 }
 
 Test(test_split_args, do_not_split_two_words_on_space_if_single_quoted)
@@ -31,6 +35,8 @@ Test(test_split_args, do_not_split_two_words_on_space_if_single_quoted)
 	cr_expect_str_eq(result[0], "");
 	cr_expect_str_eq(result[1], "'a b'");
 	cr_expect_null(result[2]);
+free_2d_array((void **)result);
+	free(in);
 }
 
 Test(test_split_args, do_not_split_two_words_on_space_if_double_quoted)
@@ -42,6 +48,8 @@ Test(test_split_args, do_not_split_two_words_on_space_if_double_quoted)
 	cr_expect_str_eq(result[0], "");
 	cr_expect_str_eq(result[1], "\"a b\"");
 	cr_expect_null(result[2]);
+free_2d_array((void **)result);
+	free(in);
 }
 
 Test(test_split_args, split_two_words_on_space_if_single_quote_is_unclosed)
@@ -54,6 +62,8 @@ Test(test_split_args, split_two_words_on_space_if_single_quote_is_unclosed)
 	cr_expect_str_eq(result[1], "'a");
 	cr_expect_str_eq(result[2], "b");
 	cr_expect_null(result[3]);
+free_2d_array((void **)result);
+	free(in);
 }
 
 Test(test_split_args, split_two_words_on_space_if_double_quote_is_unclosed)
@@ -66,6 +76,8 @@ Test(test_split_args, split_two_words_on_space_if_double_quote_is_unclosed)
 	cr_expect_str_eq(result[1], "\"a");
 	cr_expect_str_eq(result[2], "b");
 	cr_expect_null(result[3]);
+free_2d_array((void **)result);
+	free(in);
 }
 
 Test(test_split_args, two_unquoted_strings_with_white_space_get_split)
@@ -78,6 +90,8 @@ Test(test_split_args, two_unquoted_strings_with_white_space_get_split)
 	cr_expect_str_eq(result[1], "abc");
 	cr_expect_str_eq(result[2], "d");
 	cr_expect_null(result[3]);
+free_2d_array((void **)result);
+	free(in);
 }
 
 Test(test_split_args, only_unquoted_spaces_split_single)
@@ -90,6 +104,8 @@ Test(test_split_args, only_unquoted_spaces_split_single)
 	cr_expect_str_eq(result[1], "'a b'");
 	cr_expect_str_eq(result[2], "c");
 	cr_expect_null(result[3]);
+free_2d_array((void **)result);
+	free(in);
 }
 
 Test(test_split_args, only_unquoted_spaces_split_double)
@@ -102,6 +118,8 @@ Test(test_split_args, only_unquoted_spaces_split_double)
 	cr_expect_str_eq(result[1], "\"a b\"");
 	cr_expect_str_eq(result[2], "c");
 	cr_expect_null(result[3]);
+free_2d_array((void **)result);
+	free(in);
 }
 
 Test(test_split_args, three_words_return_three_substrings_if_one_is_unclosed_single_quote)
@@ -115,6 +133,8 @@ Test(test_split_args, three_words_return_three_substrings_if_one_is_unclosed_sin
 	cr_expect_str_eq(result[2], "b");
 	cr_expect_str_eq(result[3], "c'");
 	cr_expect_null(result[4]);
+free_2d_array((void **)result);
+	free(in);
 }
 
 Test(test_split_args, three_words_return_three_substrings_if_one_is_unclosed_double_quote)
@@ -128,6 +148,8 @@ Test(test_split_args, three_words_return_three_substrings_if_one_is_unclosed_dou
 	cr_expect_str_eq(result[2], "b");
 	cr_expect_str_eq(result[3], "c\"");
 	cr_expect_null(result[4]);
+free_2d_array((void **)result);
+	free(in);
 }
 
 //"'a b c" -> 'a, b, c : 3

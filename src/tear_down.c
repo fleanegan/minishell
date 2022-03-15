@@ -7,6 +7,7 @@ void	free_cmd(void *cmd)
 	free(((t_cmd *) cmd)->exec_name);
 	free_2d_array((void **) ((t_cmd *) cmd)->args);
 	free(((t_cmd *) cmd)->infile);
+	free(((t_cmd *) cmd)->outfile);
 	free(cmd);
 }
 
