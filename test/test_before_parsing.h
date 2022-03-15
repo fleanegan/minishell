@@ -11,6 +11,32 @@ Test(test_before_parsing, init_builds_minimal_env)
 	ft_lstclear(&env, free_dict_entry);
 }
 
+Test(test_before_parsing, null_input_returns_NULL)
+{
+	cr_redirect_stdout();
+	t_list *env = init();
+
+	char	*in = NULL;
+	char	*result = expand_variables(env, in);
+
+	cr_assert_null(result);
+	ft_lstclear(&env, free_dict_entry);
+	free(result);
+	free(in);
+}
+
+Test(test_before_parsing, null_env_return_with_no_expand)
+{
+	cr_redirect_stdout();
+
+	t_list	*env = NULL;
+	char	*in = ft_strdup("this var does not get expended$test");
+	char	*result = expand_variables(env, in);
+
+	cr_assert_str_eq(result, "this var does not get expended");
+	free(result);
+	free(in);
+}
 
 Test(test_before_parsing, empty_text)
 {
@@ -144,8 +170,7 @@ Test(test_before_parsing, glued_pseudo_var_becomes_empty_string)
 }
 
 
-// invalid_var_name_prints_dollar_and_name
 // test_without_environment
-// null_input_returns_NULL
+//
 // null_env_return_with_no_expand
 // expand_between_quotes

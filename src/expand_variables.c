@@ -15,12 +15,32 @@ char	*append_str(char *base, char *appendix, int appendix_size)
 		free(base);
 		return (NULL);
 	}
-	ft_strlcpy( \
+	ft_strlcpy(\
 	result, base, base_size + SPACE_FOR_NULLTERMIN);
-	ft_strlcat( \
+	ft_strlcat(\
 	result, appendix, base_size + appendix_size + SPACE_FOR_NULLTERMIN);
 	free(base);
 	return (result);
+}
+
+char	*replace_key(t_dict_entry *expanded_var, char *result)
+{
+	if (expanded_var == NULL)
+		result = append_str(result, "", 0);
+	else
+		result = append_str(\
+		result, expanded_var->value, ft_strlen(expanded_var->value));
+	return (result);
+}
+
+int	zero_init_vars(char **result, int *start, int *current)
+{
+	*start = 0;
+	*current = 0;
+	*result = ft_strdup("");
+	if (*result == NULL)
+		return (1);
+	return (0);
 }
 
 char	*expand_variables(t_list *env, char *in)
@@ -30,34 +50,23 @@ char	*expand_variables(t_list *env, char *in)
 	int				start;
 	int				current;
 
-	start = 0;
-	current = 0;
-	result = ft_strdup("");
-	if (result == NULL)
+	if (in == NULL || zero_init_vars(&result, &start, &current))
 		return (NULL);
-	while(1)
+	while (in[current] || in[current - 1])
 	{
 		if (in[current] == '$' || in[current] == 0)
 		{
-			result = append_str(result, &in[start],current - start);
+			result = append_str(result, &in[start], current - start);
 			start = current;
-			if (!in[current])
-				return (result);
-			current++;
-			if (calc_key_len(&in[current]) != 0)
+			if (calc_key_len(&in[current + 1]) != 0)
 			{
-				expanded_var = get_value_by_key(env, &in[current]);
-				current += calc_key_len(&in[current]);
-				if (expanded_var == NULL)
-					result = append_str(result, "",0);
-				else
-					result = append_str(result, expanded_var->value, ft_strlen(expanded_var->value));
-				start = current;
+				expanded_var = get_value_by_key(env, &in[current + 1]);
+				current += calc_key_len(&in[current + 1]);
+				result = replace_key(expanded_var, result);
+				start = current + 1;
 			}
 		}
-		else
-			current++;
+		current++;
 	}
+	return (result);
 }
-//	if (env == NULL || in == NULL)
-//		return (NULL);
