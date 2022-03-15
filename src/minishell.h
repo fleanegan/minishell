@@ -44,12 +44,13 @@ typedef struct s_cmd
 /* Init */
 t_list			*init();
 t_dict_entry	*get_value_by_key(t_list *lst, char *key);
-char			*expand_variables(t_list *env, char *in);
+char			*expand_one_layer_of_variables(t_list *env, char *in);
+char			*expand_all_variables(t_list *env, char *in);
 int				append_to_dict(t_list **dict, char *key, char *value);
 
 
 /*	Parsing	*/
-t_list			*parsing(const char *input);
+t_list			*parsing(char *input);
 int				parse_token(const char *in, \
 				int *start, int *current, t_list *current_cmd);
 int				parse_args( \

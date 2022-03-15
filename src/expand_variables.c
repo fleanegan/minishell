@@ -1,27 +1,5 @@
+#include <stdbool.h>
 #include "minishell.h"
-
-char	*append_str(char *base, char *appendix, int appendix_size)
-{
-	int		base_size;
-	char	*result;
-
-	if (base == NULL || appendix == NULL)
-		return (NULL);
-	base_size = ft_strlen(base);
-	result = ft_calloc((base_size + appendix_size + SPACE_FOR_NULLTERMIN), \
-		sizeof(char));
-	if (result == NULL)
-	{
-		free(base);
-		return (NULL);
-	}
-	ft_strlcpy(\
-	result, base, base_size + SPACE_FOR_NULLTERMIN);
-	ft_strlcat(\
-	result, appendix, base_size + appendix_size + SPACE_FOR_NULLTERMIN);
-	free(base);
-	return (result);
-}
 
 char	*replace_key(t_dict_entry *expanded_var, char *result)
 {
@@ -44,7 +22,23 @@ int	zero_init_vars(char **result, int *start, int *current, char *mode)
 	return (0);
 }
 
-char	*expand_variables(t_list *env, char *in)
+bool is_not_in_heredoc(char *in, int current)
+{
+	while (current > 0)
+	{
+		if (is_token(in[current]))
+		{
+			if (in[current] == '<' && in[current - 1] == '<')
+				return (0);
+			else
+				return (1);
+		}
+		current--;
+	}
+	return (1);
+}
+
+char	*expand_one_layer_of_variables(t_list *env, char *in)
 {
 	char			*res;
 	int				start;
@@ -61,7 +55,7 @@ char	*expand_variables(t_list *env, char *in)
 		{
 			res = append_str(res, &in[start], current - start);
 			start = current;
-			if (calc_key_len(&in[current]) != 0 && mode != SINGLE_QUOTE)
+			if (calc_key_len(&in[current]) != 0 && mode != SINGLE_QUOTE && is_not_in_heredoc(in, current))
 			{
 				res = replace_key(get_value_by_key(env, &in[current]), res);
 				current += calc_key_len(&in[current]);
@@ -71,4 +65,18 @@ char	*expand_variables(t_list *env, char *in)
 		current++;
 	}
 	return (res);
+}
+
+char	*expand_all_variables(t_list *env, char *in)
+{
+	char	*result;
+	int		is_done;
+
+	result = expand_one_layer_of_variables(env, in);
+	is_done = ft_strncmp(in, result, calc_max_unsigned(\
+			ft_strlen(in), ft_strlen(result))) == 0;
+	free(in);
+	if (is_done)
+		return (result);
+	return (expand_all_variables(env, result));
 }

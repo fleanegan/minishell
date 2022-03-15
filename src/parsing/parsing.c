@@ -1,7 +1,7 @@
 #include "minishell.h"
 
 
-t_list *parsing(const char *input)
+t_list *parsing(char *input)
 {
 	t_list  *result_cmd;
 	t_list  *current_cmd;
@@ -20,8 +20,10 @@ t_list *parsing(const char *input)
 		{
 			puts("clearing list");
 			ft_lstclear(&result_cmd, free_cmd);
+			free(input);
 			return (NULL);
 		}
 	}
+	free(input);
 	return (result_cmd);
 }
