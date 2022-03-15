@@ -12,7 +12,7 @@ int	calc_key_len(char *key)
 	int	i;
 
 	i = 0;
-	if (key == NULL || ft_isdigit(key[i]))
+	if (key == NULL || key[i] == 0 || ft_isdigit(key[i]))
 		return (0);
 	key++;
 	while (key[i] && (ft_isalnum(key[i]) || key[i] == '_'))

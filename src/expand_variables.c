@@ -33,10 +33,11 @@ char	*replace_key(t_dict_entry *expanded_var, char *result)
 	return (result);
 }
 
-int	zero_init_vars(char **result, int *start, int *current)
+int	zero_init_vars(char **result, int *start, int *current, char *mode)
 {
 	*start = 0;
 	*current = 0;
+	*mode = 0;
 	*result = ft_strdup("");
 	if (*result == NULL)
 		return (1);
@@ -45,31 +46,29 @@ int	zero_init_vars(char **result, int *start, int *current)
 
 char	*expand_variables(t_list *env, char *in)
 {
-	t_dict_entry	*expanded_var;
-	char			*result;
+	char			*res;
 	int				start;
 	int				current;
 	char			mode;
 
-	mode = 0;
-	if (in == NULL || zero_init_vars(&result, &start, &current))
+	if (in == NULL || zero_init_vars(&res, &start, &current, &mode))
 		return (NULL);
-	while (in[current] || in[current - 1])
+	while ((current > 0 && in[current - 1]) \
+			|| (current < (int) ft_strlen(in) && in[current]))
 	{
 		mode = update_mode((char *)&in[current], mode);
 		if (in[current] == '$' || in[current] == 0)
 		{
-			result = append_str(result, &in[start], current - start);
+			res = append_str(res, &in[start], current - start);
 			start = current;
 			if (calc_key_len(&in[current]) != 0 && mode != SINGLE_QUOTE)
 			{
-				expanded_var = get_value_by_key(env, &in[current]);
+				res = replace_key(get_value_by_key(env, &in[current]), res);
 				current += calc_key_len(&in[current]);
-				result = replace_key(expanded_var, result);
 				start = current + 1;
 			}
 		}
 		current++;
 	}
-	return (result);
+	return (res);
 }
