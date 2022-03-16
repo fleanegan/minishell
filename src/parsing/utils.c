@@ -15,11 +15,7 @@ char	*strdup_from_to(t_string_slice sub)
 	int		i;
 
 	if (sub.src == NULL || sub.start > sub.current - 1)
-	{
-		puts("strdup got invalid input");
-		printf("src: %s, start: %d, curr: %d\n", sub.src, sub.start, sub.current);
 		return (NULL);
-	}
 	res = malloc((\
 			sub.current - sub.start + SPACE_FOR_NULLTERMIN) * sizeof(char));
 	if (res == NULL)

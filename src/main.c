@@ -21,8 +21,8 @@ int	main(void)
 	t_list	*cmd;
 	t_list	*tmp;
 
+	(void) tmp;
 	env = init();
-	show_list(env);
 	if (env == NULL)
 		return (1);
 	while (42)
@@ -36,15 +36,19 @@ int	main(void)
 		add_history(line);
 		line_expanded = expand_all_variables(env, line);
 		cmd = parsing(line_expanded, env);
-		tmp = cmd;
-		while (tmp)
-		{
-			printf("exec_name: %s\n", get_content(tmp)->exec_name);
-			printf("infile: %s\n", get_content(tmp)->infile);
-			printf("outfile: %s\n", get_content(tmp)->outfile);
-			tmp = tmp->next;
-		}
-		//execution(get_content(cmd)->exec_name, get_content(cmd)->args, NULL);
+//		tmp = cmd;
+//		while (tmp)
+//		{
+//			printf("exec_name: %s\n", get_content(tmp)->exec_name);
+//			printf("intoken: %d\n", get_content(tmp)->intoken);
+//			printf("outtoken: %d\n", get_content(tmp)->outtoken);
+//			printf("infile: %s\n", get_content(tmp)->infile);
+//			printf("outfile: %s\n", get_content(tmp)->outfile);
+//			printf("\n");
+//			tmp = tmp->next;
+//		}
+		execution(cmd, NULL);
+		ft_lstclear(&cmd, free_cmd);
 	}
 }
 

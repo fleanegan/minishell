@@ -89,7 +89,7 @@ int				set_signal_handler(int signal_no, \
 				void (*handler_function)(int, siginfo_t *, void *));
 
 /*	Execution	*/
-void			execution(char *path, char **args, char *env);
+void			execution(t_list *cmd, char *env);
 
 /*	Utils		*/
 t_cmd			*get_content(t_list *in);
