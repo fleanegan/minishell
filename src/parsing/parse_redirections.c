@@ -16,7 +16,7 @@ int parse_pipe(t_string_slice *sub, t_list *current_cmd)
 	}
 }
 
-int	parse_redir_out(t_string_slice *sub, t_list *current_cmd)
+int parse_redir_out(t_string_slice *sub, t_list *current_cmd, t_list *env)
 {
 	get_content(current_cmd)->outtoken = REDIR_OUT_REPLACE;
 	if (sub->src[sub->start + 1] == sub->src[sub->start])
@@ -35,10 +35,10 @@ int	parse_redir_out(t_string_slice *sub, t_list *current_cmd)
 	if (get_content(current_cmd)->outfile == NULL)
 		return (1);
 	delete_quotes(get_content(current_cmd)->outfile);
-	return (parse_token(sub, current_cmd));
+	return (parse_token(sub, current_cmd, env));
 }
 
-int	parse_redir_in(t_string_slice *sub, t_list *current_cmd)
+int parse_redir_in(t_string_slice *sub, t_list *current_cmd, t_list *env)
 {
 	char	*parsed_infile;
 	get_content(current_cmd)->intoken = REDIR_IN_FILE;
@@ -58,9 +58,10 @@ int	parse_redir_in(t_string_slice *sub, t_list *current_cmd)
 	get_content(current_cmd)->infile = parsed_infile;
 	if (get_content(current_cmd)->intoken == REDIR_IN_HERE_DOC)
 	{
+		show_list(env);
 		get_content(current_cmd)->infile = \
-		generate_heredoc(NULL, parsed_infile,readline);
+		generate_heredoc(env, parsed_infile,readline);
 		free(parsed_infile);
 	}
-	return (parse_token(sub, current_cmd));
+	return (parse_token(sub, current_cmd, env));
 }

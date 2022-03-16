@@ -57,8 +57,8 @@ char			*expand_all_variables(t_list *env, char *in);
 int				append_to_dict(t_list **dict, char *key, char *value);
 
 /*	Parsing	*/
-t_list			*parsing(char *input);
-int				parse_token(t_string_slice *sub, t_list *current_cmd);
+t_list *parsing(char *input, t_list *env);
+int parse_token(t_string_slice *sub, t_list *current_cmd, t_list *env);
 int				parse_args(t_string_slice *sub, t_list *current_cmd);
 int				parse_exec_name(t_string_slice *sub, t_list *current_cmd);
 char			*delete_quotes(char *in);
@@ -76,8 +76,8 @@ char			*generate_heredoc(\
 				t_list *env, const char *delimiter, char *(line_reader)(
 				const char *));
 char			*parse_until(t_string_slice *sub, int(*stop_condition)(int));
-int				parse_redir_out(t_string_slice *sub, t_list *current_cmd);
-int				parse_redir_in(t_string_slice *sub, t_list *current_cmd);
+int parse_redir_out(t_string_slice *sub, t_list *current_cmd, t_list *env);
+int parse_redir_in(t_string_slice *sub, t_list *current_cmd, t_list *env);
 int				parse_pipe(t_string_slice *sub, t_list *current_cmd);
 
 
@@ -99,6 +99,8 @@ t_cmd			*new_cmd(void);
 char			*append_str(char *base, char *appendix, int appendix_size);
 int				calc_key_len(char *key);
 char			*read_file(char *name);
+void			show_list(t_list *lst);
+
 
 
 /*	Tear_down	*/

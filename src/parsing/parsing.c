@@ -1,7 +1,7 @@
 #include "minishell.h"
 
 
-t_list *parsing(char *input)
+t_list *parsing(char *input, t_list *env)
 {
 	t_list  		*result_cmd;
 	t_list  		*current_cmd;
@@ -15,7 +15,7 @@ t_list *parsing(char *input)
 		if (append_new_cmd(&result_cmd, &current_cmd) \
  			|| parse_exec_name(&current_substr, current_cmd) \
  			|| parse_args(&current_substr, current_cmd) \
- 			|| parse_token(&current_substr, current_cmd))
+ 			|| parse_token(&current_substr, current_cmd, env))
 		{
 			puts("clearing list");
 			ft_lstclear(&result_cmd, free_cmd);

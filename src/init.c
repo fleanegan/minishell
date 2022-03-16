@@ -23,7 +23,10 @@ t_list	*init()
 
 	if (set_signal_handler(SIGINT, handle_ctrl_c) \
 		|| set_signal_handler(SIGQUIT, handle_ctrl_backslash))
+	{
+		puts("error in init");
 		return (NULL);
+	}
 	result = NULL;
 
 	if (append_to_dict(&result, "HOME", getenv("HOME")) \
@@ -31,6 +34,7 @@ t_list	*init()
 		|| append_to_dict(&result, "X", "TEST")
 		|| append_to_dict(&result, "PWD", getenv("PWD")))
 	{
+		puts("error initiating env");
 		ft_lstclear(&result, free_dict_entry);
 		return (NULL);
 	}

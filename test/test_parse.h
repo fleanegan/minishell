@@ -3,7 +3,7 @@
 Test(test_parsing, init_with_NULL)
 {
 	cr_redirect_stdout();
-	t_list *result = parsing(ft_strdup(""));;
+	t_list *result = parsing(ft_strdup(""), NULL);;
 
 	cr_assert_null(result);
 	ft_lstclear(&result, free_cmd);
@@ -13,7 +13,7 @@ Test(test_parsing, init_with_NULL)
 Test(test_parsing, test_one_cmd)
 {
 	cr_redirect_stdout();
-	t_list *result = parsing(ft_strdup("test"));;
+	t_list *result = parsing(ft_strdup("test"), NULL);;
 	cr_assert_str_eq(get_content(result)->exec_name, "test");
 	ft_lstclear(&result, free_cmd);
 	ft_lstclear(&result, free_cmd);
@@ -22,7 +22,7 @@ Test(test_parsing, test_one_cmd)
 Test(test_parsing, test_one_cmd_with_args)
 {
 	cr_redirect_stdout();
-	t_list *result = parsing(ft_strdup("test -options args"));;
+	t_list *result = parsing(ft_strdup("test -options args"), NULL);;
 
 	cr_assert_str_eq(get_content(result)->exec_name, "test");
 	cr_assert_str_eq(get_content(result)->args[1], "-options");
@@ -32,7 +32,7 @@ Test(test_parsing, test_one_cmd_with_args)
 Test(test_parsing, input_with_pipe_generates_two_commands)
 {
 	cr_redirect_stdout();
-	t_list *result = parsing(ft_strdup("test | me"));;
+	t_list *result = parsing(ft_strdup("test | me"), NULL);;
 
 	cr_expect_str_eq(get_content(result)->exec_name, "test");
 	cr_expect_str_eq(get_content(result->next)->exec_name, "me");
@@ -42,7 +42,8 @@ Test(test_parsing, input_with_pipe_generates_two_commands)
 Test(test_parsing, three_cmds)
 {
 	cr_redirect_stdout();
-	t_list *result = parsing(ft_strdup("test -option1 arg1 | me -option2 arg2 | now"));;
+	t_list *result = parsing(
+			ft_strdup("test -option1 arg1 | me -option2 arg2 | now"), NULL);;
 
 	cr_expect_str_eq(get_content(result)->exec_name, "test");
 	cr_expect_str_eq(get_content(result->next)->exec_name, "me");
@@ -58,7 +59,7 @@ Test(test_parsing, three_cmds)
 Test(test_parsing, quotes_at_beginning_creates_one_big_exec_name)
 {
 	cr_redirect_stdout();
-	t_list *result = parsing(ft_strdup("'echo me test > a | A -' "));
+	t_list *result = parsing(ft_strdup("'echo me test > a | A -' "), NULL);
 
 	cr_expect_str_eq(get_content(result)->exec_name, "echo me test > a | A -");
 	cr_expect_str_eq(*(get_content(result))->args, "");
@@ -68,7 +69,7 @@ Test(test_parsing, quotes_at_beginning_creates_one_big_exec_name)
 Test(test_parsing, unterminated_quote_is_char)
 {
 	cr_redirect_stdout();
-	t_list *result = parsing(ft_strdup("'echo"));;
+	t_list *result = parsing(ft_strdup("'echo"), NULL);;
 
 	cr_expect_str_eq(get_content(result)->exec_name, "'echo");
 	cr_expect_str_eq(*(get_content(result))->args, "");
@@ -78,7 +79,7 @@ Test(test_parsing, unterminated_quote_is_char)
 Test(test_parsing, triple_quotes)
 {
 	cr_redirect_stdout();
-	t_list *result = parsing(ft_strdup("'ec'ho'"));;
+	t_list *result = parsing(ft_strdup("'ec'ho'"), NULL);;
 
 	cr_expect_str_eq(get_content(result)->exec_name, "echo'");
 	cr_expect_str_eq(*(get_content(result))->args, "");
@@ -89,7 +90,7 @@ Test(test_parsing, token_with_no_exec_name_returns_error)
 {
 	cr_redirect_stdout();
 
-	t_list *result = parsing(ft_strdup("|"));;
+	t_list *result = parsing(ft_strdup("|"), NULL);;
 
 	cr_assert_null(result);
 	ft_lstclear(&result, free_cmd);
@@ -98,7 +99,7 @@ Test(test_parsing, token_with_no_exec_name_returns_error)
 Test(test_parsing, put_pipe_into_token)
 {
 	cr_redirect_stdout();
-	t_list *result = parsing(ft_strdup("a | b"));;
+	t_list *result = parsing(ft_strdup("a | b"), NULL);;
 
 	cr_expect_eq(get_content(result)->outtoken, PIPE);
 	ft_lstclear(&result, free_cmd);
@@ -107,7 +108,7 @@ Test(test_parsing, put_pipe_into_token)
 Test(test_parsing, pipe_without_follow_up_command_error)
 {
 	cr_redirect_stdout();
-	t_list *result = parsing(ft_strdup("a | "));;
+	t_list *result = parsing(ft_strdup("a | "), NULL);;
 
 	cr_assert_null(result);
 	ft_lstclear(&result, free_cmd);
@@ -116,7 +117,7 @@ Test(test_parsing, pipe_without_follow_up_command_error)
 Test(test_parsing, redirection_without_target_is_error)
 {
 	cr_redirect_stdout();
-	t_list *result = parsing(ft_strdup("a |"));;
+	t_list *result = parsing(ft_strdup("a |"), NULL);;
 
 	cr_assert_null(result);
 	ft_lstclear(&result, free_cmd);
@@ -125,7 +126,7 @@ Test(test_parsing, redirection_without_target_is_error)
 Test(test_parsing, two_pipes_are_error_not_or)
 {
 	cr_redirect_stdout();
-	t_list *result = parsing(ft_strdup("a ||"));;
+	t_list *result = parsing(ft_strdup("a ||"), NULL);;
 
 	cr_assert_null(result);
 	ft_lstclear(&result, free_cmd);
@@ -135,7 +136,7 @@ Test(test_parsing, redirection_with_no_exec_name_returns_error)
 {
 	cr_redirect_stdout();
 
-	t_list *result = parsing(ft_strdup(">"));;
+	t_list *result = parsing(ft_strdup(">"), NULL);;
 
 	cr_assert_null(result);
 	ft_lstclear(&result, free_cmd);
@@ -145,7 +146,7 @@ Test(test_parsing, put_angular_bracket_into_field_token)
 {
 	cr_redirect_stdout();
 
-	t_list *result = parsing(ft_strdup("a > b"));;
+	t_list *result = parsing(ft_strdup("a > b"), NULL);;
 
 	cr_expect_eq(get_content(result)->outtoken, REDIR_OUT_REPLACE);
 	ft_lstclear(&result, free_cmd);
@@ -154,7 +155,7 @@ Test(test_parsing, put_angular_bracket_into_field_token)
 Test(test_parsing, two_following_tokens_are_error)
 {
 	cr_redirect_stdout();
-	t_list *result = parsing(ft_strdup("a > | c"));;
+	t_list *result = parsing(ft_strdup("a > | c"), NULL);;
 
 	cr_assert_null(result);
 	ft_lstclear(&result, free_cmd);
@@ -163,7 +164,7 @@ Test(test_parsing, two_following_tokens_are_error)
 Test(test_parsing, put_inverse_angular_bracket_into_field_token)
 {
 	cr_redirect_stdout();
-	t_list *result = parsing(ft_strdup("a < b"));;
+	t_list *result = parsing(ft_strdup("a < b"), NULL);;
 
 	cr_assert_not_null(result);
 	cr_expect_eq(get_content(result)->intoken, REDIR_IN_FILE);
@@ -173,7 +174,7 @@ Test(test_parsing, put_inverse_angular_bracket_into_field_token)
 Test(test_parsing, redirection_puts_filename_in_struct)
 {
 	cr_redirect_stdout();
-	t_list *result = parsing(ft_strdup("a < b"));;
+	t_list *result = parsing(ft_strdup("a < b"), NULL);;
 
 	cr_assert_not_null(result);
 	cr_expect_eq(get_content(result)->intoken, REDIR_IN_FILE);
@@ -184,7 +185,7 @@ Test(test_parsing, redirection_puts_filename_in_struct)
 Test(test_parsing, multiple_input_redirection_replaces_with_last_encouter)
 {
 	cr_redirect_stdout();
-	t_list *result = parsing(ft_strdup("a < b < c"));;
+	t_list *result = parsing(ft_strdup("a < b < c"), NULL);;
 
 	cr_assert_not_null(result);
 	cr_expect_eq(get_content(result)->intoken, REDIR_IN_FILE);
@@ -196,7 +197,7 @@ Test(test_parsing, multiple_output_redirection_replaces_with_last_encouter,
 	 .disabled = 0)
 {
 	cr_redirect_stdout();
-	t_list *result = parsing(ft_strdup("a > b > c"));;
+	t_list *result = parsing(ft_strdup("a > b > c"), NULL);;
 
 	cr_assert_not_null(result);
 	cr_expect_eq(get_content(result)->outtoken, REDIR_OUT_REPLACE);
@@ -207,7 +208,7 @@ Test(test_parsing, multiple_output_redirection_replaces_with_last_encouter,
 Test(test_parsing, in_and_out_direction)
 {
 	cr_redirect_stdout();
-	t_list *result = parsing(ft_strdup("A > b < c"));;
+	t_list *result = parsing(ft_strdup("A > b < c"), NULL);;
 
 	cr_assert_not_null(result);
 	cr_expect_eq(get_content(result)->outtoken, REDIR_OUT_REPLACE);
@@ -220,7 +221,7 @@ Test(test_parsing, in_and_out_direction)
 Test(test_parsing, multiple_in_and_out_direction)
 {
 	cr_redirect_stdout();
-	t_list *result = parsing(ft_strdup("A > x < c > b"));;
+	t_list *result = parsing(ft_strdup("A > x < c > b"), NULL);;
 
 	cr_assert_not_null(result);
 	cr_expect_eq(get_content(result)->outtoken, REDIR_OUT_REPLACE);
@@ -233,7 +234,7 @@ Test(test_parsing, multiple_in_and_out_direction)
 Test(test_parsing, quote_inside_parse_token)
 {
 	cr_redirect_stdout();
-	t_list *result = parsing(ft_strdup("A > 'b | c'"));;
+	t_list *result = parsing(ft_strdup("A > 'b | c'"), NULL);;
 
 	cr_expect_str_eq(get_content(result)->outfile, "b | c");
 	ft_lstclear(&result, free_cmd);
@@ -242,7 +243,7 @@ Test(test_parsing, quote_inside_parse_token)
 Test(test_parsing, double_angle_brackets_are_append_token)
 {
 	cr_redirect_stdout();
-	t_list *result = parsing(ft_strdup("A >> b"));;
+	t_list *result = parsing(ft_strdup("A >> b"), NULL);;
 
 	cr_expect_eq(get_content(result)->outtoken, REDIR_OUT_APPEND);
 	cr_expect_str_eq(get_content(result)->outfile, "b");
@@ -252,7 +253,7 @@ Test(test_parsing, double_angle_brackets_are_append_token)
 Test(test_parsing, three_angle_brackets_are_error)
 {
 	cr_redirect_stdout();
-	t_list *result = parsing(ft_strdup("A >>> b"));
+	t_list *result = parsing(ft_strdup("A >>> b"), NULL);
 
 	cr_assert_null(result);
 	ft_lstclear(&result, free_cmd);
