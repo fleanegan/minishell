@@ -1,6 +1,6 @@
 #include "test_utils.h"
 
-char 	*mock_readline_no_var(char *dummy)
+char 	*mock_readline_no_var(const char *dummy)
 {
 	static int call_no = -1;
 
@@ -15,7 +15,7 @@ char 	*mock_readline_no_var(char *dummy)
 	(void) dummy;
 }
 
-char 	*mock_readline_with_var(char *dummy)
+char 	*mock_readline_with_var(const char *dummy)
 {
 	static int call_no = -1;
 

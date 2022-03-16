@@ -1,36 +1,41 @@
 #include "minishell.h"
 
-void move_start_and_end_behind_whitespace(const char *input, int *start, int *current)
+void move_start_and_end_behind_whitespace(t_string_slice *sub)
 {
-	if (*current)
-		*start = *current;
-	while (input[*start] && ft_isspace(input[*start]))
-		(*start)++;
-	*current = *start;
+	if (sub->current)
+		sub->start = sub->current;
+	while (sub->src[sub->current] && ft_isspace(sub->src[sub->current]))
+		(sub->current)++;
+	sub->start = sub->current;
 }
 
-char	*strdup_from_to(const char *str, int start, int end)
+char	*strdup_from_to(t_string_slice sub)
 {
 	char 	*res;
 	int		i;
 
-	if (str == NULL || start > end - 1)
+	if (sub.src == NULL || sub.start > sub.current - 1)
+	{
+		puts("strdup got invalid input");
+		printf("src: %s, start: %d, curr: %d\n", sub.src, sub.start, sub.current);
 		return (NULL);
-	res = malloc((end - start + SPACE_FOR_NULLTERMIN) * sizeof(char));
+	}
+	res = malloc((\
+			sub.current - sub.start + SPACE_FOR_NULLTERMIN) * sizeof(char));
 	if (res == NULL)
 		return (NULL);
 	i = 0;
-	while (start <= end - 1)
+	while (sub.start <= sub.current - 1)
 	{
-		res[i] = str[start];
+		res[i] = sub.src[sub.start];
 		i++;
-		start++;
+		sub.start++;
 	}
 	res[i] = '\0';
 	return (res);
 }
 
-static char update_mode_for_type(char *input, char mode, char quote_type)
+static char update_mode_for_type(const char *input, char mode, char quote_type)
 {
 	if (mode == 0 && *input == quote_type && ft_strchr(input + 1, quote_type))
 	{
@@ -44,7 +49,7 @@ static char update_mode_for_type(char *input, char mode, char quote_type)
 	return (mode);
 }
 
-char update_mode(char *input, char mode)
+char update_mode(const char *input, char mode)
 {
 	char res = update_mode_for_type(input, mode, SINGLE_QUOTE);
 	if (res)

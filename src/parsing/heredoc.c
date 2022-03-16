@@ -30,7 +30,7 @@ char	*new_enumerated_empty_file(char *prefix_file_name, int sequence)
 }
 
 char	*generate_heredoc(\
-		t_list *env, const char *delimiter, char *(line_reader)(char *))
+		t_list *env, const char *delimiter, char *(line_reader)(const char *))
 {
 	char	*file_name;
 	char	*heredoc;
@@ -53,7 +53,7 @@ char	*generate_heredoc(\
 }
 
 char	*fetch_heredoc_input(\
-		t_list *env, const char *string, char *(line_reader)(char *))
+		t_list *env, const char *string, char *(line_reader)(const char *))
 {
 	char	*result;
 	char	*line;

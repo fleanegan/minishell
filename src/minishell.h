@@ -25,6 +25,14 @@ typedef enum	e_token
 	REDIR_IN_HERE_DOC
 }		t_token;
 
+typedef struct	s_string_slice
+{
+	const char	*src;
+	int			start;
+	int			current;
+
+}	t_string_slice;
+
 typedef struct s_dict_entry
 {
 	char	*key;
@@ -50,32 +58,27 @@ int				append_to_dict(t_list **dict, char *key, char *value);
 
 /*	Parsing	*/
 t_list			*parsing(char *input);
-int				parse_token(const char *in, \
-				int *start, int *current, t_list *current_cmd);
-int				parse_args(const char *input, \
-				t_list *current_cmd, int *start, int *current);
-int				parse_exec_name(const char *input, \
-				t_list *current_cmd, int *start, int *current);
+int				parse_token(t_string_slice *sub, t_list *current_cmd);
+int				parse_args(t_string_slice *sub, t_list *current_cmd);
+int				parse_exec_name(t_string_slice *sub, t_list *current_cmd);
 char			*delete_quotes(char *in);
 char			**split_args(char *in);
 int				split_count_substrings(char *in);
 char			*get_first_quote(char *in);
-char			update_mode(char *input, char mode);
+char			update_mode(const char *input, char mode);
 int     		append_new_cmd(t_list **result_cmd, t_list **current_cmd);
 char    		*trim_result(char *result);
 int				is_token(int c);
 char			*fetch_heredoc_input(\
-				t_list *env, const char *string, char *(line_reader)(char *));
+				t_list *env, const char *string, char *(*line_reader)(
+		const char *));
 char			*generate_heredoc(\
-				t_list *env, const char *delimiter, char *(line_reader)(char *));
-char			*parse_until(const char *input, \
-				int *start, int *current, int(*stop_condition)(int));
-int				parse_redir_out(\
-				const char *in, int *start, int *current, t_list *current_cmd);
-int				parse_redir_in(\
-				const char *in, int *start, int *current, t_list *current_cmd);
-int				parse_pipe(\
-				const char *in, int *start, int *current, t_list *current_cmd);
+				t_list *env, const char *delimiter, char *(line_reader)(
+				const char *));
+char			*parse_until(t_string_slice *sub, int(*stop_condition)(int));
+int				parse_redir_out(t_string_slice *sub, t_list *current_cmd);
+int				parse_redir_in(t_string_slice *sub, t_list *current_cmd);
+int				parse_pipe(t_string_slice *sub, t_list *current_cmd);
 
 
 /* Signal handling */
@@ -90,8 +93,8 @@ void			execution(char *path, char **args, char *env);
 
 /*	Utils		*/
 t_cmd			*get_content(t_list *in);
-char			*strdup_from_to(const char *str, int start, int end);
-void			move_start_and_end_behind_whitespace(const char *input, int *start, int *current);
+char			*strdup_from_to(t_string_slice sub);
+void			move_start_and_end_behind_whitespace(t_string_slice *sub);
 t_cmd			*new_cmd(void);
 char			*append_str(char *base, char *appendix, int appendix_size);
 int				calc_key_len(char *key);
