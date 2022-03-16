@@ -48,13 +48,12 @@ char			*expand_one_layer_of_variables(t_list *env, char *in);
 char			*expand_all_variables(t_list *env, char *in);
 int				append_to_dict(t_list **dict, char *key, char *value);
 
-
 /*	Parsing	*/
 t_list			*parsing(char *input);
 int				parse_token(const char *in, \
 				int *start, int *current, t_list *current_cmd);
-int				parse_args( \
-				const char *input, t_list *current_cmd, int *start, int *current);
+int				parse_args(const char *input, \
+				t_list *current_cmd, int *start, int *current);
 int				parse_exec_name(const char *input, \
 				t_list *current_cmd, int *start, int *current);
 char			*delete_quotes(char *in);
@@ -65,6 +64,19 @@ char			update_mode(char *input, char mode);
 int     		append_new_cmd(t_list **result_cmd, t_list **current_cmd);
 char    		*trim_result(char *result);
 int				is_token(int c);
+char			*fetch_heredoc_input(\
+				t_list *env, const char *string, char *(line_reader)(char *));
+char			*generate_heredoc(\
+				t_list *env, const char *delimiter, char *(line_reader)(char *));
+char			*parse_until(const char *input, \
+				int *start, int *current, int(*stop_condition)(int));
+int				parse_redir_out(\
+				const char *in, int *start, int *current, t_list *current_cmd);
+int				parse_redir_in(\
+				const char *in, int *start, int *current, t_list *current_cmd);
+int				parse_pipe(\
+				const char *in, int *start, int *current, t_list *current_cmd);
+
 
 /* Signal handling */
 void			handle_ctrl_c(int signal_no, siginfo_t *info, void *hmm);
@@ -83,6 +95,8 @@ void			move_start_and_end_behind_whitespace(const char *input, int *start, int *
 t_cmd			*new_cmd(void);
 char			*append_str(char *base, char *appendix, int appendix_size);
 int				calc_key_len(char *key);
+char			*read_file(char *name);
+
 
 /*	Tear_down	*/
 void			free_cmd(void *cmd);

@@ -55,5 +55,25 @@ char	*append_str(char *base, char *appendix, int appendix_size)
 	result, appendix, base_size + appendix_size + SPACE_FOR_NULLTERMIN);
 	free(base);
 	return (result);
-	return NULL;
+}
+
+char	*read_file(char *name)
+{
+	char	*result;
+	char	*line;
+	int		fd;
+
+	fd = open(name, O_RDONLY);
+	result = ft_strdup("");
+	while (gnl(fd, &line) == 1)
+	{
+		result = append_str(result, line, (int)ft_strlen(line));
+		free(line);
+	}
+	if (close(fd))
+	{
+		free(result);
+		return (NULL);
+	}
+	return (result);
 }

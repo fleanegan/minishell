@@ -258,6 +258,7 @@ Test(test_parsing, three_angle_brackets_are_error)
 	ft_lstclear(&result, free_cmd);
 }
 
+
 //// simultaneous_redirection_in_both_directions
 //// two_angle_brackets_are_not_alone
 //// create_input_with_token -> <,>,|,>>

@@ -28,7 +28,7 @@ t_list	*init()
 
 	if (append_to_dict(&result, "HOME", getenv("HOME")) \
 		|| append_to_dict(&result, "PATH", getenv("PATH"))
-		|| append_to_dict(&result, "V", "TEST")
+		|| append_to_dict(&result, "X", "TEST")
 		|| append_to_dict(&result, "PWD", getenv("PWD")))
 	{
 		ft_lstclear(&result, free_dict_entry);
