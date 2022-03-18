@@ -14,6 +14,7 @@ int parse_pipe(t_string_slice *sub, t_list *current_cmd)
 		if (! sub->src[sub->start] || is_token(sub->src[sub->start]))
 			return (1);
 	}
+	move_start_and_end_behind_whitespace(sub);
 }
 
 int parse_redir_out(t_string_slice *sub, t_list *current_cmd, t_list *env)
@@ -25,7 +26,6 @@ int parse_redir_out(t_string_slice *sub, t_list *current_cmd, t_list *env)
 		(sub->current)++;
 		get_content(current_cmd)->outtoken = REDIR_OUT_APPEND;
 	}
-	move_start_and_end_behind_whitespace(sub);
 	(sub->start)++;
 	(sub->current)++;
 	if (! sub->src[sub->current] || is_token(sub->src[sub->current]))
@@ -35,6 +35,7 @@ int parse_redir_out(t_string_slice *sub, t_list *current_cmd, t_list *env)
 	if (get_content(current_cmd)->outfile == NULL)
 		return (1);
 	delete_quotes(get_content(current_cmd)->outfile);
+	move_start_and_end_behind_whitespace(sub);
 	return (parse_token(sub, current_cmd, env));
 }
 
@@ -63,5 +64,6 @@ int parse_redir_in(t_string_slice *sub, t_list *current_cmd, t_list *env)
 		generate_heredoc(env, parsed_infile,readline);
 		free(parsed_infile);
 	}
+	move_start_and_end_behind_whitespace(sub);
 	return (parse_token(sub, current_cmd, env));
 }

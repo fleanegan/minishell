@@ -57,7 +57,8 @@ char			*expand_all_variables(t_list *env, char *in);
 int				append_to_dict(t_list **dict, char *key, char *value);
 
 /*	Parsing	*/
-t_list *parsing(char *input, t_list *env);
+t_list	*parsing(char *input, t_list *env);
+t_list	*flexparse(char *input, t_list *env);
 int parse_token(t_string_slice *sub, t_list *current_cmd, t_list *env);
 int				parse_args(t_string_slice *sub, t_list *current_cmd);
 int				parse_exec_name(t_string_slice *sub, t_list *current_cmd);

@@ -23,8 +23,8 @@ char	*parse_until(t_string_slice *sub, int(*stop_condition)(int))
 int parse_token(t_string_slice *sub, t_list *current_cmd, t_list *env)
 {
 	move_start_and_end_behind_whitespace(sub);
-	if (get_content(current_cmd)->exec_name == NULL)
-		return (1);
+	//if (get_content(current_cmd)->exec_name == NULL)
+	//	return (1);
 	if (is_token(sub->src[(sub->start)]))
 	{
 		if (sub->src[sub->start] == '|')
@@ -38,6 +38,7 @@ int parse_token(t_string_slice *sub, t_list *current_cmd, t_list *env)
 		else if (sub->src[sub->start] == '<' && parse_redir_in(sub, current_cmd, env))
 			return (1);
 	}
+	move_start_and_end_behind_whitespace(sub);
 	return (0);
 }
 
