@@ -85,10 +85,11 @@ void			handle_ctrl_c(int signal_no, siginfo_t *info, void *hmm);
 void			handle_ctrl_d(int signal_no, siginfo_t *info, void *hmm);
 void			handle_ctrl_backslash(int signal_no, siginfo_t *info, void *hmm);
 int				set_signal_handler(int signal_no, \
-				void (*handler_function)(int, siginfo_t *, void *));
+void 			(*handler_function)(int, siginfo_t *, void *));
 
 /*	Execution	*/
 void			execution(t_list *cmd, char *env);
+char			*get_path(char *exec_name, char *path);
 
 /*	Utils		*/
 t_cmd			*get_content(t_list *in);
@@ -99,8 +100,6 @@ char			*append_str(char *base, char *appendix, int appendix_size);
 int				calc_key_len(char *key);
 char			*read_file(char *name);
 void			show_list(t_list *lst);
-
-
 
 /*	Tear_down	*/
 void			free_cmd(void *cmd);

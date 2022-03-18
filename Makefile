@@ -21,6 +21,7 @@ SRC_NAME =	main.c \
 			parsing/split_args.c \
 			parsing/delete_quotes.c \
 			execution/execution.c \
+			execution/get_path.c
 
 TEST_SRC_NAME = test_main.c \
 
@@ -57,7 +58,7 @@ $(NAME): $(OBJ)
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 	mkdir -p $(@D)
-	$(CC) $(CFLAGS) -g -I$(SRC_PATH) -o $@ -c $< $(LIBS)
+	$(CC) $(CFLAGS) -g -I$(SRC_PATH) -o $@ -c $<
 
 clean:
 	@rm -rf $(OBJ_PATH) db
