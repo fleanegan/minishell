@@ -1,27 +1,28 @@
 #include "minishell.h"
 
 
-t_list *parsing(const char *input)
+t_list *parsing(char *input, t_list *env)
 {
-	t_list  *result_cmd;
-	t_list  *current_cmd;
-	int     start;
-	int     current;
+	t_list  		*result_cmd;
+	t_list  		*current_cmd;
+	t_string_slice	current_substr;
 
-	current = 0;
-	start = 0;
+	ft_bzero(&current_substr, sizeof(current_substr));
+	current_substr.src = input;
 	result_cmd = NULL;
-	while (input[start])
+	while (input[current_substr.start])
 	{
-		if ( append_new_cmd(&result_cmd, &current_cmd) \
-			|| parse_exec_name(input, current_cmd, &start, &current) \
-			|| parse_args(input, current_cmd, &start, &current) \
-			|| parse_token(input, &start, &current, current_cmd))
+		if (append_new_cmd(&result_cmd, &current_cmd) \
+ 			|| parse_exec_name(&current_substr, current_cmd) \
+ 			|| parse_args(&current_substr, current_cmd) \
+ 			|| parse_token(&current_substr, current_cmd, env))
 		{
 			puts("clearing list");
 			ft_lstclear(&result_cmd, free_cmd);
+			free(input);
 			return (NULL);
 		}
 	}
+	free(input);
 	return (result_cmd);
 }

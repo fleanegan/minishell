@@ -24,6 +24,7 @@ int				count_substrings(const char *s, char *c);
 int				is_char_in_set(char in, const char *set);
 int				calc_digits_in_number(int in);
 size_t			calc_min_unsigned(size_t a, size_t b);
+size_t			calc_max_unsigned(size_t a, size_t b);
 void			*ft_memccpy(void *dest, const void *src, int c, size_t n);
 void			ft_lstput_nbr_bonus(t_list *lst);
 void			ft_lstput_char_bonus(t_list *lst);

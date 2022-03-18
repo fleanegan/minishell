@@ -24,7 +24,7 @@ t_list	*ft_lstget_element_by_index(t_list *lst, size_t index)
 	return (lst);
 }
 
-t_list	*ft_lstget_element_by_function(t_list *lst, \
+	t_list	*ft_lstget_element_by_function(t_list *lst, \
 int (*equals)(void *, int), int i)
 {
 	while (lst)

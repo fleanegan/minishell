@@ -1,8 +1,18 @@
 #include "../minishell.h"
 
-int	calc_end_of_sub(char *in, int current);
+int	calc_end_of_sub(const char *in, int current)
+{
+	static char	mode;
 
-int	count_substrings(char *in)
+	while (in[current] && (in[current] != ' ' || mode != NOT_IN_QUOTE))
+	{
+		mode = update_mode(&in[current], mode);
+		++current;
+	}
+	return (current);
+}
+
+int	split_count_substrings(char *in)
 {
 	int		i;
 	int		nbr;
@@ -24,40 +34,28 @@ int	count_substrings(char *in)
 
 char	**fill(char **dest, char *in)
 {
-	int		current;
-	int		start;
-	int		current_substring;
+	t_string_slice	sub;
+	int				current_substring;
 
-	if (in == NULL)
+	ft_bzero(&sub, sizeof(sub));
+	sub.src = in;
+	if (sub.src == NULL)
 		return (NULL);
-	current = 0;
-	start = 0;
 	current_substring = 0;
-	while (in[current])
+	while (sub.src[sub.current])
 	{
-		current = calc_end_of_sub(in, current);
-		if (current != start)
+		sub.current = calc_end_of_sub(sub.src, sub.current);
+		if (sub.current != sub.start)
 		{
-			dest[current_substring] = strdup_from_to(in, start, current);
+			dest[current_substring] = strdup_from_to(sub);
 			if (! dest[current_substring])
 				return (free_2d_array((void **) dest));
 			current_substring++;
 		}
-		move_start_and_end_behind_whitespace(in, &start, &current);
+
+		move_start_and_end_behind_whitespace(&sub);
 	}
 	return (dest);
-}
-
-int	calc_end_of_sub(char *in, int current)
-{
-	static char	mode;
-
-	while (in[current] && (in[current] != ' ' || mode != NOT_IN_QUOTE))
-	{
-		mode = update_mode(&in[current], mode);
-		++current;
-	}
-	return (current);
 }
 
 char	**split_args(char *in)
@@ -65,7 +63,7 @@ char	**split_args(char *in)
 	char	**result;
 	size_t	alloc_size;
 
-	alloc_size = count_substrings(in) \
+	alloc_size = split_count_substrings(in) \
 					+ SPACE_FOR_NULLTERMIN \
 					+ SPACE_FOR_EXEC_NAME;
 	result = malloc(sizeof(char *) * (alloc_size));

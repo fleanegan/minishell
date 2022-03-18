@@ -9,8 +9,12 @@ TEST_PATH = test/
 SRC_NAME =	main.c \
 			init.c \
 			utils.c \
+			signals.c \
 			tear_down.c \
+			expand_variables.c \
 			parsing/parsing.c \
+			parsing/parse_redirections.c \
+			parsing/heredoc.c \
 			parsing/init.c \
 			parsing/parse_fields.c \
 			parsing/utils.c \
