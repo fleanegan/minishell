@@ -49,9 +49,6 @@ typedef struct s_cmd
 	t_token outtoken;
 }			t_cmd;
 
-<<<<<<< HEAD
-/*	Parsing		*/
-=======
 /* Init */
 t_list			*init();
 t_dict_entry	*get_value_by_key(t_list *lst, char *key);
@@ -60,8 +57,8 @@ char			*expand_all_variables(t_list *env, char *in);
 int				append_to_dict(t_list **dict, char *key, char *value);
 
 /*	Parsing	*/
-t_list *parsing(char *input, t_list *env);
-int parse_token(t_string_slice *sub, t_list *current_cmd, t_list *env);
+t_list 			*parsing(char *input, t_list *env);
+int 			parse_token(t_string_slice *sub, t_list *current_cmd, t_list *env);
 int				parse_args(t_string_slice *sub, t_list *current_cmd);
 int				parse_exec_name(t_string_slice *sub, t_list *current_cmd);
 char			*delete_quotes(char *in);
@@ -82,16 +79,7 @@ char			*parse_until(t_string_slice *sub, int(*stop_condition)(int));
 int parse_redir_out(t_string_slice *sub, t_list *current_cmd, t_list *env);
 int parse_redir_in(t_string_slice *sub, t_list *current_cmd, t_list *env);
 int				parse_pipe(t_string_slice *sub, t_list *current_cmd);
->>>>>>> Frederik
 
-
-<<<<<<< HEAD
-/*	Execution	*/
-
-void	execution(char *path, char **args, char *env);
-
-/*	Utils		*/
-=======
 /* Signal handling */
 void			handle_ctrl_c(int signal_no, siginfo_t *info, void *hmm);
 void			handle_ctrl_d(int signal_no, siginfo_t *info, void *hmm);
@@ -101,7 +89,6 @@ int				set_signal_handler(int signal_no, \
 
 /*	Execution	*/
 void			execution(t_list *cmd, char *env);
->>>>>>> Frederik
 
 /*	Utils		*/
 t_cmd			*get_content(t_list *in);

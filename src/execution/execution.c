@@ -1,14 +1,3 @@
-<<<<<<< HEAD
-#include "minishell.h"
-
-void	execution(char *path, char **args, char *env)
-{
-	(void)	args;
-	(void)	env;
-	char	*argv[] = { "test", NULL };
-	execve(path, argv, NULL);
-	perror("minishell");
-=======
 #include <sys/types.h>
 #include <sys/wait.h>
 #include "minishell.h"
@@ -40,5 +29,4 @@ void	execution(t_list *cmd, char *env)
 			}
 		}
 	}
->>>>>>> Frederik
 }

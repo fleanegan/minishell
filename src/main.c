@@ -1,4 +1,5 @@
 #include "minishell.h"
+
 void show_list(t_list *lst)
 {
 	puts("printing env");
@@ -9,21 +10,6 @@ void show_list(t_list *lst)
 	}
 }
 #ifndef IS_TEST
-
-<<<<<<< HEAD
-int	main(void)
-{
-	char *result;
-
-	while (42)
-	{
-		result = readline("minishell$");
-		execution(result, NULL, NULL);
-	}
-	return (0);
-=======
-
-
 
 int	main(void)
 {
@@ -62,7 +48,6 @@ int	main(void)
 		execution(cmd, NULL);
 		ft_lstclear(&cmd, free_cmd);
 	}
->>>>>>> Frederik
 }
 
 
