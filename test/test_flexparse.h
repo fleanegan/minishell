@@ -71,7 +71,7 @@ Test(test_flexparse, erroneous)
 Test(test_flexparse, parse_complex)
 {
 	cr_redirect_stdout();
-	t_list *result = flexparse(ft_strdup("< a A b c f | B > c"), NULL);;
+	t_list *result = flexparse(ft_strdup("   < a   A   b  c     f    |   B  >   c  "), NULL);;
 
 	cr_assert_not_null(result);
 	cr_expect_str_eq(get_content(result)->exec_name, "A");

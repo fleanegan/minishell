@@ -23,6 +23,7 @@ t_list	*flexparse(char *input, t_list *env)
 	current_substr.src = input;
 	result_cmd = NULL;
 	arg_tmp = NULL;
+	move_start_and_end_behind_whitespace(&current_substr);
 	while (current_substr.src[current_substr.current])
 	{
 		append_new_cmd(&result_cmd, &current_cmd);
