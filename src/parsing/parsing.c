@@ -1,7 +1,8 @@
 #include "minishell.h"
 
 
-void parse_next_field(t_list *env, t_list *current_cmd, t_list **arg_tmp, t_string_slice *current_substr);
+int parse_next_field(t_list *env, t_list *current_cmd, t_list **arg_tmp, t_string_slice *sub);
+int append_next_argument_to_list(t_list **arg_tmp, t_string_slice *sub, t_list **tmp_arg);
 
 int cpy_str(void *content, void **result)
 {
@@ -35,63 +36,44 @@ t_list	*flexparse(char *input, t_list *env)
 				free(input);
 				return (NULL);
 			}
-			if (current_substr.src[current_substr.start] == '|' && parse_token(&current_substr, current_cmd, env))
+			if (current_substr.src[current_substr.start] == '|' && parse_pipe(&current_substr, current_cmd))
+			{
+				puts("clearing list");
+				ft_lstclear(&result_cmd, free_cmd);
+				ft_lstclear(&arg_tmp, free);
+				free(input);
 				return (NULL);
+			}
 			get_content(current_cmd)->args = (char **) to_array(arg_tmp, cpy_str);
 			ft_lstclear(&arg_tmp, free);
 		}
 	}
 	free(input);
 	return (result_cmd);
-	(void) env;
 }
 
-void	parse_next_field(t_list *env, t_list *current_cmd, t_list **arg_tmp, t_string_slice *current_substr)
+int	parse_next_field(t_list *env, t_list *current_cmd, t_list **arg_tmp, t_string_slice *sub)
 {
-	while ((*current_substr).src[(*current_substr).current] && (*current_substr).src[(*current_substr).current] != '|')
+	t_list	*tmp_arg;
+
+	while (char_under_cursor(*sub) != 0 && char_under_cursor(*sub) != '|')
 	{
-		if (is_token((*current_substr).src[(*current_substr).current])) {
-			if ((*current_substr).src[(*current_substr).current] == '>' &&
-				parse_redir_out(current_substr, current_cmd, env)) { puts("error"); }
-			if ((*current_substr).src[(*current_substr).current] == '<' &&
-				parse_redir_in(current_substr, current_cmd, env)) { puts("eroor"); }
-		}
-		//printf("parse name start: %d, current %d, string: %s\n", current_substr.start, current_substr.current, current_substr.src);
-		if ((*current_substr).src[(*current_substr).current])
+		if (is_token(char_under_cursor(*sub)) && \
+			parse_redirection(env, current_cmd, sub))
+				return (1);
+		if (get_content(current_cmd)->exec_name == NULL)
 		{
-			if (get_content(current_cmd)->exec_name == NULL)
-			{
-				if (parse_exec_name(current_substr, current_cmd))
-					puts("eror");
-			}
-			else
-				ft_lstadd_back(arg_tmp, ft_lstnew(parse_until(current_substr, ft_isspace)));
+			if (parse_exec_name(sub, current_cmd))
+				return (1);
 		}
+		else if (is_token(char_under_cursor(*sub)) == 0 \
+			&& append_next_argument_to_list(arg_tmp, sub, &tmp_arg))
+				return (1);
 	}
+	return (0);
 }
 
-t_list *parsing(char *input, t_list *env)
-{
-	t_list  		*result_cmd;
-	t_list  		*current_cmd;
-	t_string_slice	current_substr;
-
-	ft_bzero(&current_substr, sizeof(current_substr));
-	current_substr.src = input;
-	result_cmd = NULL;
-	while (current_substr.src[current_substr.start])
-	{
-		if (append_new_cmd(&result_cmd, &current_cmd) \
- 			|| parse_exec_name(&current_substr, current_cmd) \
- 			|| parse_args(&current_substr, current_cmd) \
- 			|| parse_token(&current_substr, current_cmd, env))
-		{
-			puts("clearing list");
-			ft_lstclear(&result_cmd, free_cmd);
-			free(input);
-			return (NULL);
-		}
-	}
-	free(input);
-	return (result_cmd);
+int clear_list_and_return_null(t_list **tmp_arg) {
+	ft_lstclear(tmp_arg, free);
+	return (1);
 }

@@ -60,6 +60,10 @@ int is_token(int c)
 	return (c == '>' || c == '<' || c == '|');
 }
 
+char char_under_cursor(t_string_slice in) {
+	return (in).src[(in).current];
+}
+
 char *trim_result(char *result)
 {
 	char    *tmp;

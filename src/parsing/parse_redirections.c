@@ -14,10 +14,9 @@ int parse_pipe(t_string_slice *sub, t_list *current_cmd)
 		if (! sub->src[sub->start] || is_token(sub->src[sub->start]))
 			return (1);
 	}
-	move_start_and_end_behind_whitespace(sub);
 }
 
-int parse_redir_out(t_string_slice *sub, t_list *current_cmd, t_list *env)
+int parse_redir_out(t_string_slice *sub, t_list *current_cmd)
 {
 	get_content(current_cmd)->outtoken = REDIR_OUT_REPLACE;
 	if (sub->src[sub->start + 1] == sub->src[sub->start])
@@ -36,7 +35,7 @@ int parse_redir_out(t_string_slice *sub, t_list *current_cmd, t_list *env)
 		return (1);
 	delete_quotes(get_content(current_cmd)->outfile);
 	move_start_and_end_behind_whitespace(sub);
-	return (parse_token(sub, current_cmd, env));
+	return (0);
 }
 
 int parse_redir_in(t_string_slice *sub, t_list *current_cmd, t_list *env)
@@ -59,11 +58,10 @@ int parse_redir_in(t_string_slice *sub, t_list *current_cmd, t_list *env)
 	get_content(current_cmd)->infile = parsed_infile;
 	if (get_content(current_cmd)->intoken == REDIR_IN_HERE_DOC)
 	{
-		show_list(env);
 		get_content(current_cmd)->infile = \
 		generate_heredoc(env, parsed_infile,readline);
 		free(parsed_infile);
 	}
 	move_start_and_end_behind_whitespace(sub);
-	return (parse_token(sub, current_cmd, env));
+	return (0);
 }
