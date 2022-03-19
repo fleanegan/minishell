@@ -29,15 +29,11 @@ t_list	*flexparse(char *input, t_list *env)
 		append_new_cmd(&result_cmd, &current_cmd);
 		while (get_content(current_cmd)->exec_name == NULL)
 		{
-			parse_next_field(env, current_cmd, &arg_tmp, &current_substr);
-			if (get_content(current_cmd)->exec_name == NULL) {
-				puts("clearing list");
-				ft_lstclear(&result_cmd, free_cmd);
-				ft_lstclear(&arg_tmp, free);
-				free(input);
-				return (NULL);
-			}
-			if (current_substr.src[current_substr.start] == '|' && parse_pipe(&current_substr, current_cmd))
+			/* error is in first condition */
+			if (parse_next_field(env, current_cmd, &arg_tmp, &current_substr) \
+				|| get_content(current_cmd)->exec_name == NULL \
+				|| (current_substr.src[current_substr.start] == '|' \
+						&& parse_pipe(&current_substr, current_cmd)))
 			{
 				puts("clearing list");
 				ft_lstclear(&result_cmd, free_cmd);
@@ -67,6 +63,7 @@ int	parse_next_field(t_list *env, t_list *current_cmd, t_list **arg_tmp, t_strin
 			if (parse_exec_name(sub, current_cmd))
 				return (1);
 		}
+		// error is in here
 		else if (is_token(char_under_cursor(*sub)) == 0 \
 			&& append_next_argument_to_list(arg_tmp, sub, &tmp_arg))
 				return (1);

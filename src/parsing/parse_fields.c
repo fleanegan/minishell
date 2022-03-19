@@ -21,9 +21,13 @@ char	*parse_until(t_string_slice *sub, int(*stop_condition)(int))
 
 int append_next_argument_to_list(t_list **arg_tmp, t_string_slice *sub, t_list **tmp_arg) {
 	char	*tmp_arg_content;
+	int		cursor_before_parse;
 
+	cursor_before_parse = sub->current;
 	printf("before append arg: %s\n", &sub->src[sub->current]);
 	tmp_arg_content = parse_until(sub, ft_isspace);
+	if (sub->current == cursor_before_parse)
+		return (0);
 	printf("after append arg: %s\n", &sub->src[sub->current]);
 	if (tmp_arg_content == NULL)
 		return (1);
