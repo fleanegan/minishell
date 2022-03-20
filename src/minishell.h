@@ -88,8 +88,12 @@ int				set_signal_handler(int signal_no, \
 void 			(*handler_function)(int, siginfo_t *, void *));
 
 /*	Execution	*/
-void			execution(t_list *cmd, char *env);
+int				execution(t_list *cmd, char *env);
 char			*get_path(char *exec_name, char *path);
+int				**ft_tabnew_two(int col, int line);
+int				ft_destroy_tab_two(int **tab, int col);
+int 			ft_close(int *fd);
+int				close_before_exit_process(int **fd, int nb_cmd);
 
 /*	Utils		*/
 t_cmd			*get_content(t_list *in);

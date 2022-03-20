@@ -21,7 +21,8 @@ SRC_NAME =	main.c \
 			parsing/split_args.c \
 			parsing/delete_quotes.c \
 			execution/execution.c \
-			execution/get_path.c
+			execution/get_path.c \
+			execution/utils.c \
 
 TEST_SRC_NAME = test_main.c \
 

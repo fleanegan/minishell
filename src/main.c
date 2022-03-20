@@ -23,8 +23,7 @@ int	main(void)
 	env = init();
 	if (env == NULL)
 		return (1);
-	printf("-%s-\n", get_path(ft_strdup("ls"), ft_strdup("test:re")));//get_value_by_key(env, "$PATH")->value));
-	while (0)
+	while (1)
 	{
 		line = readline("minishell$");
 		if (! line)
