@@ -22,7 +22,7 @@ Test(test_split_args, wtf)
 	ft_bzero(&sub, sizeof(sub));
 	sub.src = in;
 
-	move_start_and_end_behind_whitespace(&sub);
+	move_cursor_behind_whitespace(&sub);
 	cr_expect_eq(sub.start, sub.current);
 	cr_assert_eq(sub.start, 3);
 }

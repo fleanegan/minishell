@@ -12,13 +12,12 @@ SRC_NAME =	main.c \
 			signals.c \
 			tear_down.c \
 			expand_variables.c \
-			parsing/parsing.c \
+			parsing/parse.c \
 			parsing/parse_redirections.c \
 			parsing/heredoc.c \
 			parsing/init.c \
-			parsing/parse_fields.c \
+			parsing/parse_attributes.c \
 			parsing/utils.c \
-			parsing/split_args.c \
 			parsing/delete_quotes.c \
 			execution/execution.c \
 

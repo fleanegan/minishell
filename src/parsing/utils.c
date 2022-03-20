@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void move_start_and_end_behind_whitespace(t_string_slice *sub)
+void move_cursor_behind_whitespace(t_string_slice *sub)
 {
 	if (sub->current)
 		sub->start = sub->current;

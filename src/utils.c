@@ -77,3 +77,53 @@ char	*read_file(char *name)
 	}
 	return (result);
 }
+
+int cpy_str(void *content, void **result) {
+	(*result) = ft_strdup((char *)content);
+	if (*result == NULL)
+		return (1);
+	return (0);
+}
+
+void *free_list_and_return_null(t_list **lst, void (*del)(void *)) {
+	ft_lstclear(lst, del);
+	return (NULL);
+}
+
+t_token determine_redirection_type(t_string_slice *sub, t_list *current_cmd) {
+	t_token	result;
+
+	if (sub->src[sub->current] == '>')
+	{
+		result = REDIR_OUT_REPLACE;
+		if (sub->src[sub->start + 1] == sub->src[sub->start])
+		{
+			(sub->start)++;
+			(sub->current)++;
+			result = REDIR_OUT_APPEND;
+		}
+		get_content(current_cmd)->outtoken = result;
+	}
+	else if (sub->src[sub->start] == '<')
+	{
+		result = REDIR_IN_FILE;
+		if (sub->src[sub->start + 1] == sub->src[sub->start])
+		{
+			(sub->start)++;
+			(sub->current)++;
+			result = REDIR_IN_HERE_DOC;
+		}
+		get_content(current_cmd)->intoken = result;
+	}
+	return (result);
+}
+
+int move_cursor_behind_token(t_string_slice *sub) {
+	(sub->start)++;
+	(sub->current)++;
+	if (sub->src[sub->current] == 0 \
+		|| sub->src[sub->current - SPACE_FOR_NULLTERMIN] == 0 \
+		|| is_token(sub->src[sub->current]))
+		return (1);
+	return (0);
+}

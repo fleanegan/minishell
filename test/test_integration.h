@@ -8,7 +8,7 @@ Test(test_integration, tricky)
 	char	*in = ft_strdup("l$TEST");
 
 	char	*in_expanded = expand_all_variables(env, in);
-	t_list *result = parsing(in_expanded, NULL);
+	t_list *result = parse(in_expanded, NULL);
 
 	cr_assert_not_null(result);
 	cr_expect_str_eq(get_content(result)->exec_name, "ls");
@@ -25,7 +25,7 @@ Test(test_integration, more_tricky)
 	char *in = ft_strdup("l$TEST");
 
 	char *in_expanded = expand_all_variables(env, in);
-	t_list *result = parsing(in_expanded, NULL);
+	t_list *result = parse(in_expanded, NULL);
 
 	cr_assert_not_null(result);
 	cr_expect_str_eq(get_content(result)->exec_name, "ls");
@@ -44,7 +44,7 @@ Test(test_integration, remove_empty_quotes)
 	char *in = ft_strdup("l'' \"\"");
 
 	char *in_expanded = expand_all_variables(env, in);
-	t_list *result = parsing(in_expanded, NULL);
+	t_list *result = parse(in_expanded, NULL);
 
 	cr_assert_not_null(result);
 	cr_expect_str_eq(get_content(result)->exec_name, "l");

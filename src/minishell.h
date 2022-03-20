@@ -58,7 +58,7 @@ int				append_to_dict(t_list **dict, char *key, char *value);
 
 /*	Parsing	*/
 t_list			*parsing(char *input, t_list *env);
-t_list			*flexparse(char *input, t_list *env);
+t_list			*parse(char *input, t_list *env);
 int				parse_token(t_string_slice *sub, t_list *current_cmd, t_list *env);
 int				parse_args(t_string_slice *sub, t_list *current_cmd);
 int				parse_exec_name(t_string_slice *sub, t_list *current_cmd);
@@ -68,6 +68,7 @@ int				split_count_substrings(char *in);
 char			*get_first_quote(char *in);
 char			update_mode(const char *input, char mode);
 int     		append_new_cmd(t_list **result_cmd, t_list **current_cmd);
+int				append_new_arg(t_list **tmp_args, char	*arg_str);
 char    		*trim_result(char *result);
 int				is_token(int c);
 char			*fetch_heredoc_input(\
@@ -80,7 +81,8 @@ int parse_redir_out(t_string_slice *sub, t_list *current_cmd);
 int				parse_redir_in(t_string_slice *sub, t_list *current_cmd, t_list *env);
 int				parse_pipe(t_string_slice *sub, t_list *current_cmd);
 int				parse_redirection(t_list *env, t_list *current_cmd, t_string_slice *sub);
-
+t_token			determine_redirection_type(t_string_slice *sub, t_list *current_cmd);
+int				move_cursor_behind_token(t_string_slice *sub);
 
 /* Signal handling */
 void			handle_ctrl_c(int signal_no, siginfo_t *info, void *hmm);
@@ -95,13 +97,15 @@ void			execution(t_list *cmd, char *env);
 /*	Utils		*/
 t_cmd			*get_content(t_list *in);
 char			*strdup_from_to(t_string_slice sub);
-void			move_start_and_end_behind_whitespace(t_string_slice *sub);
+void			move_cursor_behind_whitespace(t_string_slice *sub);
 t_cmd			*new_cmd(void);
 char			*append_str(char *base, char *appendix, int appendix_size);
 int				calc_key_len(char *key);
 char			*read_file(char *name);
 void			show_list(t_list *lst);
 char			char_under_cursor(t_string_slice in);
+int				cpy_str(void *content, void **result);
+void			*free_list_and_return_null(t_list **lst, void (*del)(void *));
 
 
 

@@ -6,7 +6,7 @@ char	*parse_until(t_string_slice *sub, int(*stop_condition)(int))
 	char    mode;
 
 	mode = 0;
-	move_start_and_end_behind_whitespace(sub);
+	move_cursor_behind_whitespace(sub);
 	while (sub->src[(sub->current)])
 	{
 		mode = update_mode((char *)&sub->src[sub->current], mode);
@@ -15,7 +15,8 @@ char	*parse_until(t_string_slice *sub, int(*stop_condition)(int))
 		(sub->current)++;
 	}
 	result = strdup_from_to(*sub);
-	move_start_and_end_behind_whitespace(sub);
+	move_cursor_behind_whitespace(sub);
+	delete_quotes(result);
 	return (trim_result(result));
 }
 
@@ -24,11 +25,9 @@ int append_next_argument_to_list(t_list **arg_tmp, t_string_slice *sub, t_list *
 	int		cursor_before_parse;
 
 	cursor_before_parse = sub->current;
-	printf("before append arg: %s\n", &sub->src[sub->current]);
 	tmp_arg_content = parse_until(sub, ft_isspace);
 	if (sub->current == cursor_before_parse)
 		return (0);
-	printf("after append arg: %s\n", &sub->src[sub->current]);
 	if (tmp_arg_content == NULL)
 		return (1);
 	(*tmp_arg) = ft_lstnew(tmp_arg_content);
@@ -40,17 +39,6 @@ int append_next_argument_to_list(t_list **arg_tmp, t_string_slice *sub, t_list *
 	ft_lstadd_back(arg_tmp, (*tmp_arg));
 	return (0);
 }
-
-int parse_redirection(t_list *env, t_list *current_cmd, t_string_slice *sub) {
-	if (char_under_cursor(*sub) == '>' \
-		&& parse_redir_out(sub, current_cmd))
-		return (1);
-	if (char_under_cursor(*sub) == '<' \
-		&& parse_redir_in(sub, current_cmd, env))
-		return (1);
-	return (0);
-}
-
 
 // protect malloc!
 int parse_exec_name(t_string_slice *sub, t_list *current_cmd)
