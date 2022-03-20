@@ -274,7 +274,7 @@ Test(test_parse, infile_first, .disabled=1)
 
 Test(test_parse, infile_before_and_after_exec_name)
 {
-	cr_redirect_stdout();
+	//cr_redirect_stdout();
 	t_list *result = parse(ft_strdup("< infile_name exec_name < infile_name2"), NULL);;
 
 	cr_assert_not_null(result);

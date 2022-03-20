@@ -19,3 +19,9 @@ void	free_dict_entry(void *dict_entry)
 	free(((t_dict_entry *) dict_entry)->key);
 	free(dict_entry);
 }
+
+int tear_down_one_command(t_list **arg_tmp)
+{
+	ft_lstclear(arg_tmp, free);
+	return (1);
+}

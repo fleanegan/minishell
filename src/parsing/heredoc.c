@@ -69,13 +69,15 @@ char	*fetch_heredoc_input(\
 			free(result);
 			return (0);
 		}
-		// free_and_return_on_handle_ctrl
-		if (ft_strncmp(line, string, calc_max_unsigned(ft_strlen(line), ft_strlen(string))) == 0)
+		// TODO: free_and_return_on_handle_ctrl
+		if (ft_strncmp(line, string, \
+		calc_max_unsigned(ft_strlen(line), ft_strlen(string))) == 0)
 		{
 			free(line);
 			return (result);
 		}
-		result = expand_all_variables(env, append_str(result, line, ft_strlen(line)));
+		result = expand_all_variables(\
+			env, append_str(result, line, ft_strlen(line)));
 		result = append_str(result, "\n", 1);
 		free(line);
 	}

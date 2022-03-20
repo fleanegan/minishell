@@ -1,17 +1,14 @@
 #include "../minishell.h"
 
-int move_cursor_behind_token(t_string_slice *sub);
-
-enum e_token determine_redirection_type(t_string_slice *sub, t_list *current_cmd);
-
-int parse_pipe(t_string_slice *sub, t_list *current_cmd)
+int	parse_pipe(t_string_slice *sub, t_list *current_cmd)
 {
 	if (get_content(current_cmd)->outtoken != EMPTY)
 		return (1);
 	get_content(current_cmd)->outtoken = PIPE;
 	while (1)
 	{
-		if (! is_token(sub->src[sub->start]) && ! ft_isspace(sub->src[sub->start]))
+		if (! is_token(sub->src[sub->start]) \
+			&& ! ft_isspace(sub->src[sub->start]))
 			return (0);
 		(sub->start)++;
 		(sub->current)++;
@@ -28,23 +25,23 @@ int	parse_redirection(t_list *env, t_list *current_cmd, t_string_slice *sub)
 	if ((type == REDIR_OUT_APPEND || type == REDIR_OUT_REPLACE) \
 		&& parse_redir_out(sub, current_cmd))
 		return (1);
-	if ((type == REDIR_IN_FILE|| type == REDIR_IN_HERE_DOC) \
+	if ((type == REDIR_IN_FILE || type == REDIR_IN_HERE_DOC) \
 		&& parse_redir_in(sub, current_cmd, env))
 		return (1);
 	return (0);
 }
 
-int parse_redir_out(t_string_slice *sub, t_list *current_cmd)
+int	parse_redir_out(t_string_slice *sub, t_list *current_cmd)
 {
-		free(get_content(current_cmd)->outfile);
-		get_content(current_cmd)->outfile = parse_until(sub, ft_isspace);
-		if (get_content(current_cmd)->outfile == NULL)
-			return (1);
+	free(get_content(current_cmd)->outfile);
+	(get_content(current_cmd))->outfile = parse_until(sub, ft_isspace);
+	if (get_content(current_cmd)->outfile == NULL)
+		return (1);
 	move_cursor_behind_whitespace(sub);
 	return (0);
 }
 
-int parse_redir_in(t_string_slice *sub, t_list *current_cmd, t_list *env)
+int	parse_redir_in(t_string_slice *sub, t_list *current_cmd, t_list *env)
 {
 	char	*parsed_infile;
 
@@ -54,8 +51,8 @@ int parse_redir_in(t_string_slice *sub, t_list *current_cmd, t_list *env)
 	if (get_content(current_cmd)->intoken == REDIR_IN_HERE_DOC)
 	{
 		// TODO: testme
-		get_content(current_cmd)->infile = \
-		generate_heredoc(env, parsed_infile,readline);
+		(get_content(current_cmd))->infile = \
+		generate_heredoc(env, parsed_infile, readline);
 		free(parsed_infile);
 	}
 	move_cursor_behind_whitespace(sub);

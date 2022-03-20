@@ -16,7 +16,7 @@ SRC_NAME =	main.c \
 			parsing/parse_redirections.c \
 			parsing/heredoc.c \
 			parsing/init.c \
-			parsing/parse_attributes.c \
+			parsing/string_splice_utils.c \
 			parsing/utils.c \
 			parsing/delete_quotes.c \
 			execution/execution.c \
