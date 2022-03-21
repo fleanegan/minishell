@@ -57,7 +57,7 @@ char	*expand_one_layer_of_variables(t_list *env, char *in)
 			start = current;
 			if (calc_key_len(&in[current]) != 0 && mode != SINGLE_QUOTE && is_not_in_heredoc(in, current))
 			{
-				res = replace_key(get_value_by_key(env, &in[current]), res);
+				res = replace_key(get_value_by_key(env, &in[current + 1]), res);
 				current += calc_key_len(&in[current]);
 				start = current + 1;
 			}

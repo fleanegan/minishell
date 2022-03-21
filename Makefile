@@ -22,6 +22,7 @@ SRC_NAME =	main.c \
 			execution/execution.c \
 			execution/get_path.c \
 			execution/utils.c \
+			built_in/export.c \
 
 TEST_SRC_NAME = test_main.c \
 

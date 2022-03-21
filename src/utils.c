@@ -20,17 +20,15 @@ int	calc_key_len(char *key)
 	return (i);
 }
 
-t_dict_entry	*get_value_by_key(t_list *lst, char *key)
+t_dict_entry	*get_value_by_key(t_list *lst, char *key_without_dollar)
 {
-	char	*key_without_dollar;
 	size_t	max;
 
-	key_without_dollar = key + 1;
 	while (lst)
 	{
 		max = calc_max_unsigned(\
 		ft_strlen(((t_dict_entry *) (lst->content))->key), \
-		calc_key_len(key));
+		calc_key_len(key_without_dollar - 1));
 		if (ft_strncmp(((t_dict_entry *) (lst->content))->key, \
 			key_without_dollar , max) == 0)
 			return ((t_dict_entry *) (lst->content));

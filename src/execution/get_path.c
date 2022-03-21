@@ -35,10 +35,7 @@ char	*get_path(char *exec_name, char *path)
 		if (path[i] == ':')
 			i++;
 		if (access(res, X_OK) == 0)
-		{
-			//free(exec_name);
 			return (res);
-		}
 	}
 	free(res);
 	return (exec_name);

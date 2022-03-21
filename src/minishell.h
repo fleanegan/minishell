@@ -96,6 +96,10 @@ int				ft_destroy_tab_two(int **tab, int col);
 int 			ft_close(int *fd);
 int				close_before_exit_process(int **fd, int nb_cmd);
 
+/*	Built in	*/
+int				export(t_list *env, char *key);
+
+
 /*	Utils		*/
 t_cmd			*get_content(t_list *in);
 void			move_cursor_behind_whitespace(t_string_slice *sub);

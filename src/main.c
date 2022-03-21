@@ -1,14 +1,5 @@
 #include "minishell.h"
 
-void show_list(t_list *lst)
-{
-	puts("printing env");
-	while (lst)
-	{
-		ft_putstr_fd(((t_dict_entry *)lst->content)->key, 1);
-		lst = lst->next;
-	}
-}
 #ifndef IS_TEST
 
 int	main(void)
