@@ -28,6 +28,7 @@ int	parse_redirection(t_list *env, t_list *current_cmd, t_string_slice *sub)
 	if ((type == REDIR_IN_FILE || type == REDIR_IN_HERE_DOC) \
 		&& parse_redir_in(sub, current_cmd, env))
 		return (1);
+	move_cursor_behind_whitespace(sub);
 	return (0);
 }
 
@@ -37,7 +38,6 @@ int	parse_redir_out(t_string_slice *sub, t_list *current_cmd)
 	(get_content(current_cmd))->outfile = parse_until(sub, ft_isspace);
 	if (get_content(current_cmd)->outfile == NULL)
 		return (1);
-	move_cursor_behind_whitespace(sub);
 	return (0);
 }
 
@@ -55,6 +55,5 @@ int	parse_redir_in(t_string_slice *sub, t_list *current_cmd, t_list *env)
 		generate_heredoc(env, parsed_infile, readline);
 		free(parsed_infile);
 	}
-	move_cursor_behind_whitespace(sub);
 	return (0);
 }

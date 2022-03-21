@@ -1,27 +1,5 @@
 #include "minishell.h"
 
-char	*strdup_from_to(t_string_slice sub)
-{
-	char	*res;
-	int		i;
-
-	if (sub.src == NULL || sub.start > sub.current - 1)
-		return (NULL);
-	res = malloc((\
-			sub.current - sub.start + SPACE_FOR_NULLTERMIN) * sizeof(char));
-	if (res == NULL)
-		return (NULL);
-	i = 0;
-	while (sub.start <= sub.current - 1)
-	{
-		res[i] = sub.src[sub.start];
-		i++;
-		sub.start++;
-	}
-	res[i] = '\0';
-	return (res);
-}
-
 static char	update_mode_for_type(const char *input, char mode, char quote_type)
 {
 	if (mode == 0 && *input == quote_type && ft_strchr(input + 1, quote_type))
@@ -90,27 +68,6 @@ t_token	determine_redirection_type(t_string_slice *sub, t_list *current_cmd)
 			result = REDIR_IN_HERE_DOC;
 		}
 		get_content(current_cmd)->intoken = result;
-	}
-	return (result);
-}
-
-char	*read_file(char *name)
-{
-	char	*result;
-	char	*line;
-	int		fd;
-
-	fd = open(name, O_RDONLY);
-	result = ft_strdup("");
-	while (gnl(fd, &line) == 1)
-	{
-		result = append_str(result, line, (int)ft_strlen(line));
-		free(line);
-	}
-	if (close(fd))
-	{
-		free(result);
-		return (NULL);
 	}
 	return (result);
 }

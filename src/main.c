@@ -35,7 +35,7 @@ int	main(void)
 		}
 		add_history(line);
 		line_expanded = expand_all_variables(env, line);
-		cmd = parsing(line_expanded, env);
+		cmd = parse(line_expanded, env);
 //		tmp = cmd;
 //		while (tmp)
 //		{
