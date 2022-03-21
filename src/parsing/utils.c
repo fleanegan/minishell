@@ -71,3 +71,28 @@ t_token	determine_redirection_type(t_string_slice *sub, t_list *current_cmd)
 	}
 	return (result);
 }
+
+char	*parse_until(t_string_slice *sub, int (*stop_condition)(int))
+{
+	char	*result;
+	char	mode;
+
+	mode = 0;
+	move_cursor_behind_whitespace(sub);
+	while (sub->src[(sub->current)])
+	{
+		mode = update_mode((char *)&sub->src[sub->current], mode);
+		if (mode == NOT_IN_QUOTE \
+			&& (is_token(sub->src[(sub->current)]) \
+				|| stop_condition(sub->src[(sub->current)])))
+			break ;
+		(sub->current)++;
+	}
+	if (sub->start > sub->current - 1)
+		return (NULL);
+	result = append_str(ft_strdup(""), \
+	(char *)&sub->src[sub->start], sub->current - sub->start);
+	move_cursor_behind_whitespace(sub);
+	delete_quotes(result);
+	return (trim_result(result));
+}

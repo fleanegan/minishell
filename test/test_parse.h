@@ -7,7 +7,6 @@ Test(test_parse, init_with_NULL)
 
 	cr_assert_null(result);
 	ft_lstclear(&result, free_cmd);
-	ft_lstclear(&result, free_cmd);
 }
 
 Test(test_parse, test_one_cmd)
@@ -15,7 +14,6 @@ Test(test_parse, test_one_cmd)
 	cr_redirect_stdout();
 	t_list *result = parse(ft_strdup("test"), NULL);;
 	cr_assert_str_eq(get_content(result)->exec_name, "test");
-	ft_lstclear(&result, free_cmd);
 	ft_lstclear(&result, free_cmd);
 }
 
@@ -50,9 +48,10 @@ Test(test_parse, three_cmds)
 	cr_expect_str_eq(get_content(result->next->next)->exec_name, "now");
 	cr_assert_str_eq(get_content(result)->args[1], "-option1");
 	cr_assert_str_eq(get_content(result)->args[2], "arg1");
+	cr_assert_str_eq(get_content(result->next)->args[0], "me");
 	cr_assert_str_eq(get_content(result->next)->args[1], "-option2");
 	cr_assert_str_eq(get_content(result->next)->args[2], "arg2");
-	cr_expect_str_eq(*(get_content(result->next->next))->args, "");
+	cr_expect_str_eq((get_content(result->next->next))->args[0], "now");
 	ft_lstclear(&result, free_cmd);
 }
 
@@ -62,7 +61,7 @@ Test(test_parse, quotes_at_beginning_creates_one_big_exec_name)
 	t_list *result = parse(ft_strdup("'echo me test > a | A -' "), NULL);
 
 	cr_expect_str_eq(get_content(result)->exec_name, "echo me test > a | A -");
-	cr_expect_str_eq(*(get_content(result))->args, "");
+	cr_expect_str_eq(*(get_content(result))->args, "echo me test > a | A -");
 	ft_lstclear(&result, free_cmd);
 }
 
@@ -72,7 +71,7 @@ Test(test_parse, unterminated_quote_is_char)
 	t_list *result = parse(ft_strdup("'echo"), NULL);;
 
 	cr_expect_str_eq(get_content(result)->exec_name, "'echo");
-	cr_expect_str_eq(*(get_content(result))->args, "");
+	cr_expect_str_eq(*(get_content(result))->args, "'echo");
 	ft_lstclear(&result, free_cmd);
 }
 
@@ -82,7 +81,7 @@ Test(test_parse, triple_quotes)
 	t_list *result = parse(ft_strdup("'ec'ho'"), NULL);;
 
 	cr_expect_str_eq(get_content(result)->exec_name, "echo'");
-	cr_expect_str_eq(*(get_content(result))->args, "");
+	cr_expect_str_eq(*(get_content(result))->args, "echo'");
 	ft_lstclear(&result, free_cmd);
 }
 
@@ -274,7 +273,7 @@ Test(test_parse, infile_first, .disabled=1)
 
 Test(test_parse, infile_before_and_after_exec_name)
 {
-	//cr_redirect_stdout();
+	cr_redirect_stdout();
 	t_list *result = parse(ft_strdup("< infile_name exec_name < infile_name2"), NULL);;
 
 	cr_assert_not_null(result);
@@ -286,7 +285,7 @@ Test(test_parse, infile_before_and_after_exec_name)
 
 Test(test_parse, missing_execname_is_error)
 {
-	cr_redirect_stdout();
+	//cr_redirect_stdout();
 	t_list *result = parse(ft_strdup("<    infile_name    < infile_name2"), NULL);;
 
 	cr_assert_null(result);
@@ -311,7 +310,7 @@ Test(test_parse, parse_args)
 
 	cr_assert_not_null(result);
 	cr_expect_str_eq(get_content(result)->exec_name, "test");
-	cr_expect_str_eq(get_content(result)->args[0], "");
+	cr_expect_str_eq(get_content(result)->args[0], "test");
 	cr_expect_str_eq(get_content(result)->args[1], "la");
 	cr_expect_str_eq(get_content(result)->args[2], "le");
 	cr_expect_str_eq(get_content(result)->args[3], "lu");
@@ -336,7 +335,7 @@ Test(test_parse, parse_complex)
 
 	cr_assert_not_null(result);
 	cr_expect_str_eq(get_content(result)->exec_name, "A");
-	cr_expect_str_eq(get_content(result)->args[0], "");
+	cr_expect_str_eq(get_content(result)->args[0], "A");
 	cr_expect_str_eq(get_content(result)->args[1], "b");
 	cr_expect_str_eq(get_content(result)->args[2], "c");
 	cr_expect_str_eq(get_content(result)->args[3], "f");
@@ -353,13 +352,24 @@ Test(test_parse, scarce_whitespace)
 
 	cr_assert_not_null(result);
 	cr_expect_str_eq(get_content(result)->exec_name, "A");
-	cr_expect_str_eq(get_content(result)->args[0], "");
+	cr_expect_str_eq(get_content(result)->args[0], "A");
 	cr_expect_str_eq(get_content(result)->args[1], "b");
 	cr_expect_str_eq(get_content(result)->infile, "a");
 	cr_expect_eq(get_content(result)->outtoken, PIPE);
 	cr_expect_str_eq(get_content(result->next)->exec_name, "B");
 	cr_expect_str_eq(get_content(result->next)->outfile, "c");
 	ft_lstclear(&result, free_cmd);
+}
+
+Test(test_parse, test_expend_path_of_existing_cmd)
+{
+//	cr_redirect_stdout();
+	t_list *env = init();
+
+	t_list *result = parse(ft_strdup("ls"), env);;
+	cr_assert_str_eq(get_content(result)->exec_name, "/usr/bin/ls");
+	ft_lstclear(&result, free_cmd);
+	ft_lstclear(&env, free_dict_entry);
 }
 
 //// simultaneous_redirection_in_both_directions

@@ -69,8 +69,8 @@ Test(test_before_parsing, text_without_expand)
 Test(test_before_parsing, non_existing_variable_expands_to_empty_string)
 {
 	t_list *env = init();
-
 	cr_redirect_stdout();
+
 	char	*in = ft_strdup("regular $NON_EXISTING text");
 	char	*result = expand_one_layer_of_variables(env, in);
 
@@ -290,7 +290,7 @@ Test(test_before_parsing, ttt)
 
 Test(test_before_parsing, recursive_expanding)
 {
-//	cr_redirect_stdout();
+	cr_redirect_stdout();
 	t_list *env = init();
 	append_to_dict(&env, "V_OUTER", "XXXXX$V_INNER");
 	append_to_dict(&env, "V_INNER", "xxxxx");
@@ -301,7 +301,50 @@ Test(test_before_parsing, recursive_expanding)
 	cr_assert_str_eq(result, "regular XXXXXxxxxx text");
 	ft_lstclear(&env, free_dict_entry);
 	free(result);
-	//free(in);
 }
+
+Test(test_before_parsing, two_similar_variables_expand_to_correct_name)
+{
+	cr_redirect_stdout();
+	t_list *env = init();
+	append_to_dict(&env, "V11", "XXXXX");
+	append_to_dict(&env, "V1", "xxxxx");
+
+	char	*in = ft_strdup("regular $V1 text");
+	char	*result = expand_all_variables(env, in);
+
+	cr_assert_str_eq(result, "regular xxxxx text");
+	ft_lstclear(&env, free_dict_entry);
+	free(result);
+}
+
+Test(test_before_parsing, non_existing_var_does_not_get_expanded_to_similar)
+{
+	cr_redirect_stdout();
+	t_list *env = init();
+	append_to_dict(&env, "V", "xxxxx");
+
+	char	*in = ft_strdup("regular $V1 text");
+	char	*result = expand_all_variables(env, in);
+
+	cr_assert_str_eq(result, "regular  text");
+	ft_lstclear(&env, free_dict_entry);
+	free(result);
+}
+
+Test(test_before_parsing, special_variable_for_last_exit_state)
+{
+	cr_redirect_stdout();
+	t_list *env = init();
+
+	char	*in = ft_strdup("regular $? text");
+	char	*result = expand_all_variables(env, in);
+
+	cr_assert_str_eq(result, "regular 0 text");
+	ft_lstclear(&env, free_dict_entry);
+	free(result);
+}
+
+// non_existing_var
 
 //TODO: test Var expansion with V1 and V11

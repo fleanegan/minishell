@@ -32,6 +32,7 @@ t_list	*init()
 	if (append_to_dict(&result, "HOME", getenv("HOME")) \
 		|| append_to_dict(&result, "PATH", getenv("PATH"))
 		|| append_to_dict(&result, "X", "TEST")
+		|| append_to_dict(&result, "?", "0")
 		|| append_to_dict(&result, "PWD", getenv("PWD")))
 	{
 		puts("error initiating env");

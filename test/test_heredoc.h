@@ -65,6 +65,7 @@ Test(test_parsing, test_heredoc_with_expansion_delimiter_is_var)
 {
 	t_list *env = init();
 	append_to_dict(&env, "V", "XXXXX");
+	cr_redirect_stdout();
 
 	usleep(20000);
 	char	*file_name = generate_heredoc(env, "$V", mock_readline_with_var);

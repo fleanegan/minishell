@@ -15,7 +15,7 @@ int	calc_key_len(char *key)
 	if (key == NULL || key[i] == 0 || ft_isdigit(key[i]))
 		return (0);
 	key++;
-	while (key[i] && (ft_isalnum(key[i]) || key[i] == '_'))
+	while (key[i] && (ft_isalnum(key[i]) || key[i] == '_' || key[i] == '?'))
 		i++;
 	return (i);
 }
@@ -23,11 +23,16 @@ int	calc_key_len(char *key)
 t_dict_entry	*get_value_by_key(t_list *lst, char *key)
 {
 	char	*key_without_dollar;
+	size_t	max;
 
 	key_without_dollar = key + 1;
 	while (lst)
 	{
-		if (ft_strncmp(((t_dict_entry *) (lst->content))->key, key_without_dollar , calc_key_len(key)) == 0)
+		max = calc_max_unsigned(\
+		ft_strlen(((t_dict_entry *) (lst->content))->key), \
+		calc_key_len(key));
+		if (ft_strncmp(((t_dict_entry *) (lst->content))->key, \
+			key_without_dollar , max) == 0)
 			return ((t_dict_entry *) (lst->content));
 		lst = lst->next;
 	}

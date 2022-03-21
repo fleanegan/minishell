@@ -17,6 +17,8 @@ char	*ft_strdup(const char *s)
 	size_t	bytes_for_string;
 	char	*result;
 
+	if (s == NULL)
+		return (NULL);
 	bytes_for_string = ft_strlen(s) + SPACE_NULLTERMIN;
 	result = malloc(sizeof(char) * bytes_for_string);
 	if (!result)
