@@ -6,7 +6,7 @@
 /*   By:  <fschlute>                                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 09:02:29 by                   #+#    #+#             */
-/*   Updated: 2022/02/05 11:21:35 by                  ###   ########.fr       */
+/*   Updated: 2022/02/05 13:16:00 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 char	*char_list_to_char_array(t_list *lst)
 {
 	char	*result;
-	t_list	*tmp;
 	int		ctr;
 
 	if (! lst)
@@ -24,15 +23,45 @@ char	*char_list_to_char_array(t_list *lst)
 	if (! result)
 		return (NULL);
 	ctr = 0;
-	tmp = lst;
 	while (lst)
 	{
-		result[ctr] = *(char *)lst->content;
-		if (! result[ctr])
+		if (! *(char *)lst->content)
 			break ;
+		result[ctr] = *(char *)lst->content;
 		ctr++;
 		lst = lst->next;
 	}
-	ft_lstclear(&tmp, free);
+	result [ctr] = 0;
 	return (result);
 }
+
+void **to_array(t_list *pList, int (*cpy)(void *, void **)) {
+	void	**result;
+	int		size;
+	int		i;
+
+	i = 0;
+	size = ft_lstsize(pList);
+	result = malloc(sizeof(t_list) * (size + 1));
+	result[size] = NULL;
+	if (pList == NULL)
+		return (result);
+	while (i < size)
+	{
+		if (pList->content == NULL)
+		{
+			pList = pList->next;
+			size--;
+			continue ;
+		}
+		if (cpy(pList->content, &result[i]))
+		{
+			free_2d_array(result);
+			return (NULL);
+		}
+		i++;
+		pList = pList->next;
+	}
+	return (result);
+}
+
