@@ -4,9 +4,7 @@
 #include "minishell.h"
 
 void exec_child(t_list *cmd, int i, int nb_cmd, int **fd);
-
-int tear_down_parent(int i, int nb_cmd, int **fd);
-
+int tear_down_parent(int nb_cmd, int **fd, int pid_of_last_cmd);
 void init_pipes(int nb_cmd, int **fd);
 
 int	execution(t_list *cmd, char *env)
@@ -23,13 +21,15 @@ int	execution(t_list *cmd, char *env)
 	while (i < nb_cmd)
 	{
 		pid = fork();
+		if (pid == -1)
+			return (-1);
 		if (pid == 0)
 			exec_child(cmd, i, nb_cmd, fd);
 		cmd = cmd->next;
 		i++;
 	}
 	if (pid != 0)
-		tear_down_parent(i, nb_cmd, fd);
+		return(tear_down_parent(nb_cmd, fd, pid));
 	return (0);
 	(void) env;
 }
@@ -46,22 +46,34 @@ void	init_pipes(int nb_cmd, int **fd)
 	}
 }
 
-int	tear_down_parent(int i, int nb_cmd, int **fd)
+int tear_down_parent(int nb_cmd, int **fd, int pid_of_last_cmd)
 {
-	int	last_status;
+	int	wait_result_buffer;
+	int	last_result;
+	int	i;
+	int	pid_return;
 
+	i = 0;
+	last_result = 0;
 	if (close_before_exit_process(fd, nb_cmd) == 1)
-		exit (1);
-	while (i > 0)
 	{
-		if (wait(&last_status) == -1)
+		free_2d_array((void **) fd);
+		return (-1);
+	}
+	while (i < nb_cmd)
+	{
+		pid_return = wait(&wait_result_buffer);
+		if (pid_return == -1)
 			perror("wait");
-		i--;
+		if (pid_return == pid_of_last_cmd)
+		{
+			if (WIFEXITED(wait_result_buffer))
+				last_result = WEXITSTATUS(wait_result_buffer);
+		}
+		i++;
 	}
 	free_2d_array((void **) fd);
-	if ( WIFEXITED(last_status))
-		return (WEXITSTATUS(last_status));
-	return (0);
+	return (last_result);
 }
 
 int	redirect_stdout_into_pipe(int *fd_of_pipe)
@@ -93,22 +105,12 @@ void exec_child(t_list *cmd, int i, int nb_cmd, int **fd)
 		close_before_exit_process(fd, nb_cmd);
 		exit(1);
 	}
-	if (i == 0)
-	{
-		execve(get_content(cmd)->exec_name, get_content(cmd)->args, NULL);
-		perror(get_content(cmd)->exec_name);
-		exit(errno);
-	}
 	if (i != 0)
-	{
 		redirect_stdin_into_pipe(fd[i - 1]);
-		if (close_before_exit_process(fd, nb_cmd) == 1)
-			exit (1);
-		execve(get_content(cmd)->exec_name, get_content(cmd)->args, NULL);
-		perror(get_content(cmd)->exec_name);
-
-	}
 	if (close_before_exit_process(fd, nb_cmd) == 1)
 		exit(1);
+	execve(get_content(cmd)->exec_name, get_content(cmd)->args, NULL);
+	fprintf(stderr, "errno: %d\n", errno);
+	perror(get_content(cmd)->exec_name);
 	exit(errno);
 }
