@@ -8,13 +8,13 @@ int	**ft_tabnew_two(int col, int line)
 	i = 0;
 	if (!col || !line)
 		return (0);
-	tab = malloc(col * sizeof(int *));
+	tab = ft_calloc(col + 1, sizeof(int *));
 	if (!tab)
 		return (0);
 	while (i < col)
 	{
 		tab[i] = malloc(line * sizeof(int));
-		if (!tab)
+		if (! tab[i])
 			return (0);
 		i++;
 	}
