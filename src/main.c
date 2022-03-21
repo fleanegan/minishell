@@ -1,4 +1,5 @@
 #include "minishell.h"
+
 void show_list(t_list *lst)
 {
 	puts("printing env");
@@ -9,9 +10,6 @@ void show_list(t_list *lst)
 	}
 }
 #ifndef IS_TEST
-
-
-
 
 int	main(void)
 {
@@ -25,7 +23,7 @@ int	main(void)
 	env = init();
 	if (env == NULL)
 		return (1);
-	while (42)
+	while (1)
 	{
 		line = readline("minishell$");
 		if (! line)

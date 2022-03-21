@@ -57,7 +57,6 @@ int				append_to_dict(t_list **dict, char *key, char *value);
 
 /*	Parsing	*/
 t_list			*parse(char *input, t_list *env);
-
 int				parse_args(t_string_slice *sub, t_list *current_cmd);
 char			*delete_quotes(char *in);
 char			update_mode(const char *input, char mode);
@@ -87,9 +86,15 @@ void			handle_ctrl_c(int signal_no, siginfo_t *info, void *hmm);
 void			handle_ctrl_d(int signal_no, siginfo_t *info, void *hmm);
 void			handle_ctrl_backslash(int signal_no, siginfo_t *info, void *hmm);
 int				set_signal_handler(int signal_no, \
-				void (*handler_function)(int, siginfo_t *, void *));
+void 			(*handler_function)(int, siginfo_t *, void *));
+
 /*	Execution	*/
-void			execution(t_list *cmd, char *env);
+int				execution(t_list *cmd, char *env);
+char			*get_path(char *exec_name, char *path);
+int				**ft_tabnew_two(int col, int line);
+int				ft_destroy_tab_two(int **tab, int col);
+int 			ft_close(int *fd);
+int				close_before_exit_process(int **fd, int nb_cmd);
 
 /*	Utils		*/
 t_cmd			*get_content(t_list *in);
@@ -105,10 +110,6 @@ void			*free_list_and_return_null(t_list **lst, void (*del)(void *));
 int				append_next_argument_to_list(\
 				t_list **arg_tmp, t_string_slice *sub, t_list **current_arg);
 t_string_slice	init_slice_at_start_of(const char *input);
-
-
-
-
 
 /*	Tear_down	*/
 void			free_cmd(void *cmd);
