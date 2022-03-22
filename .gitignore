@@ -70,3 +70,5 @@ minishell
 ehthumbs.db
 Thumbs.db
 
+.nfs*
+*.swp

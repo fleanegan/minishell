@@ -85,7 +85,47 @@ Test(test_execution, non_found_infile_sets_errno)
 
 	int result = execution(cmd, NULL);
 
-	cr_assert_eq(result, 2, "act: %d", result);
+	cr_assert_eq(result, 22, "act: %d", result);
 	ft_lstclear(&cmd, free_cmd);
 	ft_lstclear(&env, free_dict_entry);
 }
+
+Test(test_execution, outfile_in_replace_mode)
+{
+	t_list *env = init();
+	t_list	*cmd = parse("echo -n test > outfile", env);
+	cr_redirect_stderr();
+	cr_redirect_stdout();
+
+	int		result = execution(cmd, NULL);
+	char	*file_content = read_file("outfile");
+
+
+	cr_assert_eq(result, 0, "act: %d", result);
+	cr_assert_str_eq(file_content, "test");
+	ft_lstclear(&cmd, free_cmd);
+	free(file_content);
+	ft_lstclear(&env, free_dict_entry);
+}
+
+Test(test_execution, outfile_in_append_mode)
+{
+	t_list *env = init();
+	t_list	*cmd = parse("echo -n test >> outfile_append", env);
+	cr_redirect_stderr();
+	cr_redirect_stdout();
+
+	int		result = execution(cmd, NULL);
+	result = execution(cmd, NULL);
+	char	*file_content = read_file("outfile_append");
+
+
+	cr_assert_eq(result, 0, "act: %d", result);
+	cr_assert_str_eq(file_content, "testtest");
+	ft_lstclear(&cmd, free_cmd);
+	free(file_content);
+	remove("outfile_append");
+	ft_lstclear(&env, free_dict_entry);
+}
+
+// chmod 644

@@ -5,6 +5,7 @@
 
 void	exec_child(t_list *cmd, int i, int nb_processes, int **fd);
 int		tear_down_parent(int nb_processes, int **fd, int pid_of_last_cmd);
+int redirect_stdout_to_outfile(char *outfile, t_token mode);
 void	init_pipes(int nb_processes, int **fd);
 int		redirect_infile_to_stdin(char *infile);
 
@@ -104,17 +105,24 @@ int	redirect_stdin_into_pipe(int *fd_of_pipe)
 
 void exec_child(t_list *cmd, int i, int nb_processes, int **fd)
 {
-	if (i != nb_processes - 1 && redirect_stdout_into_pipe(fd[i]))
+	if (i != nb_processes - 1)
 	{
-		close_before_exit_process(fd, nb_processes);
-		exit(1);
+		if (redirect_stdout_into_pipe(fd[i]))
+		{
+			close_before_exit_process(fd, nb_processes);
+			exit(1);
+		}
+	}
+	else
+	{
+		if (i == 0 && get_content(cmd)->outtoken != EMPTY \
+		&& redirect_stdout_to_outfile(get_content(cmd)->outfile, get_content(cmd)->outtoken))
+			exit(errno);
 	}
 	if (i != 0)
 		redirect_stdin_into_pipe(fd[i - 1]);
 	if (i == 0 && get_content(cmd)->intoken != EMPTY && redirect_infile_to_stdin(get_content(cmd)->infile))
-	{
 		exit(errno);
-	}
 	if (close_before_exit_process(fd, nb_processes) == 1)
 		exit(1);
 	if (access(get_content(cmd)->exec_name, X_OK) != 0)
@@ -137,16 +145,51 @@ int redirect_infile_to_stdin(char *infile)
 			perror(infile);
 			return (errno);
 		}
-		else if (dup2(fd, 0))
+		else if (dup2(fd, 0) == -1)
 		{
-			ft_putendl_fd("Error", 2);
+			perror(infile);
 			return (errno);
 		}
 	}
 	else
 	{
-		ft_putendl_fd("file is not available for read", 2);
+		perror(infile);
 		return (errno);
+	}
+	return (0);
+}
+
+int redirect_stdout_to_outfile(char *outfile, t_token mode)
+{
+	int	fd;
+
+	if (mode == REDIR_OUT_REPLACE)
+	{
+		fd = open(outfile, O_WRONLY | O_TRUNC | O_CREAT, 0644);
+		if (fd == -1)
+		{
+			perror(outfile);
+			return (errno);
+		}
+		else if (dup2(fd, 1) == -1)
+		{
+			perror(outfile);
+			return (errno);
+		}
+	}
+	else
+	{
+		fd = open(outfile, O_WRONLY | O_APPEND | O_CREAT, 0644);
+		if (fd == -1)
+		{
+			perror(outfile);
+			return (errno);
+		}
+		else if (dup2(fd, 1) == -1)
+		{
+			perror(outfile);
+			return (errno);
+		}
 	}
 	return (0);
 }
