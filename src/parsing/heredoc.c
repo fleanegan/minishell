@@ -65,7 +65,6 @@ char	*fetch_heredoc_input(\
 		line = line_reader(">");
 		if (line == NULL)
 		{
-			handle_ctrl_d(-1, NULL, NULL);
 			free(result);
 			return (0);
 		}

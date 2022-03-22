@@ -29,9 +29,9 @@ t_dict_entry	*get_value_by_key(t_list *lst, char *key_without_dollar)
 		max = calc_max_unsigned(\
 		ft_strlen(((t_dict_entry *) (lst->content))->key), \
 		calc_key_len(key_without_dollar - 1));
-		if (ft_strncmp(((t_dict_entry *) (lst->content))->key, \
-			key_without_dollar , max) == 0)
-			return ((t_dict_entry *) (lst->content));
+		if (ft_strncmp(((t_dict_entry *)(lst->content))->key, \
+			key_without_dollar, max) == 0)
+			return (lst->content);
 		lst = lst->next;
 	}
 	return (NULL);
@@ -60,18 +60,19 @@ char	*append_str(char *base, char *appendix, int appendix_size)
 	return (result);
 }
 
-int cpy_str(void *content, void **result) {
+int	cpy_str(void *content, void **result)
+{
 	(*result) = ft_strdup((char *)content);
 	if (*result == NULL)
 		return (1);
 	return (0);
 }
 
-void *free_list_and_return_null(t_list **lst, void (*del)(void *)) {
+void	*free_list_and_return_null(t_list **lst, void (*del)(void *))
+{
 	ft_lstclear(lst, del);
 	return (NULL);
 }
-
 
 char	*read_file(char *name)
 {
@@ -92,4 +93,9 @@ char	*read_file(char *name)
 		return (NULL);
 	}
 	return (result);
+}
+
+int	is_token(int c)
+{
+	return (c == '>' || c == '<' || c == '|');
 }

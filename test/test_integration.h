@@ -4,7 +4,7 @@ Test(test_integration, tricky)
 {
 	cr_redirect_stdout();
 	t_list *env = init();
-	append_to_dict(&env, "TEST", "s -la");
+	update_env(&env, "TEST", "s -la");
 	char	*in = ft_strdup("l$TEST");
 
 	char	*in_expanded = expand_all_variables(env, in);
@@ -21,7 +21,7 @@ Test(test_integration, more_tricky)
 {
 	cr_redirect_stdout();
 	t_list *env = init();
-	append_to_dict(&env, "TEST", "s -la | wc");
+	update_env(&env, "TEST", "s -la | wc");
 	char *in = ft_strdup("l$TEST");
 
 	char *in_expanded = expand_all_variables(env, in);

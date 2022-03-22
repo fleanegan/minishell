@@ -6,7 +6,7 @@ void show_list(t_list *lst)
 	while (lst)
 	{
 		ft_putstr_fd(((t_dict_entry *)lst->content)->key, 1);
-		ft_putstr_fd(":", 1);
+		ft_putstr_fd("=", 1);
 		ft_putendl_fd(((t_dict_entry *)lst->content)->value, 1);
 		lst = lst->next;
 	}

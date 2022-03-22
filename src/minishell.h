@@ -53,7 +53,7 @@ typedef struct s_cmd
 t_list			*init();
 char			*expand_one_layer_of_variables(t_list *env, char *in);
 char			*expand_all_variables(t_list *env, char *in);
-int				append_to_dict(t_list **dict, char *key, char *value);
+int				update_env(t_list **env, char *key, char *value);
 
 /*	Parsing	*/
 t_list			*parse(char *input, t_list *env);
@@ -79,12 +79,12 @@ int				move_cursor_behind_token(t_string_slice *sub);
 int				parse_next_attribute(t_list *env, t_list *current_cmd, \
 				t_list **arg_tmp, t_string_slice *sub);
 int				parse_one_command(t_string_slice *sub, t_list **result_cmd, t_list *env);
+int				parse_exec_name(t_list *env, t_list *current_cmd, \
+				t_list **arg_tmp,	t_string_slice *sub);
+
 
 /* Signal handling */
 void			handle_ctrl_c(int signal_no, siginfo_t *info, void *hmm);
-
-void			handle_ctrl_d(int signal_no, siginfo_t *info, void *hmm);
-void			handle_ctrl_backslash(int signal_no, siginfo_t *info, void *hmm);
 int				set_signal_handler(int signal_no, \
 void 			(*handler_function)(int, siginfo_t *, void *));
 
@@ -111,7 +111,7 @@ char			*read_file(char *name);
 char			char_under_cursor(t_string_slice in);
 int				cpy_str(void *content, void **result);
 void			*free_list_and_return_null(t_list **lst, void (*del)(void *));
-int				append_next_argument_to_list(\
+int				parse_one_argument(\
 				t_list **arg_tmp, t_string_slice *sub, t_list **current_arg);
 t_string_slice	init_slice_at_start_of(const char *input);
 

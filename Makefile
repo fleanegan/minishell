@@ -19,8 +19,8 @@ SRC_NAME =	main.c \
 			parsing/string_splice_utils.c \
 			parsing/utils.c \
 			parsing/delete_quotes.c \
+			parsing/parse_exec_name.c \
 			execution/execution.c \
-			execution/get_path.c \
 			execution/utils.c \
 			built_in/export.c \
 

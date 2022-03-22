@@ -11,6 +11,12 @@ void	move_cursor_behind_whitespace(t_string_slice *sub)
 
 int	move_cursor_behind_token(t_string_slice *sub)
 {
+	if ((sub->src[sub->current] == '<' || sub->src[sub->current] == '>') \
+		&& sub->src[sub->current] == sub->src[sub->current + 1])
+	{
+		(sub->start)++;
+		(sub->current)++;
+	}
 	(sub->start)++;
 	(sub->current)++;
 	if (sub->src[sub->current] == 0 \
