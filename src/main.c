@@ -12,6 +12,7 @@ int	main(void)
 
 	(void) tmp;
 	env = init();
+	cmd = NULL;
 	if (env == NULL)
 		return (1);
 	while (1)
@@ -39,6 +40,7 @@ int	main(void)
 				return (1);
 			}
 			update_env(&env, "?", tmp1);
+			free(tmp1);
 		}
 		ft_lstclear(&cmd, free_cmd);
 		free(line);

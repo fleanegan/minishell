@@ -13,6 +13,7 @@ int export(t_list *env, char *key)
 	free_2d_array((void **) key_split);
 }
 
+// TODO: malloc protection
 int	append_to_dict(t_list **dict, char *key, char *value)
 {
 	t_dict_entry	*tmp_entry;
@@ -44,6 +45,7 @@ int update_env(t_list **env, char *key, char *value)
 	else
 	{
 		free(current->value);
+		// TODO: malloc protection
 		current->value = ft_strdup(value);
 	}
 	return 0;

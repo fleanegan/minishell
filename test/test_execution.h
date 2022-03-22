@@ -60,26 +60,17 @@ Test(test_execution, first_command_fails_second_does_not)
 	ft_lstclear(&cmd, free_cmd);
 }
 
-Test(test_execution, tes)
+Test(test_execution, infile_gets_read_to_stdin_of_first_process)
 {
-	t_list	*cmd = parse(ft_strdup("/bin/ls non_existing"), NULL);
-	cr_redirect_stderr();
-	cr_redirect_stdout();
-
-	int result = execution(cmd, NULL);
-
-	cr_assert_eq(result, 2, "act: %d", result);
-	ft_lstclear(&cmd, free_cmd);
-}
-
-Test(test_execution, te2s)
-{
-	t_list	*cmd = parse(ft_strdup(" /bin/echo 'works'"), NULL);
+	t_list *env = init();
+	t_list	*cmd = parse(ft_strdup("cat < /mnt/nfs/homes/fschlute/repo/minishell/test/assets/simple_input"), env);
 	cr_redirect_stderr();
 	cr_redirect_stdout();
 
 	int result = execution(cmd, NULL);
 
 	cr_assert_eq(result, 0, "act: %d", result);
+	cr_bugfix_assert_str_stdout("abc\n");
 	ft_lstclear(&cmd, free_cmd);
+	ft_lstclear(&env, free_dict_entry);
 }
