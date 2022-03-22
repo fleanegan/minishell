@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include "minishell.h"
 
+// TODO: replace with strdup
 char	*replace_key(t_dict_entry *expanded_var, char *result)
 {
 	if (expanded_var == NULL)
@@ -75,6 +76,7 @@ char	*expand_all_variables(t_list *env, char *in)
 	result = expand_one_layer_of_variables(env, in);
 	is_done = ft_strncmp(in, result, calc_max_unsigned(\
 			ft_strlen(in), ft_strlen(result))) == 0;
+	free(in);
 	if (is_done)
 		return (result);
 	return (expand_all_variables(env, result));

@@ -13,6 +13,7 @@ Test(test_integration, tricky)
 	cr_assert_not_null(result);
 	cr_expect_str_eq(get_content(result)->exec_name, "ls");
 	cr_expect_str_eq(get_content(result)->args[1], "-la");
+	free(in);
 	ft_lstclear(&result, free_cmd);
 	ft_lstclear(&env, free_dict_entry);
 }
@@ -33,6 +34,7 @@ Test(test_integration, more_tricky)
 	cr_expect_eq(get_content(result)->outtoken, PIPE);
 	cr_assert_not_null(result->next);
 	cr_expect_str_eq(get_content(result->next)->exec_name, "wc");
+	free(in);
 	ft_lstclear(&result, free_cmd);
 	ft_lstclear(&env, free_dict_entry);
 }
@@ -49,6 +51,7 @@ Test(test_integration, remove_empty_quotes)
 	cr_assert_not_null(result);
 	cr_expect_str_eq(get_content(result)->exec_name, "l");
 	cr_expect_str_eq(get_content(result)->args[1], "");
+	free(in);
 	ft_lstclear(&result, free_cmd);
 	ft_lstclear(&env, free_dict_entry);
 }

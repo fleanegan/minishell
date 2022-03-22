@@ -75,8 +75,8 @@ char	*fetch_heredoc_input(\
 			free(line);
 			return (result);
 		}
-		result = expand_all_variables(\
-			env, append_str(result, line, ft_strlen(line)));
+		result = expand_all_variables(env,\
+		append_str(result, line, ft_strlen(line)));
 		result = append_str(result, "\n", 1);
 		free(line);
 	}

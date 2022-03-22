@@ -3,38 +3,36 @@
 #include <errno.h>
 #include "minishell.h"
 
-void exec_child(t_list *cmd, int i, int nb_processes, int **fd);
-int tear_down_parent(int nb_processes, int **fd, int pid_of_last_cmd);
-void init_pipes(int nb_processes, int **fd);
-
-int print_file_to_stdout(t_list *cmd);
+void	exec_child(t_list *cmd, int i, int nb_processes, int **fd);
+int		tear_down_parent(int nb_processes, int **fd, int pid_of_last_cmd);
+void	init_pipes(int nb_processes, int **fd);
+int		redirect_infile_to_stdin(char *infile);
 
 int	execution(t_list *cmd, char *env)
 {
 	pid_t	pid;
 	int		i;
-	int		nb_processes;
+	int		nb_cmd;
 	int		**fd;
 
-	nb_processes = ft_lstsize(cmd) + 1;
-	fd = ft_tabnew_two(nb_processes, 2);
-	init_pipes(nb_processes, fd);
+	nb_cmd = ft_lstsize(cmd);
+	fd = ft_tabnew_two(nb_cmd, 2);
+	init_pipes(nb_cmd, fd);
 	i = 0;
-	while (i < nb_processes)
+	while (i < nb_cmd)
 	{
 		pid = fork();
 		if (pid == -1)
 			return (-1);
 		if (pid == 0)
-			exec_child(cmd, i, nb_processes, fd);
-		if (i != 0)
-			cmd = cmd->next;
+			exec_child(cmd, i, nb_cmd, fd);
+		cmd = cmd->next;
 		i++;
 	}
 	if (pid != 0)
 	{
 
-		return(tear_down_parent(nb_processes, fd, pid));
+		return(tear_down_parent(nb_cmd, fd, pid));
 	}
 	return (0);
 	(void) env;
@@ -106,16 +104,17 @@ int	redirect_stdin_into_pipe(int *fd_of_pipe)
 
 void exec_child(t_list *cmd, int i, int nb_processes, int **fd)
 {
-	if (i != nb_processes - 1 && redirect_stdout_into_pipe(fd[i + 1]))
+	if (i != nb_processes - 1 && redirect_stdout_into_pipe(fd[i]))
 	{
 		close_before_exit_process(fd, nb_processes);
 		exit(1);
 	}
 	if (i != 0)
-		redirect_stdin_into_pipe(fd[i]);
-	if (i == 0 && get_content(cmd)->infile != NULL && print_file_to_stdout(cmd))
-		if (close_before_exit_process(fd, nb_processes))
-			exit(-1);
+		redirect_stdin_into_pipe(fd[i - 1]);
+	if (i == 0 && get_content(cmd)->intoken != EMPTY && redirect_infile_to_stdin(get_content(cmd)->infile))
+	{
+		exit(errno);
+	}
 	if (close_before_exit_process(fd, nb_processes) == 1)
 		exit(1);
 	if (access(get_content(cmd)->exec_name, X_OK) != 0)
@@ -126,26 +125,28 @@ void exec_child(t_list *cmd, int i, int nb_processes, int **fd)
 	exit(errno);
 }
 
-int print_file_to_stdout(t_list *cmd)
+int redirect_infile_to_stdin(char *infile)
 {
-	char *infile;
-	char *file_content;
+	int	fd;
 
-	if (get_content(cmd)->infile != NULL)
+	if (access(infile, R_OK) == 0)
 	{
-		infile = get_content(cmd)->infile;
-		if (access(infile, R_OK) == 0)
+		fd = open(infile, O_RDONLY);
+		if (fd == -1)
 		{
-			file_content = read_file(infile);
-			if (file_content == NULL)
-			{
-				return (1);
-			}
-			ft_putstr_fd(file_content, 1);
-			free(file_content);
-		}
-		else
 			perror(infile);
+			return (errno);
+		}
+		else if (dup2(fd, 0))
+		{
+			ft_putendl_fd("Error", 2);
+			return (errno);
+		}
+	}
+	else
+	{
+		ft_putendl_fd("file is not available for read", 2);
+		return (errno);
 	}
 	return (0);
 }

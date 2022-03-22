@@ -4,9 +4,19 @@
 
 int	main(void)
 {
+	t_list *env = init();
+	update_env(&env, "V", "XXXXX");
+
+	char	*file_name = generate_heredoc(env, "EOF", readline);
+	char	*file_content = read_file(file_name);
+	free(file_name);
+	free(file_content);
+	ft_lstclear(&env, free_dict_entry);
+	return (0);
+
 	char	*line;
 	char	*line_expanded;
-	t_list	*env;
+	//t_list	*env;
 	t_list	*cmd;
 	t_list	*tmp;
 
