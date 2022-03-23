@@ -23,8 +23,8 @@ int	msh_echo(t_list *env, t_cmd *cmd)
 
 	nl_flag = 1;
 	is_behind_options = 0;
-	i = 0;
-	while (cmd->args[i] && env)
+	i = 1;
+	while (cmd->args[0] && cmd->args[i] && env)
 	{
 		if (cmd->args[i][0] == '-' && is_behind_options == 0)
 		{

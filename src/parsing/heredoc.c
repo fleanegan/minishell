@@ -35,20 +35,43 @@ char	*generate_heredoc(\
 	char	*file_name;
 	char	*heredoc;
 	int		fd;
+	int		wait_result_buffer;
+	int last_result;
 
 	file_name = new_enumerated_empty_file("/tmp/.minishell_heredoc", 0);
-	heredoc = fetch_heredoc_input(env, delimiter, line_reader);
-	fd = open(file_name, O_WRONLY);
-	if (fd >= 3)
+	pid_t pid = fork();
+	if (pid == -1)
 	{
-		ft_putstr_fd(heredoc, fd);
-		if (close(fd) != 0)
-		{
-			free(file_name);
-			file_name = NULL;
-		}
+		free(file_name);
+		return (NULL);
 	}
-	free(heredoc);
+	if (set_signal_handler(SIGINT, handle_ctrl_c_parent))
+		exit(errno);
+	if (pid == 0)
+	{
+
+		heredoc = fetch_heredoc_input(env, delimiter, line_reader);
+		fd = open(file_name, O_WRONLY);
+		if (fd >= 3)
+		{
+			ft_putstr_fd(heredoc, fd);
+			if (close(fd) != 0)
+				exit(errno);
+		}
+		free(heredoc);
+		exit(0);
+	}
+	wait(&wait_result_buffer);
+	if (set_signal_handler(SIGINT, handle_ctrl_c))
+		exit(errno);
+	//puts("after fork");
+	if (WIFEXITED(wait_result_buffer))
+		last_result = WEXITSTATUS(wait_result_buffer);
+	if (last_result)
+	{
+		free(file_name);
+		file_name = NULL;
+	}
 	return (file_name);
 }
 
@@ -63,8 +86,6 @@ char	*fetch_heredoc_input(\
 	while (42)
 	{
 		line = line_reader(">");
-		puts("got nonempty line");
-
 		if (line == NULL)
 		{
 			puts("got empty line");

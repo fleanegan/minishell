@@ -15,6 +15,7 @@ int	execute_as_built_in(t_cmd *content, t_list *env)
 	i = 0;
 	while (i < NB_BUILT_INS)
 	{
+		//fprintf(stderr, "arg 0: %s, arg 1: %s\n", content->args[0], content->args[1]);
 		max = calc_max_unsigned(\
 		ft_strlen(content->args[0]), \
 		ft_strlen(built_in_array[i].name));
@@ -30,7 +31,7 @@ void	execute_execve(t_cmd *content, t_list *env)
 	if (execute_as_built_in(content, env) == 0 \
 		&& access(content->exec_name, X_OK) == 0)
 	{
-		fprintf(stderr, "this is NOT builtin\n");
+		//fprintf(stderr, "this is NOT builtin\n");
 		execve(content->exec_name, content->args, NULL);
 	}
 	perror(content->exec_name);

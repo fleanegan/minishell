@@ -4,7 +4,7 @@ Test(test_echo, print_first_argument_with_newline_if_no_options)
 {
 	t_list	*env = init();
 	t_cmd	*cmd = new_cmd();
-	cmd->args = ft_split("test_with_nl", ' ');
+	cmd->args = ft_split("exec_name test_with_nl", ' ');
 	cr_redirect_stdout();
 
 	msh_echo(env, cmd);
@@ -18,7 +18,7 @@ Test(test_echo, print_first_argument_without_newline_if_n_option)
 {
 	t_list	*env = init();
 	t_cmd	*cmd = new_cmd();
-	cmd->args = ft_split("-n test", ' ');
+	cmd->args = ft_split("exec_name -n test", ' ');
 	cr_redirect_stdout();
 
 	msh_echo(env, cmd);
@@ -32,7 +32,7 @@ Test(test_echo, repeated_options_get_ignored)
 {
 	t_list	*env = init();
 	t_cmd	*cmd = new_cmd();
-	cmd->args = ft_split("-n -n test", ' ');
+	cmd->args = ft_split("exec_name -n -n test", ' ');
 	cr_redirect_stdout();
 
 	msh_echo(env, cmd);
@@ -46,7 +46,7 @@ Test(test_echo, options_other_than_n_get_ignored)
 {
 	t_list	*env = init();
 	t_cmd	*cmd = new_cmd();
-	cmd->args = ft_split("-o -nges -lllssss test", ' ');
+	cmd->args = ft_split("exec_name -o -nges -lllssss test", ' ');
 	cr_redirect_stdout();
 
 	msh_echo(env, cmd);
@@ -60,7 +60,7 @@ Test(test_echo, options_after_text_are_printed_like_text)
 {
 	t_list	*env = init();
 	t_cmd	*cmd = new_cmd();
-	cmd->args = ft_split("-o -nges -lllssss test -n", ' ');
+	cmd->args = ft_split("exec_name -o -nges -lllssss test -n", ' ');
 	cr_redirect_stdout();
 
 	msh_echo(env, cmd);

@@ -95,8 +95,8 @@ Test(test_execution, outfile_in_replace_mode)
 {
 	t_list *env = init();
 	t_list	*cmd = parse("echo -n test > outfile", env);
-	cr_redirect_stderr();
-	cr_redirect_stdout();
+	//cr_redirect_stderr();
+	//cr_redirect_stdout();
 
 	int		result = execution(cmd, NULL, ft_lstsize(cmd));
 	char	*file_content = read_file("outfile");
