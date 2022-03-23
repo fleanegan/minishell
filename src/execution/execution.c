@@ -7,85 +7,32 @@ void	execute_execve(t_cmd *content)
 	perror(content->exec_name);
 }
 
-
+// TODO: eliminate nb_processes -> free fd based on nulltermination
 void exec_child(t_list *cmd, int i, int nb_processes, int **fd)
 {
 	t_cmd *content = get_content(cmd);
 
-	if (i == nb_processes - 1)
-	{
-		if (i == 0 && content->outtoken != EMPTY \
- 			&& redirect_stdout_to_outfile(content->outfile, content->outtoken))
-			exit(errno);
-	}
-	else if (redirect_stdout_into_pipe(fd[i]))
+	if ((content->outtoken == REDIR_OUT_REPLACE || content->outtoken == REDIR_OUT_APPEND) \
+		&& redirect_stdout_to_outfile(content->outfile, content->outtoken))
 	{
 		close_before_exit_process(fd, nb_processes);
-		exit(1);
-	}
-	if (i != 0)
-		redirect_stdin_into_pipe(fd[i - 1]);
-	if ((i == 0 \
-		&& content->intoken != EMPTY \
-		&& redirect_infile_to_stdin(content->infile))\
-		|| close_before_exit_process(fd, nb_processes) == 1)
 		exit(errno);
-	execute_execve(content);
-	exit(errno);
-}
-
-
-void exec_first_child(t_list *cmd, int i, int nb_processes, int **fd)
-{
-	t_cmd *content = get_content(cmd);
-
-	if (redirect_stdout_into_pipe(fd[i]))
+	}
+	else if (content->outtoken ==PIPE && redirect_stdout_into_pipe(fd[i]))
 	{
 		close_before_exit_process(fd, nb_processes);
-		exit(1);
-	}
-	if ((i == 0 \
-		&& content->intoken != EMPTY \
-		&& redirect_infile_to_stdin(content->infile))\
-		|| close_before_exit_process(fd, nb_processes) == 1)
 		exit(errno);
-	execute_execve(content);
-	exit(errno);
-}
-
-void exec_middle_child(t_list *cmd, int i, int nb_processes, int **fd)
-{
-	t_cmd *content = get_content(cmd);
-
-	if (redirect_stdout_into_pipe(fd[i]))
+	}
+	if (content->intoken == EMPTY && cmd->prev != NULL && redirect_stdin_into_pipe(fd[i - 1]))
 	{
 		close_before_exit_process(fd, nb_processes);
-		exit(1);
-	}
-	redirect_stdin_into_pipe(fd[i - 1]);
-	if (close_before_exit_process(fd, nb_processes) == 1)
 		exit(errno);
-	execute_execve(content);
-	exit(errno);
-}
-
-void exec_last_child(t_list *cmd, int i, int nb_processes, int **fd)
-{
-	t_cmd *content = get_content(cmd);
-
-	if (i == nb_processes - 1)
-	{
-		if (i == 0 && content->outtoken != EMPTY \
- 			&& redirect_stdout_to_outfile(content->outfile, content->outtoken))
-			exit(errno);
 	}
-	else if (redirect_stdout_into_pipe(fd[i]))
+	if (content->intoken != EMPTY && redirect_infile_to_stdin(content->infile))
 	{
 		close_before_exit_process(fd, nb_processes);
-		exit(1);
+		exit(errno);
 	}
-	if (i != 0)
-		redirect_stdin_into_pipe(fd[i - 1]);
 	if (close_before_exit_process(fd, nb_processes) == 1)
 		exit(errno);
 	execute_execve(content);
@@ -107,16 +54,7 @@ int execution(t_list *cmd, char *env, int nb_cmd)
 		if (pid == -1)
 			return (-1);
 		if (pid == 0)
-		{
 			exec_child(cmd, i, nb_cmd, fd);
-
-//			if (i == 0)
-//				exec_first_child(cmd, i, nb_cmd, fd);
-//			if (i == nb_cmd - 1 && i != 0)
-//				exec_middle_child(cmd, i, nb_cmd, fd);
-//			if (i != nb_cmd - 1 && i != 0)
-//				exec_last_child(cmd, i, nb_cmd, fd);
-		}
 		cmd = cmd->next;
 		i++;
 	}

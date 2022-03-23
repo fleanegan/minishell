@@ -58,6 +58,7 @@ Test(test_execution, first_command_fails_second_does_not)
 	int result = execution(cmd, NULL, ft_lstsize(cmd));
 
 	cr_assert_eq(result, 0, "act: %d", result);
+	cr_bugfix_assert_str_stdout("works\n");
 	ft_lstclear(&cmd, free_cmd);
 }
 
@@ -128,6 +129,8 @@ Test(test_execution, outfile_in_append_mode)
 	remove("outfile_append");
 	ft_lstclear(&env, free_dict_entry);
 }
+
+// in_and_outfile_in_one_pipeline
 
 //Test(test_execution, execution_is_not_executable)
 //{

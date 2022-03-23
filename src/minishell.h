@@ -98,7 +98,7 @@ int execution(t_list *cmd, char *env, int nb_cmd);
 int				**ft_tabnew_two(int col, int line);
 int 			ft_close(int *fd);
 int				close_before_exit_process(int **fd, int nb_cmd);
-void			exec_first_child(t_list *cmd, int i, int nb_processes, int **fd);
+void			exec_child(t_list *cmd, int i, int nb_processes, int **fd);
 int				tear_down_parent(\
 				int nb_processes, int **fd, int pid_of_last_cmd);
 int 			redirect_stdout_to_outfile(char *outfile, t_token mode);
