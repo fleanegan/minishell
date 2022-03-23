@@ -21,6 +21,7 @@ SRC_NAME =	main.c \
 			parsing/delete_quotes.c \
 			parsing/parse_exec_name.c \
 			execution/execution.c \
+			execution/execute_redirections.c \
 			execution/utils.c \
 			built_in/export.c \
 

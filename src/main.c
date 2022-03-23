@@ -4,19 +4,9 @@
 
 int	main(void)
 {
-	t_list *env = init();
-	update_env(&env, "V", "XXXXX");
-
-	char	*file_name = generate_heredoc(env, "EOF", readline);
-	char	*file_content = read_file(file_name);
-	free(file_name);
-	free(file_content);
-	ft_lstclear(&env, free_dict_entry);
-	return (0);
-
 	char	*line;
 	char	*line_expanded;
-	//t_list	*env;
+	t_list	*env;
 	t_list	*cmd;
 	t_list	*tmp;
 
@@ -41,7 +31,7 @@ int	main(void)
 		free(line_expanded);
 		if (cmd != NULL)
 		{
-			char *tmp1 = ft_itoa(execution(cmd, NULL));
+			char *tmp1 = ft_itoa(execution(cmd, NULL, ft_lstsize(cmd)));
 			if (tmp1 == NULL)
 			{
 				ft_lstclear(&cmd, free_cmd);
@@ -53,7 +43,6 @@ int	main(void)
 			free(tmp1);
 		}
 		ft_lstclear(&cmd, free_cmd);
-		free(line);
 	}
 }
 

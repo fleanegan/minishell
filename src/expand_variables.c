@@ -1,29 +1,17 @@
-#include <stdbool.h>
 #include "minishell.h"
 
-// TODO: replace with strdup
-char	*replace_key(t_dict_entry *expanded_var, char *result)
+int	zero_init_vars(t_string_slice *res, char *mode)
 {
-	if (expanded_var == NULL)
-		result = append_str(result, "", 0);
-	else
-		result = append_str(\
-		result, expanded_var->value, ft_strlen(expanded_var->value));
-	return (result);
-}
-
-int	zero_init_vars(char **result, int *start, int *current, char *mode)
-{
-	*start = 0;
-	*current = 0;
+	res->start = 0;
+	res->current = 0;
 	*mode = 0;
-	*result = ft_strdup("");
-	if (*result == NULL)
+	res->src = ft_strdup("");
+	if (res->src == NULL)
 		return (1);
 	return (0);
 }
 
-bool is_not_in_heredoc(char *in, int current)
+int	is_not_in_heredoc(char *in, int current)
 {
 	while (current > 0)
 	{
@@ -39,33 +27,47 @@ bool is_not_in_heredoc(char *in, int current)
 	return (1);
 }
 
+int	expand_variable_under_cursor(t_list *env, char *in, t_string_slice *res)
+{
+	t_dict_entry	*variable;
+
+	variable = get_value_by_key(env, &in[res->current + 1]);
+	if (variable == NULL)
+		res->src = append_str(res->src, "", 0);
+	else
+		res->src = append_str(\
+		res->src, variable->value, ft_strlen(variable->value));
+	if (res->src == NULL)
+		return (1);
+	res->current += calc_key_len(&in[res->current]);
+	res->start = res->current + 1;
+	return (0);
+}
+
 char	*expand_one_layer_of_variables(t_list *env, char *in)
 {
-	char			*res;
-	int				start;
-	int				current;
+	t_string_slice	res;
 	char			mode;
 
-	if (in == NULL || zero_init_vars(&res, &start, &current, &mode))
+	if (in == NULL || zero_init_vars(&res, &mode))
 		return (NULL);
-	while ((current > 0 && in[current - 1]) \
-			|| (current < (int) ft_strlen(in) && in[current]))
+	while ((res.current > 0 && in[res.current - 1]) \
+			|| (res.current < (int) ft_strlen(in) && in[res.current]))
 	{
-		mode = update_mode((char *)&in[current], mode);
-		if (in[current] == '$' || in[current] == 0)
+		mode = update_mode(&in[res.current], mode);
+		if (in[res.current] == '$' || in[res.current] == 0)
 		{
-			res = append_str(res, &in[start], current - start);
-			start = current;
-			if (calc_key_len(&in[current]) != 0 && mode != SINGLE_QUOTE && is_not_in_heredoc(in, current))
-			{
-				res = replace_key(get_value_by_key(env, &in[current + 1]), res);
-				current += calc_key_len(&in[current]);
-				start = current + 1;
-			}
+			res.src = append_str(\
+			res.src, &in[res.start], res.current - res.start);
+			res.start = res.current;
+			if (calc_key_len(&in[res.current]) != 0 \
+			&& mode != SINGLE_QUOTE && is_not_in_heredoc(in, res.current))
+				if (expand_variable_under_cursor(env, in, &res))
+					return (NULL);
 		}
-		current++;
+		res.current++;
 	}
-	return (res);
+	return (res.src);
 }
 
 char	*expand_all_variables(t_list *env, char *in)

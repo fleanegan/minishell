@@ -26,7 +26,7 @@ int	move_cursor_behind_token(t_string_slice *sub)
 	return (0);
 }
 
-t_string_slice	init_slice_at_start_of(const char *input)
+t_string_slice	init_slice_at_start_of(char *input)
 {
 	t_string_slice	result;
 

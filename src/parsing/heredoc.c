@@ -63,8 +63,11 @@ char	*fetch_heredoc_input(\
 	while (42)
 	{
 		line = line_reader(">");
+		puts("got nonempty line");
+
 		if (line == NULL)
 		{
+			puts("got empty line");
 			free(result);
 			return (0);
 		}

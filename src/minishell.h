@@ -4,6 +4,9 @@
 # include "unistd.h"
 # include "stdlib.h"
 # include <string.h>
+# include <sys/types.h>
+# include <sys/wait.h>
+# include <errno.h>
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -27,7 +30,7 @@ typedef enum	e_token
 
 typedef struct	s_string_slice
 {
-	const char	*src;
+	char		*src;
 	int			start;
 	int			current;
 
@@ -81,6 +84,8 @@ int				parse_next_attribute(t_list *env, t_list *current_cmd, \
 int				parse_one_command(t_string_slice *sub, t_list **result_cmd, t_list *env);
 int				parse_exec_name(t_list *env, t_list *current_cmd, \
 				t_list **arg_tmp,	t_string_slice *sub);
+char			*get_path(char *exec_name, char *path);
+
 
 
 /* Signal handling */
@@ -89,12 +94,19 @@ int				set_signal_handler(int signal_no, \
 void 			(*handler_function)(int, siginfo_t *, void *));
 
 /*	Execution	*/
-int				execution(t_list *cmd, char *env);
-char			*get_path(char *exec_name, char *path);
+int execution(t_list *cmd, char *env, int nb_cmd);
 int				**ft_tabnew_two(int col, int line);
-int				ft_destroy_tab_two(int **tab, int col);
 int 			ft_close(int *fd);
 int				close_before_exit_process(int **fd, int nb_cmd);
+void			exec_first_child(t_list *cmd, int i, int nb_processes, int **fd);
+int				tear_down_parent(\
+				int nb_processes, int **fd, int pid_of_last_cmd);
+int 			redirect_stdout_to_outfile(char *outfile, t_token mode);
+void			init_pipes(int nb_processes, int **fd);
+int				redirect_infile_to_stdin(char *infile);
+int				redirect_stdout_into_pipe(int *fd_of_pipe);
+int				redirect_stdin_into_pipe(int *fd_of_pipe);
+void			init_pipes(int nb_processes, int **fd);
 
 /*	Built in	*/
 int				export(t_list *env, char *key);
@@ -113,7 +125,7 @@ int				cpy_str(void *content, void **result);
 void			*free_list_and_return_null(t_list **lst, void (*del)(void *));
 int				parse_one_argument(\
 				t_list **arg_tmp, t_string_slice *sub, t_list **current_arg);
-t_string_slice	init_slice_at_start_of(const char *input);
+t_string_slice	init_slice_at_start_of(char *input);
 
 /*	Tear_down	*/
 void			free_cmd(void *cmd);
