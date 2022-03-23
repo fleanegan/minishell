@@ -1,16 +1,11 @@
 #include "minishell.h"
 
-int export(t_list *env, char *key)
+int msh_export(t_list *env, t_cmd *cmd)
 {
+	puts("implement export..");
+	return (0);
+	(void) cmd;
 	(void) env;
-	(void) key;
-
-	return (1);
-	char **key_split;
-
-	key_split = ft_split(key, '=');
-	printf("%s, %s\n", key_split[0], key_split[1]);
-	free_2d_array((void **) key_split);
 }
 
 // TODO: malloc protection

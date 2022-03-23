@@ -79,7 +79,7 @@ Test(test_execution, infile_gets_read_to_stdin_of_first_process)
 
 Test(test_execution, non_found_infile_sets_errno)
 {
-	t_list *env = init();
+	t_list	*env = init();
 	t_list	*cmd = parse("cat < undefined", env);
 	cr_redirect_stderr();
 	cr_redirect_stdout();
@@ -134,8 +134,8 @@ Test(test_execution, outfile_in_append_mode)
 
 //Test(test_execution, execution_is_not_executable)
 //{
-//	t_list *env = init();
-//	t_list	*cmd = parse("/etc/fstab", env);
+//	t_list *msh_env = init();
+//	t_list	*cmd = parse("/etc/fstab", msh_env);
 //	//cr_redirect_stderr();
 //	//cr_redirect_stdout();
 //
@@ -144,7 +144,7 @@ Test(test_execution, outfile_in_append_mode)
 //	cr_assert_eq(result, 13, "act: %d", result);
 //	ft_lstclear(&cmd, free_cmd);
 //	remove("outfile_append");
-//	ft_lstclear(&env, free_dict_entry);
+//	ft_lstclear(&msh_env, free_dict_entry);
 //}
 
 // chmod 644

@@ -24,6 +24,11 @@ SRC_NAME =	main.c \
 			execution/execute_redirections.c \
 			execution/utils.c \
 			built_in/export.c \
+			built_in/echo.c \
+			built_in/pwd.c \
+			built_in/cd.c \
+			built_in/unset.c \
+			built_in/env.c \
 
 TEST_SRC_NAME = test_main.c \
 

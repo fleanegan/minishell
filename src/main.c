@@ -31,7 +31,7 @@ int	main(void)
 		free(line_expanded);
 		if (cmd != NULL)
 		{
-			char *tmp1 = ft_itoa(execution(cmd, NULL, ft_lstsize(cmd)));
+			char *tmp1 = ft_itoa(execution(cmd, env, ft_lstsize(cmd)));
 			if (tmp1 == NULL)
 			{
 				ft_lstclear(&cmd, free_cmd);

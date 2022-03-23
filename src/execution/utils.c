@@ -21,22 +21,6 @@ int	**ft_tabnew_two(int col, int line)
 	return (tab);
 }
 
-int	ft_destroy_tab_two(int **tab, int col)
-{
-	int	i;
-
-	i = 0;
-	if (!*tab)
-		return (1);
-	while (i < col)
-	{
-		free(tab[i]);
-		i++;
-	}
-	free(tab);
-	return (0);
-}
-
 int ft_close(int *fd)
 {
 	if (*fd != -1)
@@ -48,24 +32,24 @@ int ft_close(int *fd)
 	return (0);
 }
 
-int	close_before_exit_process(int **fd, int nb_cmd)
+int close_before_exit_process(int **fd)
 {
 	int	i;
 
 	i = 0;
-	while (i < nb_cmd)
+	while (fd[i] != NULL)
 	{
 		if (fd[i][0] != -1)
 		{
 			if (ft_close(&fd[i][0]) == 1)
-				return (1);
+				return (errno);
 		}
 		if (fd[i][1] != -1)
 		{
 			if (ft_close(&fd[i][1]) == 1)
-				return (1);
+				return (errno);
 		}
 		i++;
 	}
-	return (0);
+	return (errno);
 }

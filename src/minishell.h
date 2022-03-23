@@ -17,6 +17,7 @@
 # define DOUBLE_QUOTE '\"'
 # define NOT_IN_QUOTE 0
 # define SINGLE_QUOTE '\''
+# define NB_BUILT_INS 6
 
 typedef enum	e_token
 {
@@ -51,6 +52,12 @@ typedef struct s_cmd
 	t_token	intoken;
 	t_token outtoken;
 }			t_cmd;
+
+typedef	struct	s_built_in_entry
+{
+	char	*name;
+	int		(*func_ptr)(t_list *env , t_cmd *cmd);
+}	t_built_in_entry;
 
 /* Init */
 t_list			*init();
@@ -87,18 +94,17 @@ int				parse_exec_name(t_list *env, t_list *current_cmd, \
 char			*get_path(char *exec_name, char *path);
 
 
-
 /* Signal handling */
 void			handle_ctrl_c(int signal_no, siginfo_t *info, void *hmm);
 int				set_signal_handler(int signal_no, \
 void 			(*handler_function)(int, siginfo_t *, void *));
 
 /*	Execution	*/
-int execution(t_list *cmd, char *env, int nb_cmd);
+int execution(t_list *cmd, t_list *env, int nb_cmd);
 int				**ft_tabnew_two(int col, int line);
 int 			ft_close(int *fd);
-int				close_before_exit_process(int **fd, int nb_cmd);
-void			exec_child(t_list *cmd, int i, int nb_processes, int **fd);
+int close_before_exit_process(int **fd);
+void exec_child(t_list *cmd, int i, int **fd, t_list *env);
 int				tear_down_parent(\
 				int nb_processes, int **fd, int pid_of_last_cmd);
 int 			redirect_stdout_to_outfile(char *outfile, t_token mode);
@@ -107,10 +113,6 @@ int				redirect_infile_to_stdin(char *infile);
 int				redirect_stdout_into_pipe(int *fd_of_pipe);
 int				redirect_stdin_into_pipe(int *fd_of_pipe);
 void			init_pipes(int nb_processes, int **fd);
-
-/*	Built in	*/
-int				export(t_list *env, char *key);
-
 
 /*	Utils		*/
 t_cmd			*get_content(t_list *in);
@@ -131,5 +133,15 @@ t_string_slice	init_slice_at_start_of(char *input);
 void			free_cmd(void *cmd);
 void			free_dict_entry(void *dict_entry);
 int tear_down_one_command(t_list **arg_tmp);
+
+/* Built ins */
+int msh_env(t_list *env, t_cmd *cmd);
+int msh_unset(t_list *env, t_cmd *cmd);
+int msh_cd(t_list *env, t_cmd *cmd);
+int msh_export(t_list *env, t_cmd *cmd);
+int msh_pwd(t_list *env, t_cmd *cmd);
+int msh_echo(t_list *env, t_cmd *cmd);
+
+
 
 #endif //MINISHELL_H

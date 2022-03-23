@@ -18,7 +18,7 @@ t_list	*init()
 		|| update_env(&result, "?", "0")
 		|| update_env(&result, "PWD", getenv("PWD")))
 	{
-		puts("error initiating env");
+		puts("error initiating msh_env");
 		ft_lstclear(&result, free_dict_entry);
 		return (NULL);
 	}
