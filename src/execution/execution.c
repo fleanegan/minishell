@@ -31,24 +31,15 @@ int execute_execve(t_cmd *content, t_list *env)
 	int		result_of_built_in;
 	// check result of builtin
 
+	(void)	env_char;
 	result_of_built_in = execute_as_built_in(content, env);
 	if (result_of_built_in == -1 && access(content->exec_name, X_OK) == 0)
 	{
 		env_char = (char **) to_array(env, cpy_dict_to_str);
 		set_sa_handler(SIGINT, NULL);
-		if (content->args)
-			//printf("ename: %s, arg0: %s, arg1: %s, arg2: %s\n", content->exec_name, content->args[0], content->args[1], content->args[2]);
-			fprintf(stderr,"ename: %s, arg0: %s, arg1: %s\n", content->exec_name, content->args[0], content->args[1]);
-		else
-			puts("no builtirrrrn");
-		fprintf(stderr, "ename: %s \n", content->exec_name);
-		//puts("wut");
-		fflush(stdout);
 		execve(content->exec_name, content->args, NULL);
 		perror(content->exec_name);
-		puts("cantal");
 		return (errno);
-		(void) env_char;
 	}
 	return (result_of_built_in);
 }
@@ -82,7 +73,9 @@ int	execution(t_list *cmd, t_list *env, int nb_cmd)
 	int		i;
 	int		**fd;
 	int		built_in_count;
+	int		ret_builtin;
 
+	ret_builtin = 0;
 	built_in_count = 0;
 	set_sa_handler(SIGINT, SIG_IGN);
 	fd = ft_tabnew_two(nb_cmd, 2);
@@ -90,10 +83,9 @@ int	execution(t_list *cmd, t_list *env, int nb_cmd)
 	i = 0;
 	while (i < nb_cmd)
 	{
-		fprintf(stderr,"ename: %s\n", get_content(cmd)->exec_name);
-		if (msh_strcmp(get_content(cmd)->args[0], "cd") == 0)
+		if (msh_strcmp(get_content(cmd)->args[0], "cd") == 0 && nb_cmd == 1)
 		{
-			exec_child(cmd, i, fd, env); // check result
+			ret_builtin = exec_child(cmd, i, fd, env); // check result
 			built_in_count++;
 		}
 		else
@@ -109,7 +101,7 @@ int	execution(t_list *cmd, t_list *env, int nb_cmd)
 	}
 	if (pid != 0)
 		return (tear_down_parent(nb_cmd, fd, pid, built_in_count));
-	return (0);
+	return (ret_builtin);
 }
 
 int tear_down_parent(int nb_processes, int **fd, int pid_of_last_cmd, int built_in_count)

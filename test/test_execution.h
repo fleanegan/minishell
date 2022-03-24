@@ -154,10 +154,11 @@ Test(test_execution, cd_as_builtin)
 	t_list *env = init();
 	t_list	*cmd = parse("cd .. | cat", env);
 //	cr_redirect_stderr();
-//	cr_redirect_stdout();
+	cr_redirect_stdout();
 
 	int		result = execution(cmd, NULL, ft_lstsize(cmd));
 
+	printf("result: %d\n", result);
 	cr_assert_eq(result, 0, "act: %d", result);
 	ft_lstclear(&cmd, free_cmd);
 	ft_lstclear(&env, free_dict_entry);
