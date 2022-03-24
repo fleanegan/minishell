@@ -9,7 +9,7 @@ int	calc_strnlen_size(char *s1, char *s2)
 
 int	msh_strcmp(char *s1, char *s2)
 {
-	int max;
+	int	max;
 
 	max = calc_strnlen_size(s1, s2);
 	return (ft_strncmp(s1, s2, max));
@@ -26,10 +26,9 @@ int	msh_echo(t_list *env, t_cmd *cmd)
 	i = 1;
 	while (cmd->args[0] && cmd->args[i] && env)
 	{
-		if (cmd->args[i][0] == '-' && is_behind_options == 0 && msh_strcmp(cmd->args[i], "-n\0") == 0)
-		{
+		if (cmd->args[i][0] == '-' && is_behind_options == 0 \
+			&& msh_strcmp(cmd->args[i], "-n\0") == 0)
 				nl_flag = 0;
-		}
 		else
 		{
 			if (is_behind_options)
