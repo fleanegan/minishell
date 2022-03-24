@@ -43,6 +43,8 @@ void **to_array(t_list *pList, int (*cpy)(void *, void **)) {
 	i = 0;
 	size = ft_lstsize(pList);
 	result = malloc(sizeof(t_list) * (size + 1));
+	if (result == NULL)
+		return (NULL);
 	result[size] = NULL;
 	if (pList == NULL)
 		return (result);
@@ -58,6 +60,11 @@ void **to_array(t_list *pList, int (*cpy)(void *, void **)) {
 		{
 			free_2d_array(result);
 			return (NULL);
+		}
+		if (result[i] == NULL)
+		{
+			i--;
+			size--;
 		}
 		i++;
 		pList = pList->next;

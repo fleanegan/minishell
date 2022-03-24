@@ -1,5 +1,20 @@
 #include "minishell.h"
 
+int	calc_strnlen_size(char *s1, char *s2)
+{
+	return ((int) calc_max_unsigned(\
+		ft_strlen(s1), \
+		ft_strlen(s2)));
+}
+
+int	msh_strcmp(char *s1, char *s2)
+{
+	int max;
+
+	max = calc_strnlen_size(s1, s2);
+	return (ft_strncmp(s1, s2, max));
+}
+
 t_cmd	*get_content(t_list *in)
 {
 	if (in == NULL)
@@ -65,6 +80,23 @@ int	cpy_str(void *content, void **result)
 	(*result) = ft_strdup((char *)content);
 	if (*result == NULL)
 		return (1);
+	return (0);
+}
+
+int	cpy_dict_to_str(void *content, void **result)
+{
+	t_dict_entry	*entry;
+
+	entry = content;
+	if (msh_strcmp(entry->key, "?") != 0)
+	{
+		(*result) = append_str(entry->key, "=", 1);
+		(*result) = append_str(*result, entry->value, ft_strlen(entry->value));
+		if (*result == NULL)
+			return (1);
+	}
+	else
+		*result = NULL;
 	return (0);
 }
 

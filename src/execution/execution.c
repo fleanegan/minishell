@@ -27,11 +27,14 @@ int	execute_as_built_in(t_cmd *content, t_list *env)
 
 void	execute_execve(t_cmd *content, t_list *env)
 {
+	char	**env_char;
+
 	if (execute_as_built_in(content, env) == 0 \
 		&& access(content->exec_name, X_OK) == 0)
 	{
+		env_char = (char **) to_array(env, cpy_dict_to_str);
 		set_sa_handler(SIGINT, NULL);
-		execve(content->exec_name, content->args, NULL);
+		execve(content->exec_name, content->args, env_char);
 	}
 	perror(content->exec_name);
 	(void) env;
