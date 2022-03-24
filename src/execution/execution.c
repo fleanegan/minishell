@@ -42,7 +42,7 @@ int execute_execve(t_cmd *content, t_list *env)
 		else
 			puts("no builtirrrrn");
 		fprintf(stderr, "ename: %s \n", content->exec_name);
-		puts("wut");
+		//puts("wut");
 		fflush(stdout);
 		execve(content->exec_name, content->args, NULL);
 		perror(content->exec_name);

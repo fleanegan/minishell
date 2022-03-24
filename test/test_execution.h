@@ -86,7 +86,7 @@ Test(test_execution, non_found_infile_sets_errno)
 
 	int result = execution(cmd, NULL, ft_lstsize(cmd));
 
-	cr_assert_eq(result, 22, "act: %d", result);
+	cr_assert_eq(result, 2, "act: %d", result);
 	ft_lstclear(&cmd, free_cmd);
 	ft_lstclear(&env, free_dict_entry);
 }
@@ -114,8 +114,8 @@ Test(test_execution, outfile_in_replace_mode_newline)
 {
 	t_list *env = init();
 	t_list	*cmd = parse("/bin/echo test > outfile_nl", env);
-	//cr_redirect_stderr();
-	//cr_redirect_stdout();
+	cr_redirect_stderr();
+	cr_redirect_stdout();
 
 	int		result = execution(cmd, NULL, ft_lstsize(cmd));
 	char	*file_content = read_file("outfile_nl");
@@ -154,7 +154,7 @@ Test(test_execution, cd_as_builtin)
 	t_list *env = init();
 	t_list	*cmd = parse("cd .. | cat", env);
 //	cr_redirect_stderr();
-	cr_redirect_stdout();
+//	cr_redirect_stdout();
 
 	int		result = execution(cmd, NULL, ft_lstsize(cmd));
 
