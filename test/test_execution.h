@@ -149,6 +149,20 @@ Test(test_execution, outfile_in_append_mode)
 	ft_lstclear(&env, free_dict_entry);
 }
 
+Test(test_execution, cd_as_builtin)
+{
+	t_list *env = init();
+	t_list	*cmd = parse("cd .. | cat", env);
+//	cr_redirect_stderr();
+	cr_redirect_stdout();
+
+	int		result = execution(cmd, NULL, ft_lstsize(cmd));
+
+	cr_assert_eq(result, 0, "act: %d", result);
+	ft_lstclear(&cmd, free_cmd);
+	ft_lstclear(&env, free_dict_entry);
+}
+
 // in_and_outfile_in_one_pipeline
 
 //Test(test_execution, execution_is_not_executable)
