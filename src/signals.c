@@ -13,7 +13,6 @@ void handle_ctrl_c(int signal_no, siginfo_t *info, void *hmm)
 
 void handle_ctrl_c_parent(int signal_no, siginfo_t *info, void *hmm)
 {
-	printf("test\n");
 	(void) signal_no;
 	(void) info;
 	(void) hmm;
@@ -21,7 +20,9 @@ void handle_ctrl_c_parent(int signal_no, siginfo_t *info, void *hmm)
 
 void handle_ctrl_c_heredoc(int signal_no, siginfo_t *info, void *hmm)
 {
-	exit(0);
+	printf("heredoc child handler active\n");
+	close(STDIN_FILENO);
+//	exit(0);
 	(void) signal_no;
 	(void) info;
 	(void) hmm;

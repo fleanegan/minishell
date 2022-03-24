@@ -53,6 +53,8 @@ int	parse_redir_in(t_string_slice *sub, t_list *current_cmd, t_list *env)
 		// TODO: testme
 		(get_content(current_cmd))->infile = \
 		generate_heredoc(env, parsed_infile, readline);
+		if ((get_content(current_cmd))->infile == NULL)
+			return (1);
 		free(parsed_infile);
 	}
 	return (0);

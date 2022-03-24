@@ -42,14 +42,23 @@ char	*generate_heredoc(\
 	pid_t pid = fork();
 	if (pid == -1)
 	{
+		ft_putendl_fd("could not fork", 2);
 		free(file_name);
 		return (NULL);
 	}
 	if (set_signal_handler(SIGINT, handle_ctrl_c_parent))
+	{
+		ft_putendl_fd("handler could not be set", 2);
 		exit(errno);
+	}
 	if (pid == 0)
 	{
-
+		if (set_signal_handler(SIGINT, handle_ctrl_c_heredoc))
+		{
+			ft_putendl_fd("handler could not be set", 2);
+			exit(errno);
+		}
+		ft_putendl_fd("in heredoc fork. waiting for input", 2);
 		heredoc = fetch_heredoc_input(env, delimiter, line_reader);
 		fd = open(file_name, O_WRONLY);
 		if (fd >= 3)
@@ -61,17 +70,23 @@ char	*generate_heredoc(\
 		free(heredoc);
 		exit(0);
 	}
-	wait(&wait_result_buffer);
+	waitpid(pid, &wait_result_buffer, 0);
 	if (set_signal_handler(SIGINT, handle_ctrl_c))
+	{
+		ft_putendl_fd("handler could not be set", 2);
 		exit(errno);
+	}
 	//puts("after fork");
 	if (WIFEXITED(wait_result_buffer))
 		last_result = WEXITSTATUS(wait_result_buffer);
+	else
+		last_result = 0;
 	if (last_result)
 	{
 		free(file_name);
 		file_name = NULL;
 	}
+	fprintf(stderr, "filename: <%s>\n", file_name);
 	return (file_name);
 }
 
