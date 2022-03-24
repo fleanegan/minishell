@@ -42,16 +42,16 @@ Test(test_echo, repeated_options_get_ignored)
 	free_cmd(cmd);
 }
 
-Test(test_echo, options_other_than_n_get_ignored)
+Test(test_echo, options_other_than_n_get_printed)
 {
 	t_list	*env = init();
 	t_cmd	*cmd = new_cmd();
-	cmd->args = ft_split("exec_name -o -nges -lllssss test", ' ');
+	cmd->args = ft_split("exec_name -n -nges -lllssss test", ' ');
 	cr_redirect_stdout();
 
 	msh_echo(env, cmd);
 
-	cr_bugfix_assert_str_stdout("test\n");
+	cr_bugfix_assert_str_stdout("-nges -lllssss test");
 	ft_lstclear(&env, free_dict_entry);
 	free_cmd(cmd);
 }
@@ -60,12 +60,12 @@ Test(test_echo, options_after_text_are_printed_like_text)
 {
 	t_list	*env = init();
 	t_cmd	*cmd = new_cmd();
-	cmd->args = ft_split("exec_name -o -nges -lllssss test -n", ' ');
+	cmd->args = ft_split("exec_name -n test -n", ' ');
 	cr_redirect_stdout();
 
 	msh_echo(env, cmd);
 
-	cr_bugfix_assert_str_stdout("test -n\n");
+	cr_bugfix_assert_str_stdout("test -n");
 	ft_lstclear(&env, free_dict_entry);
 	free_cmd(cmd);
 }

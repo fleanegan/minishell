@@ -12,6 +12,10 @@
 
 #include "libft.h"
 
+static void	**init_to_array(t_list *pList, void ***result, int *size, int *i);
+static		void	remove_entry_if_cpy_is_null_but_no_error(\
+			void *const *result, int *size, int *i);
+
 char	*char_list_to_char_array(t_list *lst)
 {
 	char	*result;
@@ -35,17 +39,14 @@ char	*char_list_to_char_array(t_list *lst)
 	return (result);
 }
 
-void **to_array(t_list *pList, int (*cpy)(void *, void **)) {
+void	**to_array(t_list *pList, int (*cpy)(void *, void **))
+{
 	void	**result;
 	int		size;
 	int		i;
 
-	i = 0;
-	size = ft_lstsize(pList);
-	result = malloc(sizeof(t_list) * (size + 1));
-	result[size] = NULL;
-	if (pList == NULL)
-		return (result);
+	if (init_to_array(pList, &result, &size, &i) == NULL)
+		return (NULL);
 	while (i < size)
 	{
 		if (pList->content == NULL)
@@ -59,9 +60,32 @@ void **to_array(t_list *pList, int (*cpy)(void *, void **)) {
 			free_2d_array(result);
 			return (NULL);
 		}
+		remove_entry_if_cpy_is_null_but_no_error(result, &size, &i);
 		i++;
 		pList = pList->next;
 	}
 	return (result);
 }
 
+void	remove_entry_if_cpy_is_null_but_no_error(\
+		void *const *result, int *size, int *i)
+{
+	if (result[(*i)] == NULL)
+	{
+		(*i)--;
+		(*size)--;
+	}
+}
+
+void	**init_to_array(t_list *pList, void ***result, int *size, int *i)
+{
+	*i = 0;
+	if (pList == NULL)
+		return ((void **) 1);
+	*size = ft_lstsize(pList);
+	*result = malloc(sizeof(t_list) * (*size + 1));
+	if (*result == NULL)
+		return (NULL);
+	(*result)[*size] = NULL;
+	return ((void **) 1);
+}

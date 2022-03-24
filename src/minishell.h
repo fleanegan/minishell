@@ -126,8 +126,10 @@ char			*append_str(char *base, char *appendix, int appendix_size);
 int				calc_key_len(char *key);
 t_dict_entry	*get_value_by_key(t_list *lst, char *key);
 char			*read_file(char *name);
+int				msh_strcmp(char *s1, char *s2);
 char			char_under_cursor(t_string_slice in);
 int				cpy_str(void *content, void **result);
+int				cpy_dict_to_str(void *content, void **result);
 void			*free_list_and_return_null(t_list **lst, void (*del)(void *));
 int				parse_one_argument(\
 				t_list **arg_tmp, t_string_slice *sub, t_list **current_arg);
