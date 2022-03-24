@@ -1,5 +1,8 @@
 #include "../minishell.h"
 
+void	exec_child_heredoc(t_list *env, const char *delimiter, \
+		char *(*line_reader)(const char *), const char *file_name);
+
 char	*new_enumerated_empty_file(char *prefix_file_name, int sequence)
 {
 	int		fd;
@@ -33,61 +36,49 @@ char	*generate_heredoc(\
 		t_list *env, const char *delimiter, char *(line_reader)(const char *))
 {
 	char	*file_name;
-	char	*heredoc;
-	int		fd;
 	int		wait_result_buffer;
-	int last_result;
+	int		last_result;
+	pid_t	pid;
 
+	last_result = 0;
 	file_name = new_enumerated_empty_file("/tmp/.minishell_heredoc", 0);
-	pid_t pid = fork();
-	if (pid == -1)
+	pid = fork();
+	if (pid == 0)
+		exec_child_heredoc(env, delimiter, line_reader, file_name);
+	if (pid > 0)
 	{
-		ft_putendl_fd("could not fork", 2);
+		waitpid(pid, &wait_result_buffer, 0);
+		if (set_signal_handler(SIGINT, handle_ctrl_c))
+			exit(errno);
+		if (WIFEXITED(wait_result_buffer))
+			last_result = WEXITSTATUS(wait_result_buffer);
+	}
+	if (pid == -1 || set_sa_handler(SIGINT, SIG_IGN) || last_result)
+	{
 		free(file_name);
 		return (NULL);
 	}
-	if (set_signal_handler(SIGINT, handle_ctrl_c_parent))
-	{
-		ft_putendl_fd("handler could not be set", 2);
-		exit(errno);
-	}
-	if (pid == 0)
-	{
-		if (set_signal_handler(SIGINT, handle_ctrl_c_heredoc))
-		{
-			ft_putendl_fd("handler could not be set", 2);
-			exit(errno);
-		}
-		ft_putendl_fd("in heredoc fork. waiting for input", 2);
-		heredoc = fetch_heredoc_input(env, delimiter, line_reader);
-		fd = open(file_name, O_WRONLY);
-		if (fd >= 3)
-		{
-			ft_putstr_fd(heredoc, fd);
-			if (close(fd) != 0)
-				exit(errno);
-		}
-		free(heredoc);
-		exit(0);
-	}
-	waitpid(pid, &wait_result_buffer, 0);
-	if (set_signal_handler(SIGINT, handle_ctrl_c))
-	{
-		ft_putendl_fd("handler could not be set", 2);
-		exit(errno);
-	}
-	//puts("after fork");
-	if (WIFEXITED(wait_result_buffer))
-		last_result = WEXITSTATUS(wait_result_buffer);
-	else
-		last_result = 0;
-	if (last_result)
-	{
-		free(file_name);
-		file_name = NULL;
-	}
-	fprintf(stderr, "filename: <%s>\n", file_name);
 	return (file_name);
+}
+
+void	exec_child_heredoc(t_list *env, const char *delimiter, \
+		char *(*line_reader)(const char *), const char *file_name)
+{
+	int		fd;
+	char	*heredoc;
+
+	if (set_signal_handler(SIGINT, handle_ctrl_c_heredoc))
+		exit(errno);
+	heredoc = fetch_heredoc_input(env, delimiter, line_reader);
+	fd = open(file_name, O_WRONLY);
+	if (fd >= 3)
+	{
+		ft_putstr_fd(heredoc, fd);
+		if (close(fd) != 0)
+			exit(errno);
+	}
+	free(heredoc);
+	exit(0);
 }
 
 char	*fetch_heredoc_input(\
@@ -103,18 +94,16 @@ char	*fetch_heredoc_input(\
 		line = line_reader(">");
 		if (line == NULL)
 		{
-			puts("got empty line");
 			free(result);
 			return (0);
 		}
-		// TODO: free_and_return_on_handle_ctrl
 		if (ft_strncmp(line, string, \
 		calc_max_unsigned(ft_strlen(line), ft_strlen(string))) == 0)
 		{
 			free(line);
 			return (result);
 		}
-		result = expand_all_variables(env,\
+		result = expand_all_variables(env, \
 		append_str(result, line, ft_strlen(line)));
 		result = append_str(result, "\n", 1);
 		free(line);

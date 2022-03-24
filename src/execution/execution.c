@@ -15,7 +15,6 @@ int	execute_as_built_in(t_cmd *content, t_list *env)
 	i = 0;
 	while (i < NB_BUILT_INS)
 	{
-		//fprintf(stderr, "arg 0: %s, arg 1: %s\n", content->args[0], content->args[1]);
 		max = calc_max_unsigned(\
 		ft_strlen(content->args[0]), \
 		ft_strlen(built_in_array[i].name));
@@ -31,7 +30,7 @@ void	execute_execve(t_cmd *content, t_list *env)
 	if (execute_as_built_in(content, env) == 0 \
 		&& access(content->exec_name, X_OK) == 0)
 	{
-		//fprintf(stderr, "this is NOT builtin\n");
+		set_sa_handler(SIGINT, NULL);
 		execve(content->exec_name, content->args, NULL);
 	}
 	perror(content->exec_name);
@@ -68,6 +67,7 @@ int	execution(t_list *cmd, t_list *env, int nb_cmd)
 	int		i;
 	int		**fd;
 
+	set_sa_handler(SIGINT, SIG_IGN);
 	fd = ft_tabnew_two(nb_cmd, 2);
 	init_pipes(nb_cmd, fd);
 	i = 0;
@@ -109,6 +109,8 @@ int	tear_down_parent(int nb_processes, int **fd, int pid_of_last_cmd)
 		}
 		i++;
 	}
+	if (set_signal_handler(SIGINT, handle_ctrl_c))
+		exit(errno);
 	free_2d_array((void **) fd);
 	return (last_result);
 }

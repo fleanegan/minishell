@@ -42,3 +42,13 @@ int set_signal_handler(int signal_no,
 	return (sigaction(signal_no, &act, NULL));
 }
 
+int set_sa_handler(int signal_no, __sighandler_t test)
+{
+	struct sigaction act;
+
+	ft_memset(&act, 0, sizeof act);
+	sigemptyset(&act.sa_mask);
+	act.sa_handler = test;
+	return (sigaction(signal_no, &act, NULL));
+}
+
