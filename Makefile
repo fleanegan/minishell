@@ -6,8 +6,7 @@ OBJ_PATH = obj/
 TEST_PATH = test/
 
 # Names
-SRC_NAME =	main.c \
-			init.c \
+SRC_NAME =	init.c \
 			utils.c \
 			signals.c \
 			tear_down.c \
@@ -29,6 +28,8 @@ SRC_NAME =	main.c \
 			built_in/cd.c \
 			built_in/unset.c \
 			built_in/env.c \
+			main.c \
+#			../test/main_gdb.c \
 
 TEST_SRC_NAME = test_main.c \
 

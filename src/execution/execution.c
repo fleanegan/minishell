@@ -33,12 +33,13 @@ int execute_execve(t_cmd *content, t_list *env)
 
 	(void)	env_char;
 	result_of_built_in = execute_as_built_in(content, env);
-	if (result_of_built_in == -1 && access(content->exec_name, X_OK) == 0)
+	if (result_of_built_in == -1)
 	{
+		if (access(content->exec_name, X_OK) != 0)
+			return (errno);
 		env_char = (char **) to_array(env, cpy_dict_to_str);
 		set_sa_handler(SIGINT, NULL);
 		execve(content->exec_name, content->args, NULL);
-		perror(content->exec_name);
 		return (errno);
 	}
 	return (result_of_built_in);
@@ -94,7 +95,11 @@ int	execution(t_list *cmd, t_list *env, int nb_cmd)
 			if (pid == -1)
 				return (-1);
 			if (pid == 0)
-				exit(exec_child(cmd, i, fd, env));
+			{
+				if (exec_child(cmd, i, fd, env))
+					perror(get_content(cmd)->args[0]);
+				exit(errno);
+			}
 		}
 		cmd = cmd->next;
 		i++;

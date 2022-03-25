@@ -5,4 +5,4 @@
 #include "test_integration.h"
 #include "test_execution.h"
 #include "built_ins/test_echo.h"
-//#include "test_export.h	
+#include "built_ins/test_export.h"

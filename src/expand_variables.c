@@ -1,15 +1,8 @@
 #include "minishell.h"
 
-int	zero_init_vars(t_string_slice *res, char *mode)
-{
-	res->start = 0;
-	res->current = 0;
-	*mode = 0;
-	res->src = ft_strdup("");
-	if (res->src == NULL)
-		return (1);
-	return (0);
-}
+void	copy_regular_text(char *in, t_string_slice *res);
+void	expand_one_variable_if_possible(\
+		t_list *env, char *in, t_string_slice *res, char mode);
 
 int	is_not_in_heredoc(char *in, int current)
 {
@@ -27,47 +20,62 @@ int	is_not_in_heredoc(char *in, int current)
 	return (1);
 }
 
-int	expand_variable_under_cursor(t_list *env, char *in, t_string_slice *res)
-{
-	t_dict_entry	*variable;
-
-	variable = get_value_by_key(env, &in[res->current + 1]);
-	if (variable == NULL)
-		res->src = append_str(res->src, "", 0);
-	else
-		res->src = append_str(\
-		res->src, variable->value, ft_strlen(variable->value));
-	if (res->src == NULL)
-		return (1);
-	res->current += calc_key_len(&in[res->current]);
-	res->start = res->current + 1;
-	return (0);
-}
-
 char	*expand_one_layer_of_variables(t_list *env, char *in)
 {
 	t_string_slice	res;
 	char			mode;
 
-	if (in == NULL || zero_init_vars(&res, &mode))
+	mode = 0;
+	res.start = 0;
+	res.current = 0;
+	res.src = ft_strdup("");
+	if (in == NULL || res.src == NULL)
+	{
+		free(res.src);
 		return (NULL);
-	while ((res.current > 0 && in[res.current - 1]) \
-			|| (res.current < (int) ft_strlen(in) && in[res.current]))
+	}
+	while (res.src != NULL && ((res.current > 0 && in[res.current - 1]) \
+			|| (res.current < (int) ft_strlen(in) && in[res.current])))
 	{
 		mode = update_mode(&in[res.current], mode);
 		if (in[res.current] == '$' || in[res.current] == 0)
 		{
-			res.src = append_str(\
-			res.src, &in[res.start], res.current - res.start);
-			res.start = res.current;
-			if (calc_key_len(&in[res.current]) != 0 \
-			&& mode != SINGLE_QUOTE && is_not_in_heredoc(in, res.current))
-				if (expand_variable_under_cursor(env, in, &res))
-					return (NULL);
+			copy_regular_text(in, &res);
+			expand_one_variable_if_possible(env, in, &res, mode);
 		}
 		res.current++;
 	}
 	return (res.src);
+}
+
+void	expand_one_variable_if_possible(\
+		t_list *env, char *in, t_string_slice *res, char mode)
+{
+	t_dict_entry	*variable;
+
+	if (in[res->current] == 0 || in[res->current + 1] == 0)
+		return ;
+	res->current++;
+	if (calc_key_len(&in[res->current]) != 0 \
+		&& mode != SINGLE_QUOTE && is_not_in_heredoc(in, res->current))
+	{
+		variable = get_value_by_key(env, &in[res->current]);
+		if (variable == NULL)
+			res->src = append_str(res->src, "", 0);
+		else
+			res->src = append_str(\
+		res->src, variable->value, ft_strlen(variable->value));
+		res->current += calc_key_len(&in[res->current]);
+		res->start = res->current;
+	}
+	res->current--;
+}
+
+void	copy_regular_text(char *in, t_string_slice *res)
+{
+	res->src = append_str(\
+	res->src, &in[res->start], res->current - res->start);
+	res->start = res->current;
 }
 
 char	*expand_all_variables(t_list *env, char *in)
