@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int	execute_as_built_in(t_cmd *content, t_list *env)
+void * get_built_in_function_pointer(const t_cmd *content)
 {
 	int							i;
 	size_t						max;
@@ -19,30 +19,28 @@ int	execute_as_built_in(t_cmd *content, t_list *env)
 		ft_strlen(content->args[0]), \
 		ft_strlen(built_in_array[i].name));
 		if (ft_strncmp(content->args[0], built_in_array[i].name, max) == 0)
-			return(built_in_array[i].func_ptr(env, content));
+			return (built_in_array[i].func_ptr);
 		i++;
 	}
-	return (-1);
+	return (NULL);
 }
 
 int execute_execve(t_cmd *content, t_list *env)
 {
 	char	**env_char;
-	int		result_of_built_in;
-	// check result of builtin
+	void	*target;
 
-	(void)	env_char;
-	result_of_built_in = execute_as_built_in(content, env);
-	if (result_of_built_in == -1)
+	target = get_built_in_function_pointer(content);
+	if (target == NULL)
 	{
 		if (access(content->exec_name, X_OK) != 0)
 			return (errno);
 		env_char = (char **) to_array(env, cpy_dict_to_str);
 		set_sa_handler(SIGINT, NULL);
-		execve(content->exec_name, content->args, NULL);
+		execve(content->exec_name, content->args, env_char);
 		return (errno);
 	}
-	return (result_of_built_in);
+	return (((int(*)(t_list **, t_cmd *))target)(&env, content));
 }
 
 int exec_child(t_list *cmd, int i, int **fd, t_list *env)
@@ -84,9 +82,11 @@ int	execution(t_list *cmd, t_list *env, int nb_cmd)
 	i = 0;
 	while (i < nb_cmd)
 	{
-		if (msh_strcmp(get_content(cmd)->args[0], "cd") == 0 && nb_cmd == 1)
+		if (get_built_in_function_pointer(cmd->content) != NULL && nb_cmd == 1)
 		{
 			ret_builtin = exec_child(cmd, i, fd, env); // check result
+			if (ret_builtin != 0)
+				perror(get_content(cmd)->args[0]);
 			built_in_count++;
 		}
 		else

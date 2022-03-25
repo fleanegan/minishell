@@ -3,7 +3,7 @@
 Test(test_integration, tricky)
 {
 	cr_redirect_stdout();
-	t_list *env = init();
+	t_list *env = init(NULL);
 	update_env(&env, "TEST", "s -la", ENV_REPLACE_VAR);
 	char	*in = ft_strdup("l$TEST");
 
@@ -21,7 +21,7 @@ Test(test_integration, tricky)
 Test(test_integration, more_tricky)
 {
 	cr_redirect_stdout();
-	t_list *env = init();
+	t_list *env = init(NULL);
 	update_env(&env, "TEST", "s -la | wc", ENV_REPLACE_VAR);
 	char *in = ft_strdup("l$TEST");
 
@@ -42,7 +42,7 @@ Test(test_integration, more_tricky)
 Test(test_integration, remove_empty_quotes)
 {
 	cr_redirect_stdout();
-	t_list *env = init();
+	t_list *env = init(NULL);
 	char *in = ft_strdup("l'' \"\"");
 
 	char *in_expanded = expand_all_variables(env, in);

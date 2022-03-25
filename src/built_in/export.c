@@ -1,22 +1,41 @@
 #include "minishell.h"
 
+static int	split_input_string_and_store_in_env(\
+	t_list **env, char *pos_of_eq, char *input);
+
+static int	cmp_dict_entry_on_key(void *first, void *second)
+{
+	return ((msh_strcmp(((t_dict_entry *)(first))->key, \
+	((t_dict_entry *)(second))->key)) <= 0);
+}
+
 int	msh_export(t_list **env, t_cmd *cmd)
 {
-	char	*key;
-	char	*value;
 	char	*pos_of_eq;
 	char	*input;
-	int		result;
 
-	result = 0;
 	if (cmd == NULL || cmd->args[0] == NULL)
 		return (1);
+	if (cmd->args[1] == NULL)
+		return (print_all_env_vars_with_prefix(env, "declare -x "));
 	input = cmd->args[1];
 	pos_of_eq = ft_strchr(input, '=');
 	if (pos_of_eq == NULL)
 		return (0);
-	if (pos_of_eq == input || calc_key_len(input) + (*(pos_of_eq - 1) == '+') != pos_of_eq - input)
+	if (pos_of_eq == input \
+		|| calc_key_len(input) + (pos_of_eq[-1] == '+') != pos_of_eq - input)
 		return (1);
+	return (split_input_string_and_store_in_env(env, pos_of_eq, input));
+}
+
+int	split_input_string_and_store_in_env(\
+	t_list **env, char *pos_of_eq, char *input)
+{
+	char	*key;
+	char	*value;
+	int		result;
+
+	result = 0;
 	key = append_str(ft_strdup(""), input, calc_key_len(input));
 	value = append_str(ft_strdup(""), pos_of_eq + 1, ft_strlen(pos_of_eq - 1));
 	if (key == NULL || value == NULL)
@@ -53,7 +72,7 @@ int	append_to_env(t_list **env, char *key, char *value)
 	return (0);
 }
 
-int update_env(t_list **env, char *key, char *value, t_env_mode update_mode)
+int	update_env(t_list **env, char *key, char *val, t_env_mode update_mode)
 {
 	t_dict_entry	*current;
 
@@ -64,19 +83,20 @@ int update_env(t_list **env, char *key, char *value, t_env_mode update_mode)
 	{
 		if (update_mode == ENV_APPEND_VAR)
 		{
-			current->value = append_str(current->value, value, ft_strlen(value));
+			current->value = append_str(current->value, val, ft_strlen(val));
 			if (current->value == NULL)
 				return (1);
 		}
 		else
 		{
 			free(current->value);
-			current->value = ft_strdup(value);
+			current->value = ft_strdup(val);
 			if (current->value == NULL)
 				return (1);
 		}
 	}
-	else if (append_to_env(env, key, value))
+	else if (append_to_env(env, key, val))
 		return (1);
+	ft_lstsort(env, cmp_dict_entry_on_key);
 	return (0);
 }

@@ -42,16 +42,10 @@ int redirect_infile_to_stdin(char *infile)
 	{
 		fd = open(infile, O_RDONLY);
 		if (fd == -1 || dup2(fd, 0) == -1)
-		{
-			perror(infile);
 			return (errno);
-		}
 	}
 	else
-	{
-		perror(infile);
 		return (errno);
-	}
 	return (0);
 }
 
@@ -64,9 +58,6 @@ int redirect_stdout_to_outfile(char *outfile, t_token mode)
 	else
 		fd = open(outfile, O_WRONLY | O_APPEND | O_CREAT, 0644);
 	if (fd == -1 || dup2(fd, 1) == -1)
-	{
-		perror(outfile);
 		return (errno);
-	}
 	return (0);
 }

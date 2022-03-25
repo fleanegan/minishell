@@ -224,7 +224,7 @@ Test(test_export, update_var_if_already_in_env)
 {
 	cr_redirect_stdout();
 	cr_redirect_stderr();
-	t_list *env = init();
+	t_list *env = init(NULL);
 
 	t_cmd *cmd = new_cmd();
 	cmd->args = ft_split("export PATH=value", ' ');

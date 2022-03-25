@@ -2,7 +2,7 @@
 
 #ifndef IS_TEST
 
-int	main(void)
+int	main(int argc, char **argv, char **envp)
 {
 	char	*line;
 	char	*line_expanded;
@@ -11,7 +11,7 @@ int	main(void)
 	t_list	*tmp;
 
 	(void) tmp;
-	env = init();
+	env = init(envp);
 	cmd = NULL;
 	if (env == NULL)
 		return (1);
@@ -44,6 +44,8 @@ int	main(void)
 		}
 		ft_lstclear(&cmd, free_cmd);
 	}
+	(void) argc;
+	(void) argv;
 }
 
 #endif

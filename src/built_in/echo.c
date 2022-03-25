@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-int	msh_echo(t_list *env, t_cmd *cmd)
+int	msh_echo(t_list **env, t_cmd *cmd)
 {
 	int		i;
 	int		nl_flag;
@@ -9,7 +9,7 @@ int	msh_echo(t_list *env, t_cmd *cmd)
 	nl_flag = 1;
 	is_behind_options = 0;
 	i = 1;
-	while (cmd->args[0] && cmd->args[i] && env)
+	while (cmd->args[0] && cmd->args[i] && *env)
 	{
 		if (cmd->args[i][0] == '-' && is_behind_options == 0 \
 			&& msh_strcmp(cmd->args[i], "-n\0") == 0)

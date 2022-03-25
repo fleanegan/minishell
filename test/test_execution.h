@@ -64,7 +64,7 @@ Test(test_execution, first_command_fails_second_does_not)
 
 Test(test_execution, infile_gets_read_to_stdin_of_first_process)
 {
-	t_list *env = init();
+	t_list *env = init(NULL);
 	t_list	*cmd = parse("cat < test/assets/simple_input", env);
 	cr_redirect_stderr();
 	cr_redirect_stdout();
@@ -80,7 +80,7 @@ Test(test_execution, infile_gets_read_to_stdin_of_first_process)
 // Todo: fix by perror in anther place or stop overwriting perror
 Test(test_execution, non_found_infile_sets_errno, .disabled=true)
 {
-	t_list	*env = init();
+	t_list	*env = init(NULL);
 	t_list	*cmd = parse("cat < undefined", env);
 	cr_redirect_stderr();
 	cr_redirect_stdout();
@@ -94,7 +94,7 @@ Test(test_execution, non_found_infile_sets_errno, .disabled=true)
 
 Test(test_execution, outfile_in_replace_mode)
 {
-	t_list *env = init();
+	t_list *env = init(NULL);
 	t_list	*cmd = parse("/bin/echo -n test > outfile", env);
 	cr_redirect_stderr();
 	cr_redirect_stdout();
@@ -113,7 +113,7 @@ Test(test_execution, outfile_in_replace_mode)
 
 Test(test_execution, outfile_in_replace_mode_newline)
 {
-	t_list *env = init();
+	t_list *env = init(NULL);
 	t_list	*cmd = parse("/bin/echo test > outfile_nl", env);
 	cr_redirect_stderr();
 	cr_redirect_stdout();
@@ -132,7 +132,7 @@ Test(test_execution, outfile_in_replace_mode_newline)
 
 Test(test_execution, outfile_in_append_mode)
 {
-	t_list *env = init();
+	t_list *env = init(NULL);
 	t_list	*cmd = parse("/bin/echo -n test >> outfile_append", env);
 	cr_redirect_stderr();
 	cr_redirect_stdout();
@@ -152,7 +152,7 @@ Test(test_execution, outfile_in_append_mode)
 
 Test(test_execution, cd_as_builtin)
 {
-	t_list *env = init();
+	t_list *env = init(NULL);
 	t_list	*cmd = parse("cd .. | cat", env);
 //	cr_redirect_stderr();
 	cr_redirect_stdout();

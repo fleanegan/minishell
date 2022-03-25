@@ -62,14 +62,14 @@ typedef struct s_cmd
 typedef	struct	s_built_in_entry
 {
 	char	*name;
-	int		(*func_ptr)(t_list *env , t_cmd *cmd);
+	int		(*func_ptr)(t_list **env , t_cmd *cmd);
 }	t_built_in_entry;
 
 /* Init */
-t_list			*init();
+t_list *init(char **envp);
 char			*expand_one_layer_of_variables(t_list *env, char *in);
 char			*expand_all_variables(t_list *env, char *in);
-int update_env(t_list **env, char *key, char *value, t_env_mode update_mode);
+int update_env(t_list **env, char *key, char *val, t_env_mode update_mode);
 
 /*	Parsing	*/
 t_list			*parse(char *input, t_list *env);
@@ -122,6 +122,8 @@ int				redirect_infile_to_stdin(char *infile);
 int				redirect_stdout_into_pipe(int *fd_of_pipe);
 int				redirect_stdin_into_pipe(int *fd_of_pipe);
 void			init_pipes(int nb_processes, int **fd);
+void			*get_built_in_function_pointer(const t_cmd *content);
+
 
 /*	Utils		*/
 t_cmd			*get_content(t_list *in);
@@ -146,13 +148,13 @@ void			free_dict_entry(void *dict_entry);
 int tear_down_one_command(t_list **arg_tmp);
 
 /* Built ins */
-int msh_env(t_list *env, t_cmd *cmd);
-int msh_unset(t_list *env, t_cmd *cmd);
-int msh_cd(t_list *env, t_cmd *cmd);
-int msh_export(t_list **env, t_cmd *cmd);
-int msh_pwd(t_list *env, t_cmd *cmd);
-int msh_echo(t_list *env, t_cmd *cmd);
-
+int				msh_env(t_list **env, t_cmd *cmd);
+int				msh_unset(t_list **env, t_cmd *cmd);
+int				msh_cd(t_list **env, t_cmd *cmd);
+int				msh_export(t_list **env, t_cmd *cmd);
+int				msh_pwd(t_list **env, t_cmd *cmd);
+int				msh_echo(t_list **env, t_cmd *cmd);
+int				print_all_env_vars_with_prefix(t_list **env, char *prefix);
 
 
 #endif //MINISHELL_H

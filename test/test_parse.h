@@ -405,7 +405,7 @@ Test(test_parse, test_expend_path_of_existing_cmd)
 {
 //	cr_redirect_stdout();
 	cr_redirect_stderr();
-	t_list *env = init();
+	t_list *env = init(NULL);
 
 	t_list *result = parse("ls", env);;
 	cr_assert_str_eq(get_content(result)->exec_name, "/usr/bin/ls");
