@@ -15,6 +15,7 @@ int	msh_cd(t_list *env, t_cmd *cmd)
 	}
 	char s[2048];
 	//printf("inside cd. updating path to : %s\n", getcwd(s, 2048));
-	update_env(&env, "PWD", getcwd(s, 2048));
+	if (update_env(&env, "PWD", getcwd(s, 2048), ENV_REPLACE_VAR))
+		return (1);
 	return (0);
 }

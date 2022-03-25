@@ -34,7 +34,7 @@ Test(test_parsing, test_heredoc_without_expansion)
 {
 	cr_redirect_stdout();
 	t_list *env = init();
-	update_env(&env, "V", "XXXXX");
+	update_env(&env, "V", "XXXXX", ENV_REPLACE_VAR);
 
 	char	*file_name = generate_heredoc(env, "EOF", mock_readline_no_var);
 	char	*file_content = read_file(file_name);
@@ -49,7 +49,7 @@ Test(test_parsing, test_heredoc_with_expansion)
 {
 	cr_redirect_stdout();
 	t_list *env = init();
-	update_env(&env, "V", "XXXXX");
+	update_env(&env, "V", "XXXXX", ENV_REPLACE_VAR);
 
 	usleep(10000);
 	char	*file_name = generate_heredoc(env, "EOF", mock_readline_with_var);
@@ -64,7 +64,7 @@ Test(test_parsing, test_heredoc_with_expansion)
 Test(test_parsing, test_heredoc_with_expansion_delimiter_is_var)
 {
 	t_list *env = init();
-	update_env(&env, "V", "XXXXX");
+	update_env(&env, "V", "XXXXX", ENV_REPLACE_VAR);
 	cr_redirect_stdout();
 
 	usleep(20000);

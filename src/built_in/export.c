@@ -1,7 +1,6 @@
 #include "minishell.h"
-#define SPACE_FOR_EQUAL_SIGN 1
 
-int msh_export(t_list *env, t_cmd *cmd)
+int	msh_export(t_list **env, t_cmd *cmd)
 {
 	char	*key;
 	char	*value;
@@ -10,31 +9,31 @@ int msh_export(t_list *env, t_cmd *cmd)
 	int		result;
 
 	result = 0;
-	if (cmd == NULL || 	cmd->args[0] == NULL)
+	if (cmd == NULL || cmd->args[0] == NULL)
 		return (1);
 	input = cmd->args[1];
 	pos_of_eq = ft_strchr(input, '=');
-	if (pos_of_eq == NULL || pos_of_eq[1] == 0)
-		return (result);
-	if (calc_key_len(input) != pos_of_eq - input - SPACE_FOR_EQUAL_SIGN)
+	if (pos_of_eq == NULL)
+		return (0);
+	if (pos_of_eq == input || calc_key_len(input) + (*(pos_of_eq - 1) == '+') != pos_of_eq - input)
 		return (1);
-	key = append_str(ft_strdup(""), input, pos_of_eq - input);
-	value = append_str(ft_strdup(""), pos_of_eq + 1, \
-			ft_strlen(pos_of_eq - 1));
+	key = append_str(ft_strdup(""), input, calc_key_len(input));
+	value = append_str(ft_strdup(""), pos_of_eq + 1, ft_strlen(pos_of_eq - 1));
 	if (key == NULL || value == NULL)
 		result = 1;
-	if (result == 0 && update_env(&env, key, value))
-		result = 1;
+	if (result == 0 && *(pos_of_eq - 1) == '+')
+		result = update_env(env, key, value, ENV_APPEND_VAR);
+	if (result == 0 && *(pos_of_eq - 1) != '+')
+		result = update_env(env, key, value, ENV_REPLACE_VAR);
 	free(key);
 	free(value);
 	return (result);
 }
 
-// TODO: malloc protection
-int	append_to_dict(t_list **dict, char *key, char *value)
+int	append_to_env(t_list **env, char *key, char *value)
 {
 	t_dict_entry	*tmp_entry;
-	t_list	*tmp_node;
+	t_list			*tmp_node;
 
 	tmp_entry = malloc(sizeof(t_dict_entry));
 	if (tmp_entry == NULL)
@@ -42,28 +41,42 @@ int	append_to_dict(t_list **dict, char *key, char *value)
 	tmp_entry->key = ft_strdup(key);
 	tmp_entry->value = ft_strdup(value);
 	tmp_node = ft_lstnew(tmp_entry);
-	if (tmp_node == NULL)
+	if (tmp_entry->key == NULL || tmp_entry->value == NULL || tmp_node == NULL)
+	{
+		free(tmp_entry->key);
+		free(tmp_entry->value);
+		free(tmp_entry);
+		ft_lstclear(&tmp_node, free_dict_entry);
 		return (1);
-	ft_lstadd_back(dict, tmp_node);
+	}
+	ft_lstadd_back(env, tmp_node);
 	return (0);
 }
 
-int update_env(t_list **env, char *key, char *value)
+int update_env(t_list **env, char *key, char *value, t_env_mode update_mode)
 {
-	(void) env;
-	(void) key;
 	t_dict_entry	*current;
 
 	if (env == NULL || key == NULL)
 		return (1);
 	current = get_value_by_key(*env, key);
-	if (current == NULL)
-		append_to_dict(env, key, value);
-	else
+	if (current != NULL)
 	{
-		free(current->value);
-		// TODO: malloc protection
-		current->value = ft_strdup(value);
+		if (update_mode == ENV_APPEND_VAR)
+		{
+			current->value = append_str(current->value, value, ft_strlen(value));
+			if (current->value == NULL)
+				return (1);
+		}
+		else
+		{
+			free(current->value);
+			current->value = ft_strdup(value);
+			if (current->value == NULL)
+				return (1);
+		}
 	}
+	else if (append_to_env(env, key, value))
+		return (1);
 	return (0);
 }

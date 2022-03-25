@@ -12,11 +12,11 @@ t_list	*init()
 	}
 	result = NULL;
 
-	if (update_env(&result, "HOME", getenv("HOME")) \
-		|| update_env(&result, "PATH", getenv("PATH"))
-		|| update_env(&result, "X", "TEST")
-		|| update_env(&result, "?", "0")
-		|| update_env(&result, "PWD", getenv("PWD")))
+	if (update_env(&result, "HOME", getenv("HOME"), ENV_REPLACE_VAR) \
+ || update_env(&result, "PATH", getenv("PATH"), ENV_REPLACE_VAR)
+		|| update_env(&result, "X", "TEST", ENV_REPLACE_VAR)
+		|| update_env(&result, "?", "0", ENV_REPLACE_VAR)
+		|| update_env(&result, "PWD", getenv("PWD"), ENV_REPLACE_VAR))
 	{
 		puts("error initiating msh_env");
 		ft_lstclear(&result, free_dict_entry);

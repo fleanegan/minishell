@@ -91,7 +91,7 @@ Test(test_before_parsing, existing_key_expands_to_value)
 	cr_redirect_stdout();
 	cr_redirect_stderr();
 	t_list *env = init();
-	update_env(&env, "EXISTING", "TEST");
+	update_env(&env, "EXISTING", "TEST", ENV_REPLACE_VAR);
 
 	char *in = ft_strdup("$EXISTING");
 	char *result = expand_one_layer_of_variables(env, in);
@@ -107,7 +107,7 @@ Test(test_before_parsing, expand_in_the_middle_of_regular_text)
 	cr_redirect_stdout();
 	cr_redirect_stderr();
 	t_list *env = init();
-	update_env(&env, "V", "XXXXX");
+	update_env(&env, "V", "XXXXX", ENV_REPLACE_VAR);
 
 	char *in = ft_strdup("ab $V cd");
 	char *result = expand_one_layer_of_variables(env, in);
@@ -153,8 +153,8 @@ Test(test_before_parsing, two_glued_vars)
 	cr_redirect_stdout();
 	cr_redirect_stderr();
 	t_list *env = init();
-	update_env(&env, "V1", "TEST");
-	update_env(&env, "V2", "ME");
+	update_env(&env, "V1", "TEST", ENV_REPLACE_VAR);
+	update_env(&env, "V2", "ME", ENV_REPLACE_VAR);
 
 	char *in = ft_strdup("regular $V1$V2");
 	char *result = expand_one_layer_of_variables(env, in);
@@ -170,7 +170,7 @@ Test(test_before_parsing, glued_pseudo_var_becomes_empty_string)
 	cr_redirect_stdout();
 	cr_redirect_stderr();
 	t_list *env = init();
-	update_env(&env, "V2", "ME");
+	update_env(&env, "V2", "ME", ENV_REPLACE_VAR);
 
 	char *in = ft_strdup("regular $V1d$V2 text");
 	char *result = expand_one_layer_of_variables(env, in);
@@ -201,7 +201,7 @@ Test(test_before_parsing, expand_between_double_quotes)
 	cr_redirect_stdout();
 	cr_redirect_stderr();
 	t_list *env = init();
-	update_env(&env, "V", "XXXXX");
+	update_env(&env, "V", "XXXXX", ENV_REPLACE_VAR);
 
 	char *in = ft_strdup("regular $V \"$V\" text");
 	char *result = expand_one_layer_of_variables(env, in);
@@ -217,7 +217,7 @@ Test(test_before_parsing, expand_between_simple_quotes)
 	cr_redirect_stdout();
 	cr_redirect_stderr();
 	t_list *env = init();
-	update_env(&env, "V", "XXXXX");
+	update_env(&env, "V", "XXXXX", ENV_REPLACE_VAR);
 
 	char *in = ft_strdup("regular $V '$V' text");
 	char *result = expand_one_layer_of_variables(env, in);
@@ -233,7 +233,7 @@ Test(test_before_parsing, simple_quotes_inside_double_quotes_expands)
 	cr_redirect_stdout();
 	cr_redirect_stderr();
 	t_list *env = init();
-	update_env(&env, "V", "XXXXX");
+	update_env(&env, "V", "XXXXX", ENV_REPLACE_VAR);
 
 	char *in = ft_strdup("regular $V \"'$V'\" text");
 	char *result = expand_one_layer_of_variables(env, in);
@@ -249,7 +249,7 @@ Test(test_before_parsing, double_quotes_inside_simple_quotes_expands)
 	cr_redirect_stdout();
 	cr_redirect_stderr();
 	t_list *env = init();
-	update_env(&env, "V", "XXXXX");
+	update_env(&env, "V", "XXXXX", ENV_REPLACE_VAR);
 
 	char *in = ft_strdup("regular $V '\"$V\"' text");
 	char *result = expand_one_layer_of_variables(env, in);
@@ -265,7 +265,7 @@ Test(test_before_parsing, mixed_quotes)
 	cr_redirect_stdout();
 	cr_redirect_stderr();
 	t_list *env = init();
-	update_env(&env, "V", "XXXXX");
+	update_env(&env, "V", "XXXXX", ENV_REPLACE_VAR);
 
 	char *in = ft_strdup("regular $V'\"$V \"text");
 	char *result = expand_one_layer_of_variables(env, in);
@@ -281,7 +281,7 @@ Test(test_before_parsing, do_not_expand_in_heredoc)
 	cr_redirect_stdout();
 	cr_redirect_stderr();
 	t_list *env = init();
-	update_env(&env, "V", "XXXXX");
+	update_env(&env, "V", "XXXXX", ENV_REPLACE_VAR);
 
 	char *in = ft_strdup("regular << $V text");
 	char *result = expand_one_layer_of_variables(env, in);
@@ -297,7 +297,7 @@ Test(test_before_parsing, ttt)
 	cr_redirect_stdout();
 	cr_redirect_stderr();
 	t_list *env = init();
-	update_env(&env, "V", "XXXXX");
+	update_env(&env, "V", "XXXXX", ENV_REPLACE_VAR);
 
 	char *in = ft_strdup("regular < $V << $V < $V text");
 	char *result = expand_one_layer_of_variables(env, in);
@@ -313,8 +313,8 @@ Test(test_before_parsing, recursive_expanding)
 	cr_redirect_stdout();
 	cr_redirect_stderr();
 	t_list *env = init();
-	update_env(&env, "V_OUTER", "XXXXX$V_INNER");
-	update_env(&env, "V_INNER", "xxxxx");
+	update_env(&env, "V_OUTER", "XXXXX$V_INNER", ENV_REPLACE_VAR);
+	update_env(&env, "V_INNER", "xxxxx", ENV_REPLACE_VAR);
 
 	char *in = ft_strdup("regular $V_OUTER text");
 	char *result = expand_all_variables(env, in);
@@ -329,8 +329,8 @@ Test(test_before_parsing, two_similar_variables_expand_to_correct_name)
 	cr_redirect_stdout();
 	cr_redirect_stderr();
 	t_list *env = init();
-	update_env(&env, "V11", "XXXXX");
-	update_env(&env, "V1", "xxxxx");
+	update_env(&env, "V11", "XXXXX", ENV_REPLACE_VAR);
+	update_env(&env, "V1", "xxxxx", ENV_REPLACE_VAR);
 
 	char *in = ft_strdup("regular $V1 text");
 	char *result = expand_all_variables(env, in);
@@ -345,7 +345,7 @@ Test(test_before_parsing, non_existing_var_does_not_get_expanded_to_similar)
 	cr_redirect_stdout();
 	cr_redirect_stderr();
 	t_list *env = init();
-	update_env(&env, "V", "xxxxx");
+	update_env(&env, "V", "xxxxx", ENV_REPLACE_VAR);
 
 	char *in = ft_strdup("regular $V1 text");
 	char *result = expand_all_variables(env, in);
@@ -375,7 +375,7 @@ Test(test_before_parsing,
 	cr_redirect_stdout();
 	cr_redirect_stderr();
 	t_list *env = init();
-	update_env(&env, "?", "1");
+	update_env(&env, "?", "1", ENV_REPLACE_VAR);
 
 	char *in = ft_strdup("regular $? text");
 	char *result = expand_all_variables(env, in);

@@ -39,7 +39,7 @@ int	main(void)
 				free(line);
 				return (1);
 			}
-			update_env(&env, "?", tmp1);
+			update_env(&env, "?", tmp1, ENV_REPLACE_VAR);
 			free(tmp1);
 		}
 		ft_lstclear(&cmd, free_cmd);

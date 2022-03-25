@@ -29,6 +29,12 @@ typedef enum	e_token
 	REDIR_IN_HERE_DOC
 }		t_token;
 
+typedef	enum	e_env_mode
+{
+	ENV_REPLACE_VAR,
+	ENV_APPEND_VAR
+}	t_env_mode;
+
 typedef struct	s_string_slice
 {
 	char		*src;
@@ -63,7 +69,7 @@ typedef	struct	s_built_in_entry
 t_list			*init();
 char			*expand_one_layer_of_variables(t_list *env, char *in);
 char			*expand_all_variables(t_list *env, char *in);
-int				update_env(t_list **env, char *key, char *value);
+int update_env(t_list **env, char *key, char *value, t_env_mode update_mode);
 
 /*	Parsing	*/
 t_list			*parse(char *input, t_list *env);
@@ -143,7 +149,7 @@ int tear_down_one_command(t_list **arg_tmp);
 int msh_env(t_list *env, t_cmd *cmd);
 int msh_unset(t_list *env, t_cmd *cmd);
 int msh_cd(t_list *env, t_cmd *cmd);
-int msh_export(t_list *env, t_cmd *cmd);
+int msh_export(t_list **env, t_cmd *cmd);
 int msh_pwd(t_list *env, t_cmd *cmd);
 int msh_echo(t_list *env, t_cmd *cmd);
 
