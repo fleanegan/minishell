@@ -57,6 +57,7 @@ typedef struct s_cmd
 	char	*outfile;
 	t_token	intoken;
 	t_token outtoken;
+	t_token	pipe;
 }			t_cmd;
 
 typedef	struct	s_built_in_entry
@@ -155,6 +156,7 @@ int				msh_export(t_list **env, t_cmd *cmd);
 int				msh_pwd(t_list **env, t_cmd *cmd);
 int				msh_echo(t_list **env, t_cmd *cmd);
 int				print_all_env_vars_with_prefix(t_list **env, char *prefix);
-
+// utils debug
+void			print_cmd(t_list	*cmd);
 
 #endif //MINISHELL_H

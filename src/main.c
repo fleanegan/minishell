@@ -1,5 +1,27 @@
 #include "minishell.h"
 
+void	print_cmd(t_list	*cmd)
+{
+	int	i;
+
+	while (cmd != NULL)
+	{
+		printf("-----------------------------------------------------------\n");
+		i = 0;
+		printf("execname : %s\ninfile : %s\noutfile : %s\nintoken : %d\nouttoken : %d\npipe : %d\n", \
+			get_content(cmd)->exec_name, get_content(cmd)->infile, \
+			get_content(cmd)->outfile, get_content(cmd)->intoken, \
+			get_content(cmd)->outtoken, get_content(cmd)->pipe);
+		while (get_content(cmd)->args[i] != NULL)
+		{
+			printf("arg[%d] = %s\n", i, get_content(cmd)->args[i]);
+			i++;
+		}
+		cmd = cmd->next;
+	}
+	printf("-----------------------------------------------------------\n");
+}
+
 #ifndef IS_TEST
 
 int	main(int argc, char **argv, char **envp)
@@ -28,6 +50,7 @@ int	main(int argc, char **argv, char **envp)
 		add_history(line);
 		line_expanded = expand_all_variables(env, line);
 		cmd = parse(line_expanded, env);
+//		print_cmd(cmd);
 		free(line_expanded);
 		if (cmd != NULL)
 		{

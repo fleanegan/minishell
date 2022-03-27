@@ -38,9 +38,11 @@ int execute_execve(t_cmd *content, t_list *env)
 		env_char = (char **) to_array(env, cpy_dict_to_str);
 		set_sa_handler(SIGINT, NULL);
 		execve(content->exec_name, content->args, env_char);
+		//TODO : free env_char if execve error
 		return (errno);
 	}
 	return (((int(*)(t_list **, t_cmd *))target)(&env, content));
+	(void) env_char;
 }
 
 int exec_child(t_list *cmd, int i, int **fd, t_list *env)
@@ -52,7 +54,7 @@ int exec_child(t_list *cmd, int i, int **fd, t_list *env)
 		|| content->outtoken == REDIR_OUT_APPEND) \
 		&& redirect_stdout_to_outfile(content->outfile, content->outtoken))
 		return(close_before_exit_process(fd));
-	else if (content->outtoken == PIPE \
+	if (content->pipe == PIPE && content->outtoken == EMPTY \
 		&& redirect_stdout_into_pipe(fd[i]))
 		return(close_before_exit_process(fd));
 	if (content->intoken == EMPTY && cmd->prev != NULL \

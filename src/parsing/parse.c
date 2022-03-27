@@ -11,13 +11,13 @@ t_list	*parse(char *input, t_list *env)
 	while (current_substr.src[current_substr.current] != 0)
 		if (parse_one_command(&current_substr, &result_cmd, env))
 		{
-			ft_putendl_fd("parsing error", 2);
+			ft_putendl_fd("parsing error1", 2);
 			return (free_list_and_return_null(&result_cmd, free_cmd));
 		}
 	if (result_cmd != NULL \
-		&& get_content(ft_lstlast(result_cmd))->outtoken == PIPE)
+		&& get_content(ft_lstlast(result_cmd))->pipe == PIPE)
 	{
-		ft_putendl_fd("parsing error", 2);
+		ft_putendl_fd("parsing error2", 2);
 		return (free_list_and_return_null(&result_cmd, free_cmd));
 	}
 	return (result_cmd);
@@ -45,7 +45,6 @@ int	parse_next_attribute(\
 	t_list *env, t_list *current_cmd, t_list **arg_tmp, t_string_slice *sub)
 {
 	t_list	*current_arg;
-
 	if (is_token(char_under_cursor(*sub)) \
 		&& parse_redirection(env, current_cmd, sub))
 		return (1);

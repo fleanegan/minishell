@@ -111,7 +111,7 @@ Test(test_parse, put_pipe_into_token)
 	cr_redirect_stderr();
 	t_list *result = parse("a | b", NULL);;
 
-	cr_expect_eq(get_content(result)->outtoken, PIPE);
+	cr_expect_eq(get_content(result)->pipe, PIPE);
 	ft_lstclear(&result, free_cmd);
 }
 
@@ -164,6 +164,7 @@ Test(test_parse, put_angular_bracket_into_field_token)
 	t_list *result = parse("a > b", NULL);;
 
 	cr_expect_eq(get_content(result)->outtoken, REDIR_OUT_REPLACE);
+	remove("b");
 	ft_lstclear(&result, free_cmd);
 }
 
@@ -222,6 +223,8 @@ Test(test_parse, multiple_output_redirection_replaces_with_last_encouter,
 	cr_assert_not_null(result);
 	cr_expect_eq(get_content(result)->outtoken, REDIR_OUT_REPLACE);
 	cr_expect_str_eq(get_content(result)->outfile, "c");
+	remove("b");
+	remove("c");
 	ft_lstclear(&result, free_cmd);
 }
 
@@ -236,6 +239,7 @@ Test(test_parse, in_and_out_direction)
 	cr_expect_eq(get_content(result)->intoken, REDIR_IN_FILE);
 	cr_expect_str_eq(get_content(result)->outfile, "b");
 	cr_expect_str_eq(get_content(result)->infile, "c");
+	remove("b");
 	ft_lstclear(&result, free_cmd);
 }
 
@@ -250,6 +254,8 @@ Test(test_parse, multiple_in_and_out_direction)
 	cr_expect_eq(get_content(result)->intoken, REDIR_IN_FILE);
 	cr_expect_str_eq(get_content(result)->outfile, "b");
 	cr_expect_str_eq(get_content(result)->infile, "c");
+	remove("x");
+	remove("b");
 	ft_lstclear(&result, free_cmd);
 }
 
@@ -260,6 +266,7 @@ Test(test_parse, quote_inside_parse_token)
 	t_list *result = parse("A > 'b | c'", NULL);;
 
 	cr_expect_str_eq(get_content(result)->outfile, "b | c");
+	remove("b | c");
 	ft_lstclear(&result, free_cmd);
 }
 
@@ -271,6 +278,7 @@ Test(test_parse, double_angle_brackets_are_append_token)
 
 	cr_expect_eq(get_content(result)->outtoken, REDIR_OUT_APPEND);
 	cr_expect_str_eq(get_content(result)->outfile, "b");
+	remove("b");
 	ft_lstclear(&result, free_cmd);
 }
 
@@ -314,7 +322,7 @@ Test(test_parse, infile_before_and_after_exec_name)
 
 Test(test_parse, missing_execname_is_error)
 {
-	//cr_redirect_stdout();
+	cr_redirect_stdout();
 	cr_redirect_stderr();
 	t_list *result = parse("<    infile_name    < infile_name2",
 						   NULL);;
@@ -330,7 +338,7 @@ Test(test_parse, two_pipes_result_in_two_cmd_entries)
 
 	cr_assert_not_null(result);
 	cr_expect_str_eq(get_content(result)->exec_name, "test");
-	cr_expect_eq(get_content(result)->outtoken, PIPE);
+	cr_expect_eq(get_content(result)->pipe, PIPE);
 	cr_expect_str_eq(get_content(result->next)->exec_name, "me");
 	ft_lstclear(&result, free_cmd);
 }
@@ -349,19 +357,27 @@ Test(test_parse, parse_args)
 	cr_expect_str_eq(get_content(result)->args[2], "le");
 	cr_expect_str_eq(get_content(result)->args[3], "lu");
 	cr_expect_str_eq(get_content(result)->infile, "infile_name2");
-	cr_expect_eq(get_content(result)->outtoken, PIPE);
+	cr_expect_eq(get_content(result)->pipe, PIPE);
 	cr_expect_str_eq(get_content(result->next)->exec_name, "me");
 	ft_lstclear(&result, free_cmd);
 }
 
+// fix, not an error now
 Test(test_parse, erroneous)
 {
 	cr_redirect_stdout();
 	cr_redirect_stderr();
 	t_list *result = parse("> a A a < d < e simple_input   | B < c",
 						   NULL);;
-
-	cr_assert_null(result);
+	cr_expect_str_eq(get_content(result)->exec_name, "A");
+	cr_expect_str_eq(get_content(result)->infile, "e");
+	cr_expect_str_eq(get_content(result)->outfile, "a");
+	cr_expect_str_eq(get_content(result)->args[1], "a");
+	cr_expect_str_eq(get_content(result)->args[2], "simple_input");
+	cr_expect_eq(get_content(result)->pipe, PIPE);
+	cr_expect_str_eq(get_content(result->next)->exec_name, "B");
+	cr_expect_str_eq(get_content(result->next)->infile, "c");
+	remove("a");
 }
 
 Test(test_parse, parse_complex)
@@ -379,8 +395,9 @@ Test(test_parse, parse_complex)
 	cr_expect_str_eq(get_content(result)->args[2], "c");
 	cr_expect_str_eq(get_content(result)->args[3], "simple_input");
 	cr_expect_str_eq(get_content(result)->infile, "a");
-	cr_expect_eq(get_content(result)->outtoken, PIPE);
+	cr_expect_eq(get_content(result)->pipe, PIPE);
 	cr_expect_str_eq(get_content(result->next)->exec_name, "B");
+	remove("c");
 	ft_lstclear(&result, free_cmd);
 }
 
@@ -395,20 +412,62 @@ Test(test_parse, scarce_whitespace)
 	cr_expect_str_eq(get_content(result)->args[0], "A");
 	cr_expect_str_eq(get_content(result)->args[1], "b");
 	cr_expect_str_eq(get_content(result)->infile, "a");
-	cr_expect_eq(get_content(result)->outtoken, PIPE);
+	cr_expect_eq(get_content(result)->pipe, PIPE);
 	cr_expect_str_eq(get_content(result->next)->exec_name, "B");
 	cr_expect_str_eq(get_content(result->next)->outfile, "c");
+	remove("c");
 	ft_lstclear(&result, free_cmd);
 }
 
 Test(test_parse, test_expend_path_of_existing_cmd)
 {
-//	cr_redirect_stdout();
+	cr_redirect_stdout();
 	cr_redirect_stderr();
 	t_list *env = init(NULL);
 
 	t_list *result = parse("ls", env);;
 	cr_assert_str_eq(get_content(result)->exec_name, "/usr/bin/ls");
+	ft_lstclear(&result, free_cmd);
+	ft_lstclear(&env, free_dict_entry);
+}
+
+// new
+Test(test_parse, test_two_cmds_with_outfiles_at_the_begining_of_line)
+{
+	cr_redirect_stdout();
+	cr_redirect_stderr();
+	t_list *env = init(NULL);
+
+	t_list *result = parse("> file1 cat test1 | > file2 grep test2", env);
+	remove("file1");
+	remove("file2");
+	print_cmd(result);
+	cr_assert_not_null(result);
+	cr_assert_str_eq(get_content(result)->exec_name, "/usr/bin/cat");
+	cr_expect_str_eq(get_content(result)->outfile, "file1");
+	cr_expect_str_eq(get_content(result)->args[1], "test1");
+	cr_expect_eq(get_content(result)->pipe, PIPE);
+	cr_assert_str_eq(get_content(result->next)->exec_name, "/usr/bin/grep");
+	cr_expect_str_eq(get_content(result->next)->outfile, "file2");
+	cr_expect_str_eq(get_content(result->next)->args[1], "test2");
+	ft_lstclear(&result, free_cmd);
+	ft_lstclear(&env, free_dict_entry);
+}
+
+// new
+Test(test_parse, test_with_two_outfile_before_cmd)
+{
+	cr_redirect_stdout();
+	cr_redirect_stderr();
+	t_list *env = init(NULL);
+
+	t_list *result = parse("> a > b ls", env);
+	remove("a");
+	remove("b");
+	print_cmd(result);
+	cr_assert_not_null(result);
+	cr_assert_str_eq(get_content(result)->exec_name, "/usr/bin/cat");
+	cr_expect_str_eq(get_content(result)->outfile, "b");
 	ft_lstclear(&result, free_cmd);
 	ft_lstclear(&env, free_dict_entry);
 }

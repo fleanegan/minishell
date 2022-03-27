@@ -31,7 +31,7 @@ Test(test_integration, more_tricky)
 	cr_assert_not_null(result);
 	cr_expect_str_eq(get_content(result)->exec_name, "ls");
 	cr_expect_str_eq(get_content(result)->args[1], "-la");
-	cr_expect_eq(get_content(result)->outtoken, PIPE);
+	cr_expect_eq(get_content(result)->pipe, PIPE);
 	cr_assert_not_null(result->next);
 	cr_expect_str_eq(get_content(result->next)->exec_name, "wc");
 	free(in_expanded);

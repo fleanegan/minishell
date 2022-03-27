@@ -13,6 +13,7 @@ t_cmd	*new_cmd(void)
 	cmd->outfile = NULL;
 	cmd->intoken = EMPTY;
 	cmd->outtoken = EMPTY;
+	cmd->pipe = EMPTY;
 	return (cmd);
 }
 

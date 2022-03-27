@@ -2,9 +2,7 @@
 
 int	parse_pipe(t_string_slice *sub, t_list *current_cmd)
 {
-	if (get_content(current_cmd)->outtoken != EMPTY)
-		return (1);
-	get_content(current_cmd)->outtoken = PIPE;
+	get_content(current_cmd)->pipe = PIPE;
 	while (1)
 	{
 		if (! is_token(sub->src[sub->start]) \
@@ -32,11 +30,23 @@ int	parse_redirection(t_list *env, t_list *current_cmd, t_string_slice *sub)
 	return (0);
 }
 
+int	create_file_for_redir_out(char *filename)
+{
+	int	fd;
+
+	fd = open(filename, O_CREAT, 0644);
+	if (fd == -1 || ft_close(&fd) == 1)
+		return (errno);
+	return (0);
+}
+
 int	parse_redir_out(t_string_slice *sub, t_list *current_cmd)
 {
 	free(get_content(current_cmd)->outfile);
 	(get_content(current_cmd))->outfile = parse_until(sub, ft_isspace);
 	if (get_content(current_cmd)->outfile == NULL)
+		return (1);
+	if (create_file_for_redir_out((get_content(current_cmd))->outfile) != 0)
 		return (1);
 	return (0);
 }

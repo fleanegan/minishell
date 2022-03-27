@@ -154,7 +154,7 @@ Test(test_execution, cd_as_builtin)
 {
 	t_list *env = init(NULL);
 	t_list	*cmd = parse("cd .. | cat", env);
-//	cr_redirect_stderr();
+	cr_redirect_stderr();
 	cr_redirect_stdout();
 
 	int		result = execution(cmd, NULL, ft_lstsize(cmd));
