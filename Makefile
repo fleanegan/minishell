@@ -10,7 +10,7 @@ SRC_NAME =	init.c \
 			utils.c \
 			signals.c \
 			tear_down.c \
-			expand_variables.c \
+			parsing/expand_variables.c \
 			parsing/parse.c \
 			parsing/parse_redirections.c \
 			parsing/heredoc.c \
@@ -20,6 +20,8 @@ SRC_NAME =	init.c \
 			parsing/delete_quotes.c \
 			parsing/parse_exec_name.c \
 			execution/execution.c \
+			execution/child.c \
+			execution/parent.c \
 			execution/execute_redirections.c \
 			execution/utils.c \
 			built_in/export.c \

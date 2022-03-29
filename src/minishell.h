@@ -115,8 +115,8 @@ int execution(t_list *cmd, t_list *env, int nb_cmd);
 int				**ft_tabnew_two(int col, int line);
 int 			ft_close(int *fd);
 int close_before_exit_process(int **fd);
-int exec_child(t_list *cmd, int i, int **fd, t_list *env);
-int tear_down_parent(int nb_processes, int **fd, int pid_of_last_cmd, int i);
+int exec_cmd(t_list *cmd, int i, int **fd, t_list *env);
+int tear_down_parent(int nb_processes, int **fd, int pid_of_last_cmd);
 int 			redirect_stdout_to_outfile(char *outfile, t_token mode);
 void			init_pipes(int nb_processes, int **fd);
 int				redirect_infile_to_stdin(char *infile);
@@ -124,6 +124,9 @@ int				redirect_stdout_into_pipe(int *fd_of_pipe);
 int				redirect_stdin_into_pipe(int *fd_of_pipe);
 void			init_pipes(int nb_processes, int **fd);
 void			*get_built_in_function_pointer(const t_cmd *content);
+int execute_built_in_parent(t_list *cmd, t_list *env, int i, int **fd);
+int execute_cmd_in_fork(t_list *cmd, t_list *env, int i, int **fd);
+int execute_execve(t_cmd *content, t_list *env);
 
 
 /*	Utils		*/

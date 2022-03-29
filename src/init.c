@@ -6,7 +6,7 @@ int	init_env(t_list **env, char **envp)
 
 	if (envp == NULL)
 		return (0);
-	tmp.args = malloc(2 * sizeof(char));
+	tmp.args = malloc(2 * sizeof(char *));
 	if (tmp.args == NULL)
 		return (1);
 	tmp.args[0] = "exec_name";

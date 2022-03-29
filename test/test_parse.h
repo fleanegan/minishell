@@ -431,7 +431,6 @@ Test(test_parse, test_expend_path_of_existing_cmd)
 	ft_lstclear(&env, free_dict_entry);
 }
 
-// new
 Test(test_parse, test_two_cmds_with_outfiles_at_the_begining_of_line)
 {
 	cr_redirect_stdout();
@@ -454,7 +453,6 @@ Test(test_parse, test_two_cmds_with_outfiles_at_the_begining_of_line)
 	ft_lstclear(&env, free_dict_entry);
 }
 
-// new
 Test(test_parse, test_with_two_outfile_before_cmd)
 {
 	cr_redirect_stdout();
@@ -466,7 +464,7 @@ Test(test_parse, test_with_two_outfile_before_cmd)
 	remove("b");
 	print_cmd(result);
 	cr_assert_not_null(result);
-	cr_assert_str_eq(get_content(result)->exec_name, "/usr/bin/cat");
+	cr_assert_str_eq(get_content(result)->exec_name, "/usr/bin/ls");
 	cr_expect_str_eq(get_content(result)->outfile, "b");
 	ft_lstclear(&result, free_cmd);
 	ft_lstclear(&env, free_dict_entry);

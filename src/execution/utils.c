@@ -53,3 +53,28 @@ int close_before_exit_process(int **fd)
 	}
 	return (errno);
 }
+
+void	*get_built_in_function_pointer(const t_cmd *content)
+{
+	int							i;
+	size_t						max;
+	const t_built_in_entry		built_in_array[NB_BUILT_INS] = {
+			{"env", msh_env},
+			{"cd", msh_cd},
+			{"export", msh_export},
+			{"echo", msh_echo},
+			{"pwd", msh_pwd},
+			{"unset", msh_unset}};
+
+	i = 0;
+	while (i < NB_BUILT_INS)
+	{
+		max = calc_max_unsigned(\
+		ft_strlen(content->args[0]), \
+		ft_strlen(built_in_array[i].name));
+		if (ft_strncmp(content->args[0], built_in_array[i].name, max) == 0)
+			return (built_in_array[i].func_ptr);
+		i++;
+	}
+	return (NULL);
+}
