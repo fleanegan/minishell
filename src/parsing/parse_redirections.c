@@ -5,7 +5,7 @@ int	parse_pipe(t_string_slice *sub, t_list *current_cmd)
 	get_content(current_cmd)->pipe = PIPE;
 	while (1)
 	{
-		if (! is_token(sub->src[sub->start]) \
+		if (sub->src[sub->start] != '|' \
 			&& ! ft_isspace(sub->src[sub->start]))
 			return (0);
 		(sub->start)++;

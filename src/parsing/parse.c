@@ -45,15 +45,13 @@ int	parse_next_attribute(\
 	t_list *env, t_list *current_cmd, t_list **arg_tmp, t_string_slice *sub)
 {
 	t_list	*current_arg;
-	if (is_token(char_under_cursor(*sub)) \
-		&& parse_redirection(env, current_cmd, sub))
-		return (1);
-	else if (get_content(current_cmd)->exec_name == NULL \
-		&& parse_exec_name(env, current_cmd, arg_tmp, sub))
-		return (1);
-	else if (is_token(char_under_cursor(*sub)) == 0 \
- 	&& parse_one_argument(arg_tmp, sub, &current_arg))
-		return (1);
+	printf("parsing from: %s\n", &sub->src[sub->current]);
+	if (is_token(char_under_cursor(*sub)))
+		return (parse_redirection(env, current_cmd, sub) != 0);
+	if (get_content(current_cmd)->exec_name == NULL)
+		return (parse_exec_name(env, current_cmd, arg_tmp, sub) != 0);
+	if (is_token(char_under_cursor(*sub)) == 0)
+		return (parse_one_argument(arg_tmp, sub, &current_arg) != 0);
 	return (0);
 }
 
