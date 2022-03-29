@@ -17,7 +17,7 @@ int main()
 
 	ft_lstput_env(env);
 	printf("first: %s\n", ((t_dict_entry *)env->content)->key);
-	msh_env(&env, NULL);
+	msh_env(&env, NULL, 0);
 	char *in = ft_strdup("regular $?$V2");
 	char *result = expand_one_layer_of_variables(env, in);
 	printf("res: %s\n", result);

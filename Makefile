@@ -26,6 +26,7 @@ SRC_NAME =	init.c \
 			execution/utils.c \
 			built_in/export.c \
 			built_in/echo.c \
+			built_in/exit.c \
 			built_in/pwd.c \
 			built_in/cd.c \
 			built_in/unset.c \

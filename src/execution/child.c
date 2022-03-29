@@ -4,7 +4,7 @@ int	exec_cmd(t_list *cmd, int i, int **fd, t_list *env)
 {
 	t_cmd	*content;
 
-	content = get_content(cmd);
+	content = get_content(ft_lstget_element_by_index(cmd, i));
 	if ((content->outtoken == REDIR_OUT_REPLACE \
 		|| content->outtoken == REDIR_OUT_APPEND) \
 		&& redirect_stdout_to_outfile(content->outfile, content->outtoken))
@@ -12,7 +12,7 @@ int	exec_cmd(t_list *cmd, int i, int **fd, t_list *env)
 	if (content->pipe == PIPE && content->outtoken == EMPTY \
 		&& redirect_stdout_into_pipe(fd[i]))
 		return (close_before_exit_process(fd));
-	if (content->intoken == EMPTY && cmd->prev != NULL \
+	if (content->intoken == EMPTY && i != 0 \
 		&& redirect_stdin_into_pipe(fd[i - 1]))
 		return (close_before_exit_process(fd));
 	if (content->intoken != EMPTY \
@@ -20,7 +20,7 @@ int	exec_cmd(t_list *cmd, int i, int **fd, t_list *env)
 		return (close_before_exit_process(fd));
 	if (close_before_exit_process(fd) == 1)
 		return (errno);
-	return (execute_execve(content, env));
+	return (execute_execve(env, cmd, i));
 }
 
 pid_t	execute_cmd_in_fork(t_list *cmd, t_list *env, int i, int **fd)
@@ -36,7 +36,7 @@ pid_t	execute_cmd_in_fork(t_list *cmd, t_list *env, int i, int **fd)
 	if (pid == 0)
 	{
 		if (exec_cmd(cmd, i, fd, env))
-			perror(get_content(cmd)->args[0]);
+			perror(get_content(cmd)->args[0]); // getelement...
 		exit(errno);
 	}
 	return (pid);

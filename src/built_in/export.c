@@ -3,28 +3,42 @@
 static int	split_input_string_and_store_in_env(\
 	t_list **env, char *pos_of_eq, char *input);
 
+int append_str_to_env(t_list **env, char *input);
+
 static int	cmp_dict_entry_on_key(void *first, void *second)
 {
 	return ((msh_strcmp(((t_dict_entry *)(first))->key, \
 	((t_dict_entry *)(second))->key)) <= 0);
 }
 
-int	msh_export(t_list **env, t_cmd *cmd)
+int	msh_export(t_list **env, t_list **cmd, int index)
+{
+	char	*input;
+	t_cmd	*current_cmd;
+
+	current_cmd = get_content(ft_lstget_element_by_index(*cmd, index));
+	if (current_cmd == NULL || current_cmd->args[0] == NULL)
+		return (1);
+	if (current_cmd->args[1] == NULL)
+		return (print_all_env_vars_with_prefix(env, "declare -x "));
+	input = current_cmd->args[1];
+
+	return append_str_to_env(env, input);
+}
+
+int append_str_to_env(t_list **env, char *input)
 {
 	char	*pos_of_eq;
-	char	*input;
 
-	if (cmd == NULL || cmd->args[0] == NULL)
-		return (1);
-	if (cmd->args[1] == NULL)
-		return (print_all_env_vars_with_prefix(env, "declare -x "));
-	input = cmd->args[1];
 	pos_of_eq = ft_strchr(input, '=');
 	if (pos_of_eq == NULL)
 		return (0);
 	if (pos_of_eq == input \
 		|| calc_key_len(input) + (pos_of_eq[-1] == '+') != pos_of_eq - input)
-		return (1);
+	{
+		// TODO: distinguish between input error and malloc failure
+		return (0);
+	}
 	return (split_input_string_and_store_in_env(env, pos_of_eq, input));
 }
 

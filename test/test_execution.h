@@ -141,7 +141,6 @@ Test(test_execution, outfile_in_append_mode)
 	result = execution(cmd, NULL, ft_lstsize(cmd));
 	char	*file_content = read_file("outfile_append");
 
-
 	remove("outfile_append");
 	cr_assert_eq(result, 0, "act: %d", result);
 	cr_assert_str_eq(file_content, "testtest");

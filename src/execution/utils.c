@@ -64,6 +64,7 @@ void	*get_built_in_function_pointer(const t_cmd *content)
 			{"export", msh_export},
 			{"echo", msh_echo},
 			{"pwd", msh_pwd},
+			{"exit", msh_exit},
 			{"unset", msh_unset}};
 
 	i = 0;

@@ -1,9 +1,10 @@
 #include "../minishell.h"
 
-int msh_env(t_list **env, t_cmd *cmd)
+int msh_env(t_list **env, t_list **cmd, int index)
 {
 	return (print_all_env_vars_with_prefix(env, ""));
 	(void) cmd;
+	(void) index;
 }
 
 int print_all_env_vars_with_prefix(t_list **env, char *prefix)

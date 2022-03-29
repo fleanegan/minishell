@@ -17,7 +17,7 @@
 # define DOUBLE_QUOTE '\"'
 # define NOT_IN_QUOTE 0
 # define SINGLE_QUOTE '\''
-# define NB_BUILT_INS 6
+# define NB_BUILT_INS 7
 
 typedef enum	e_token
 {
@@ -63,7 +63,7 @@ typedef struct s_cmd
 typedef	struct	s_built_in_entry
 {
 	char	*name;
-	int		(*func_ptr)(t_list **env , t_cmd *cmd);
+	int (*func_ptr)(t_list **env, t_list **cmd, int index);
 }	t_built_in_entry;
 
 /* Init */
@@ -126,7 +126,7 @@ void			init_pipes(int nb_processes, int **fd);
 void			*get_built_in_function_pointer(const t_cmd *content);
 int execute_built_in_parent(t_list *cmd, t_list *env, int i, int **fd);
 int execute_cmd_in_fork(t_list *cmd, t_list *env, int i, int **fd);
-int execute_execve(t_cmd *content, t_list *env);
+int execute_execve(t_list *env, t_list *cmd, int index);
 
 
 /*	Utils		*/
@@ -145,20 +145,23 @@ void			*free_list_and_return_null(t_list **lst, void (*del)(void *));
 int				parse_one_argument(\
 				t_list **arg_tmp, t_string_slice *sub, t_list **current_arg);
 t_string_slice	init_slice_at_start_of(char *input);
+int				append_str_to_env(t_list **env, char *input);
+
 
 /*	Tear_down	*/
 void			free_cmd(void *cmd);
 void			free_dict_entry(void *dict_entry);
-int tear_down_one_command(t_list **arg_tmp);
 
 /* Built ins */
-int				msh_env(t_list **env, t_cmd *cmd);
-int				msh_unset(t_list **env, t_cmd *cmd);
-int				msh_cd(t_list **env, t_cmd *cmd);
-int				msh_export(t_list **env, t_cmd *cmd);
-int				msh_pwd(t_list **env, t_cmd *cmd);
-int				msh_echo(t_list **env, t_cmd *cmd);
+int				msh_env(t_list **env, t_list **cmd, int index);
+int				msh_unset(t_list **env, t_list **cmd, int index);
+int				msh_cd(t_list **env, t_list **current_cmd, int index);
+int				msh_export(t_list **env, t_list **current_cmd, int index);
+int				msh_pwd(t_list **env, t_list **cmd, int index);
+int				msh_echo(t_list **env, t_list **current_cmd, int index);
+int				msh_exit(t_list **env, t_list **cmd, int index);
 int				print_all_env_vars_with_prefix(t_list **env, char *prefix);
+
 // utils debug
 void			print_cmd(t_list	*cmd);
 

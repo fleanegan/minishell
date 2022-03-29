@@ -42,7 +42,7 @@ t_dict_entry	*get_value_by_key(t_list *lst, char *key_without_dollar)
 {
 	size_t	max;
 
-	while (lst)
+	while (lst != NULL && lst->content != NULL)
 	{
 		max = calc_max_unsigned(\
 		ft_strlen(((t_dict_entry *) (lst->content))->key), \

@@ -1,19 +1,22 @@
 #include "../minishell.h"
 
-int	msh_unset(t_list **env, t_cmd *cmd)
+int	msh_unset(t_list **env, t_list **cmd, int index)
 {
 	t_list	*current;
 	int		i;
+	t_cmd	*current_cmd;
 
+	current_cmd = get_content(ft_lstget_element_by_index(*cmd, index));
+	if (current_cmd == NULL || current_cmd->args == NULL || current_cmd->args[0] == NULL)
+		return (0);
 	i = 1;
-	while (cmd->args[i] != NULL)
+	while (current_cmd->args[i] != NULL)
 	{
 		current = *env;
 		while (current != NULL)
 		{
 			if (msh_strcmp((((t_dict_entry *)(current->content))->key), \
-				cmd->args[i]) == 0\
-				&& cmd->args[i][0] != '?')
+				current_cmd->args[i]) == 0 && current_cmd->args[i][0] != '?')
 			{
 				ft_lstrmnode(env, current, free_dict_entry);
 				break ;
