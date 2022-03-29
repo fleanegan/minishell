@@ -22,7 +22,7 @@ char 	*mock_readline_with_var(const char *dummy)
 	call_no++;
 	switch (call_no)
 	{
-		case 0: return ft_strdup("$X");
+		case 0: return ft_strdup("content1");
 		case 1: return ft_strdup("$V");
 		case 2: return ft_strdup("content3");
 		default: return ft_strdup("EOF");
@@ -54,7 +54,7 @@ Test(test_parsing, test_heredoc_with_expansion)
 	usleep(10000);
 	char	*file_name = generate_heredoc(env, "EOF", mock_readline_with_var);
 	char	*file_content = read_file(file_name);
-	cr_assert_str_eq(file_content, "TEST\nXXXXX\ncontent3\n");
+	cr_assert_str_eq(file_content, "content1\nXXXXX\ncontent3\n");
 	remove(file_name);
 	free(file_name);
 	free(file_content);
@@ -70,7 +70,7 @@ Test(test_parsing, test_heredoc_with_expansion_delimiter_is_var)
 	usleep(20000);
 	char	*file_name = generate_heredoc(env, "$V", mock_readline_with_var);
 	char	*file_content = read_file(file_name);
-	cr_assert_str_eq(file_content, "TEST\n");
+	cr_assert_str_eq(file_content, "content1\n");
 	remove(file_name);
 	free(file_name);
 	free(file_content);

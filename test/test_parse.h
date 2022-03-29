@@ -425,7 +425,7 @@ Test(test_parse, test_expend_path_of_existing_cmd)
 	cr_redirect_stderr();
 	t_list *env = init(NULL);
 
-	t_list *result = parse("ls", env);;
+	t_list *result = parse("/usr/bin/ls", env);;
 	cr_assert_str_eq(get_content(result)->exec_name, "/usr/bin/ls");
 	ft_lstclear(&result, free_cmd);
 	ft_lstclear(&env, free_dict_entry);
@@ -442,11 +442,11 @@ Test(test_parse, test_two_cmds_with_outfiles_at_the_begining_of_line)
 	remove("file2");
 	print_cmd(result);
 	cr_assert_not_null(result);
-	cr_assert_str_eq(get_content(result)->exec_name, "/usr/bin/cat");
+	cr_assert_str_eq(get_content(result)->exec_name, "cat");
 	cr_expect_str_eq(get_content(result)->outfile, "file1");
 	cr_expect_str_eq(get_content(result)->args[1], "test1");
 	cr_expect_eq(get_content(result)->pipe, PIPE);
-	cr_assert_str_eq(get_content(result->next)->exec_name, "/usr/bin/grep");
+	cr_assert_str_eq(get_content(result->next)->exec_name, "grep");
 	cr_expect_str_eq(get_content(result->next)->outfile, "file2");
 	cr_expect_str_eq(get_content(result->next)->args[1], "test2");
 	ft_lstclear(&result, free_cmd);
@@ -464,7 +464,7 @@ Test(test_parse, test_with_two_outfile_before_cmd)
 	remove("b");
 	print_cmd(result);
 	cr_assert_not_null(result);
-	cr_assert_str_eq(get_content(result)->exec_name, "/usr/bin/ls");
+	cr_assert_str_eq(get_content(result)->exec_name, "ls");
 	cr_expect_str_eq(get_content(result)->outfile, "b");
 	ft_lstclear(&result, free_cmd);
 	ft_lstclear(&env, free_dict_entry);

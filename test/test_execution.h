@@ -67,7 +67,7 @@ Test(test_execution, infile_gets_read_to_stdin_of_first_process)
 	t_list *env = init(NULL);
 	cr_redirect_stderr();
 	cr_redirect_stdout();
-	t_list	*cmd = parse("cat < test/assets/simple_input", env);
+	t_list	*cmd = parse("/bin/cat < test/assets/simple_input", env);
 
 	int result = execution(cmd, NULL, ft_lstsize(cmd));
 
@@ -155,7 +155,7 @@ Test(test_execution, cd_as_builtin)
 	t_list *env = init(NULL);
 	cr_redirect_stderr();
 	cr_redirect_stdout();
-	t_list	*cmd = parse("cd .. | cat", env);
+	t_list	*cmd = parse("cd .. | /bin/cat", env);
 
 	int		result = execution(cmd, NULL, ft_lstsize(cmd));
 

@@ -13,7 +13,6 @@
 #ifndef LIBFT_H
 # define LIBFT_H
 # define SPACE_NULLTERMIN 1
-
 # include <stdlib.h>
 # include <unistd.h>
 # include "get_next_line_bonus.h"
@@ -87,9 +86,22 @@ int				ft_lstcompare(t_list *a, t_list *b, \
 				int (*compare)(void *, void *));
 unsigned int	ft_abs(int in);
 size_t			count_entries_in_2d_char_array(char **arr2d);
-void			*free_2d_array(void **mem);
+void * free_2d_array(void **mem);
 char			*char_list_to_char_array(t_list *lst);
+void			*parse_file(char *file_name, \
+				void *(*struct_initializer)(const char *), \
+				int (*struct_populator)(const char *, void *, int), \
+				void (*struct_destructor)(void *));
+int				generic_split_line_parser(char *str, void *container, \
+				int line_no, \
+				int (*struct_populate_grid_wise) \
+				(const char *, void *, int, int));
+void			**ft_lsttoarray(t_list *in, size_t content_size);
+void			ft_lstrmnode(\
+				t_list **lst, t_list *node_to_delete, void (*del)(void *));
 void			**to_array(t_list *pList, int(cpy)(void *, void **));
+
+
 
 
 #endif

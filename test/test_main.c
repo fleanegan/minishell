@@ -6,3 +6,4 @@
 #include "test_execution.h"
 #include "built_ins/test_echo.h"
 #include "built_ins/test_export.h"
+#include "built_ins/test_unset.h"

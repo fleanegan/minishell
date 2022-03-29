@@ -6,9 +6,7 @@ Test(test_before_parsing, init_builds_minimal_env)
 	cr_redirect_stderr();
 	t_list *env = init(NULL);
 
-	cr_assert_str_eq(get_value_by_key(env, "HOME")->value, getenv("HOME"));
-	cr_assert_str_eq(get_value_by_key(env, "PATH")->value, getenv("PATH"));
-	cr_assert_str_eq(get_value_by_key(env, "PWD")->value, getenv("PWD"));
+	cr_assert_str_eq(get_value_by_key(env, "?")->value, "0");
 	ft_lstclear(&env, free_dict_entry);
 }
 
