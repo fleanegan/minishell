@@ -1,7 +1,8 @@
 #include "../minishell.h"
 
-void	exec_child_heredoc(t_list *env, const char *delimiter, \
+void	write_heredoc_into_tmp_file(t_list *env, const char *delimiter, \
 		char *(*line_reader)(const char *), const char *file_name);
+char	*handle_events_inside_fetch_heredoc(const char *string, char *result);
 
 int	g_is_ctrl_c = 0;
 
@@ -34,20 +35,19 @@ char	*new_enumerated_empty_file(char *prefix_file_name, int sequence)
 	return (NULL);
 }
 
+// TODO: check if last_result condition has effect since moved above pid > 0
 char	*generate_heredoc(\
 		t_list *env, const char *delimiter, char *(line_reader)(const char *))
 {
 	char	*file_name;
 	int		wait_result_buffer;
-	int		last_result;
 	pid_t	pid;
 
-	last_result = 0;
 	file_name = new_enumerated_empty_file("/tmp/.minishell_heredoc", 0);
 	pid = fork();
 	if (pid == 0)
-		exec_child_heredoc(env, delimiter, line_reader, file_name);
-	if (pid == -1 || set_sa_handler(SIGINT, SIG_IGN) || last_result)
+		write_heredoc_into_tmp_file(env, delimiter, line_reader, file_name);
+	if (pid == -1 || set_sa_handler(SIGINT, SIG_IGN))
 	{
 		free(file_name);
 		return (NULL);
@@ -55,16 +55,17 @@ char	*generate_heredoc(\
 	if (pid > 0)
 	{
 		waitpid(pid, &wait_result_buffer, 0);
-		if (set_signal_handler(SIGINT, handle_ctrl_c))
-			exit(errno);
-		if (WIFEXITED(wait_result_buffer))
-			last_result = WEXITSTATUS(wait_result_buffer);
+		if (set_signal_handler(SIGINT, handle_ctrl_c) \
+		|| (WIFEXITED(wait_result_buffer) && WEXITSTATUS(wait_result_buffer)))
+		{
+			free(file_name);
+			return (NULL);
+		}
 	}
-
 	return (file_name);
 }
 
-void	exec_child_heredoc(t_list *env, const char *delimiter, \
+void	write_heredoc_into_tmp_file(t_list *env, const char *delimiter, \
 		char *(*line_reader)(const char *), const char *file_name)
 {
 	int		fd;
@@ -72,7 +73,7 @@ void	exec_child_heredoc(t_list *env, const char *delimiter, \
 
 	if (set_signal_handler(SIGINT, handle_ctrl_c_heredoc))
 		exit(errno);
-	heredoc = fetch_heredoc_input(env, delimiter, line_reader);
+	heredoc = fetch_heredoc_input(env, (char *) delimiter, line_reader);
 	if (heredoc == NULL)
 		exit (1);
 	fd = open(file_name, O_WRONLY);
@@ -87,7 +88,7 @@ void	exec_child_heredoc(t_list *env, const char *delimiter, \
 }
 
 char	*fetch_heredoc_input(\
-		t_list *env, const char *string, char *(line_reader)(const char *))
+		t_list *env, char *string, char *(line_reader)(const char *))
 {
 	char	*result;
 	char	*line;
@@ -97,18 +98,9 @@ char	*fetch_heredoc_input(\
 	while (42)
 	{
 		line = line_reader(">");
-		if (line == NULL) // && g_var
-		{
-			if (g_is_ctrl_c == 0)
-			{
-				printf("\nExpected %s as delimiter, but got ctrl-D\n", string);
-				return (result);
-			}
-			free(result);
-			return (NULL);
-		}
-		if (ft_strncmp(line, string, \
-		calc_max_unsigned(ft_strlen(line), ft_strlen(string))) == 0)
+		if (line == NULL)
+			return (handle_events_inside_fetch_heredoc(string, result));
+		if (msh_strcmp(line, string) == 0)
 		{
 			free(line);
 			return (result);
@@ -118,4 +110,15 @@ char	*fetch_heredoc_input(\
 		result = append_str(result, "\n", 1);
 		free(line);
 	}
+}
+
+char	*handle_events_inside_fetch_heredoc(const char *string, char *result)
+{
+	if (g_is_ctrl_c == 0)
+	{
+		printf("\nExpected %s as delimiter, but got ctrl-D\n", string);
+		return (result);
+	}
+	free(result);
+	return (NULL);
 }
