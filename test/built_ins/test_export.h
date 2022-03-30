@@ -203,3 +203,18 @@ Test(test_export, update_var_if_already_in_env)
 	ft_lstclear(&env, free_dict_entry);
 	ft_lstclear(&cmd, free_cmd);
 }
+
+Test(test_export, no_args_prints_special_env)
+{
+	cr_redirect_stdout();
+	cr_redirect_stderr();
+	t_list	*env = init(NULL);
+	update_env(&env, "key", "val", ENV_REPLACE_VAR);
+	t_list	*cmd = parse(ft_strdup("export"), env);
+
+	execution(cmd, env, 1);
+
+	cr_bugfix_assert_str_stdout("declare -x key=\"val\"\n");
+	ft_lstclear(&cmd, free_cmd);
+	ft_lstclear(&env, free_dict_entry);
+}

@@ -66,6 +66,12 @@ typedef	struct	s_built_in_entry
 	int (*func_ptr)(t_list **env, t_list **cmd, int index);
 }	t_built_in_entry;
 
+typedef enum	e_print_env_mode
+{
+	PRINT_ENV,
+	PRINT_EXPORT
+}	t_print_env_mode;
+
 /* Init */
 t_list *init(char **envp);
 char			*expand_one_layer_of_variables(t_list *env, char *in);
@@ -160,7 +166,8 @@ int				msh_export(t_list **env, t_list **current_cmd, int index);
 int				msh_pwd(t_list **env, t_list **cmd, int index);
 int				msh_echo(t_list **env, t_list **current_cmd, int index);
 int				msh_exit(t_list **env, t_list **cmd, int index);
-int				print_all_env_vars_with_prefix(t_list **env, char *prefix);
+int print_all_env_vars_with_prefix(t_list **env, char *prefix,
+								   t_print_env_mode mode);
 
 // utils debug
 void			print_cmd(t_list	*cmd);

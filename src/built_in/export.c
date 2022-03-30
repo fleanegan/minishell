@@ -20,7 +20,8 @@ int	msh_export(t_list **env, t_list **cmd, int index)
 	if (current_cmd == NULL || current_cmd->args[0] == NULL)
 		return (1);
 	if (current_cmd->args[1] == NULL)
-		return (print_all_env_vars_with_prefix(env, "declare -x "));
+		return (print_all_env_vars_with_prefix(env, "declare -x ",
+											   PRINT_EXPORT));
 	input = current_cmd->args[1];
 
 	return append_str_to_env(env, input);
