@@ -9,7 +9,7 @@ int	calc_strnlen_size(char *s1, char *s2)
 
 int	msh_strcmp(char *s1, char *s2)
 {
-	int max;
+	int	max;
 
 	max = calc_strnlen_size(s1, s2);
 	return (ft_strncmp(s1, s2, max));
@@ -45,7 +45,7 @@ t_dict_entry	*get_value_by_key(t_list *lst, char *key_without_dollar)
 	while (lst != NULL && lst->content != NULL)
 	{
 		max = calc_max_unsigned(\
-		ft_strlen(((t_dict_entry *) (lst->content))->key), \
+		ft_strlen(((t_dict_entry *)(lst->content))->key), \
 		calc_key_len(key_without_dollar));
 		if (ft_strncmp(((t_dict_entry *)(lst->content))->key, \
 			key_without_dollar, max) == 0)

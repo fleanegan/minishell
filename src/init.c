@@ -17,7 +17,7 @@ int	init_env(t_list **env, char **envp)
 	return (0);
 }
 
-t_list *init(char **envp)
+t_list	*init(char **envp)
 {
 	t_list	*result;
 
@@ -28,7 +28,7 @@ t_list *init(char **envp)
 		puts("error in init");
 		return (NULL);
 	}
-	if (update_env(&result, "?", "0", ENV_REPLACE_VAR)\
+	if (update_env(&result, "?", "0", ENV_REPLACE_VAR) \
 		|| init_env(&result, envp) == 1)
 	{
 		puts("error initiating msh_env");
