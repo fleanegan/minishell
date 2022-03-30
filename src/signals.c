@@ -24,7 +24,7 @@ void	handle_ctrl_c_heredoc(int signal_no, siginfo_t *info, void *hmm)
 	(void) hmm;
 }
 
-int	get_signal_handler(int signal_no, \
+int	set_signal_handler(int signal_no, \
 	void (*handler_function)(int, siginfo_t *, void *))
 {
 	struct sigaction	act;
