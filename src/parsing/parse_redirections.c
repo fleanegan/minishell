@@ -60,7 +60,6 @@ int	parse_redir_in(t_string_slice *sub, t_list *current_cmd, t_list *env)
 	get_content(current_cmd)->infile = parsed_infile;
 	if (get_content(current_cmd)->intoken == REDIR_IN_HERE_DOC)
 	{
-		// TODO: testme
 		(get_content(current_cmd))->infile = \
 		generate_heredoc(env, parsed_infile, readline);
 		if ((get_content(current_cmd))->infile == NULL)

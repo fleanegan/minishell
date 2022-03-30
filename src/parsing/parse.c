@@ -45,6 +45,7 @@ int	parse_next_attribute(\
 	t_list *env, t_list *current_cmd, t_list **arg_tmp, t_string_slice *sub)
 {
 	t_list	*current_arg;
+
 	if (is_token(char_under_cursor(*sub)))
 		return (parse_redirection(env, current_cmd, sub) != 0);
 	if (get_content(current_cmd)->exec_name == NULL)
