@@ -34,7 +34,7 @@ int	redirect_stdin_into_pipe(int *fd_of_pipe)
 	return (0);
 }
 
-int redirect_infile_to_stdin(char *infile)
+int	redirect_infile_to_stdin(char *infile)
 {
 	int	fd;
 
@@ -49,7 +49,7 @@ int redirect_infile_to_stdin(char *infile)
 	return (0);
 }
 
-int redirect_stdout_to_outfile(char *outfile, t_token mode)
+int	redirect_stdout_to_outfile(char *outfile, t_token mode)
 {
 	int	fd;
 

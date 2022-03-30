@@ -3,7 +3,7 @@
 static int	split_input_string_and_store_in_env(\
 	t_list **env, char *pos_of_eq, char *input);
 
-int append_str_to_env(t_list **env, char *input);
+int			append_str_to_env(t_list **env, char *input);
 
 static int	cmp_dict_entry_on_key(void *first, void *second)
 {
@@ -21,13 +21,12 @@ int	msh_export(t_list **env, t_list **cmd, int index)
 		return (1);
 	if (current_cmd->args[1] == NULL)
 		return (print_all_env_vars_with_prefix(env, "declare -x ",
-											   PRINT_EXPORT));
+				PRINT_EXPORT));
 	input = current_cmd->args[1];
-
-	return append_str_to_env(env, input);
+	return (append_str_to_env(env, input));
 }
 
-int append_str_to_env(t_list **env, char *input)
+int	append_str_to_env(t_list **env, char *input)
 {
 	char	*pos_of_eq;
 

@@ -33,9 +33,10 @@ unsigned char	are_arguments_ok(int i, const t_cmd *current_cmd)
 	else
 		while (current_cmd->args[1][i])
 		{
-			if ((ft_isdigit(current_cmd->args[1][i]) == 0 \
-			&& (current_cmd->args[1][0] != '-' || current_cmd->args[1][0] != '+'))\
-			|| ft_strlen(current_cmd->args[1]) >= 20)
+			if (ft_strlen(current_cmd->args[1]) >= 20 \
+				|| (ft_isdigit(current_cmd->args[1][i]) == 0 \
+					&& (current_cmd->args[1][0] != '-' \
+					|| current_cmd->args[1][0] != '+')))
 			{
 				ft_putendl_fd("exit: numeric argument required", 2);
 				return (1);

@@ -14,7 +14,7 @@ int	msh_echo(t_list **env, t_list **cmd, int index)
 	while (current_cmd->args[0] && current_cmd->args[i] && *env)
 	{
 		if (current_cmd->args[i][0] == '-' && is_behind_options == 0 \
- 			&& msh_strcmp(current_cmd->args[i], "-n\0") == 0)
+			&& msh_strcmp(current_cmd->args[i], "-n\0") == 0)
 				nl_flag = 0;
 		else
 		{

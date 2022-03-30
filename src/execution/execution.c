@@ -24,7 +24,7 @@ int	execution(t_list *cmd, t_list *env, int nb_cmd)
 	return (tear_down_parent(nb_cmd, fd, pid));
 }
 
-int execute_execve(t_list *env, t_list *cmd, int index)
+int	execute_execve(t_list *env, t_list *cmd, int index)
 {
 	char	**env_char;
 	void	*target;
@@ -42,5 +42,6 @@ int execute_execve(t_list *env, t_list *cmd, int index)
 		free_2d_array((void **) env_char);
 		return (errno);
 	}
-	return (((int (*)(t_list **, t_list **, int index))target)(&env, &cmd, index));
+	return (((int (*)(t_list **, t_list **, int index))target) \
+			(&env, &cmd, index));
 }
