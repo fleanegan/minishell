@@ -61,13 +61,13 @@ void	*get_built_in_function_pointer(const t_cmd *content)
 	int						i;
 	size_t					max;
 	const t_built_in_entry	built_in_array[NB_BUILT_INS] = {\
-			{"env", msh_env},
-			{"cd", msh_cd},
-			{"export", msh_export},
-			{"echo", msh_echo},
-			{"pwd", msh_pwd},
-			{"exit", msh_exit},
-			{"unset", msh_unset}
+			{"env", msh_env}, \
+			{"cd", msh_cd}, \
+			{"export", msh_export}, \
+			{"echo", msh_echo}, \
+			{"pwd", msh_pwd}, \
+			{"exit", msh_exit}, \
+			{"unset", msh_unset} \
 			};
 
 	i = 0;

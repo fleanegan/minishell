@@ -1,37 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstget_element_by_index_bonus.c                 :+:      :+:    :+:   */
+/*   ft_strcmp.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By:  <fschlute>                                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/23 09:01:54 by                   #+#    #+#             */
-/*   Updated: 2022/02/04 14:11:38 by                  ###   ########.fr       */
+/*   Created: 2021/11/23 09:00:26 by                   #+#    #+#             */
+/*   Updated: 2022/02/05 11:34:48 by                  ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "libft_auxilliar.h"
 
-t_list	*ft_lstget_element_by_index(t_list *lst, size_t index)
+int	calc_strnlen_size(char *s1, char *s2)
 {
-	while (index-- > 0)
-	{
-		if (lst)
-			lst = lst->next;
-		else
-			return (NULL);
-	}
-	return (lst);
+	return ((int) calc_max_unsigned(\
+		ft_strlen(s1), \
+		ft_strlen(s2)));
 }
 
-t_list	*ft_lstget_element_by_function(t_list *lst, \
-		int (*equals)(void *, int), int i)
+int	ft_strcmp(char *s1, char *s2)
 {
-	while (lst)
-	{
-		if (equals(lst->content, i))
-			return (lst);
-		lst = lst->next;
-	}
-	return (NULL);
+	int	max;
+
+	max = calc_strnlen_size(s1, s2);
+	return (ft_strncmp(s1, s2, max));
 }

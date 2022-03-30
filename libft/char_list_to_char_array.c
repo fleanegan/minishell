@@ -11,6 +11,10 @@
 /* ************************************************************************** */
 
 #include "libft.h"
+
+int
+do_stuff(t_list *pList, int (*cpy)(void *, void **), void **result, int size);
+
 char	*char_list_to_char_array(t_list *lst)
 {
 	char	*result;
@@ -34,12 +38,11 @@ char	*char_list_to_char_array(t_list *lst)
 	return (result);
 }
 
-void **to_array(t_list *pList, int (*cpy)(void *, void **)) {
+void	**to_array(t_list *pList, int (*cpy)(void *, void **))
+{
 	void	**result;
 	int		size;
-	int		i;
 
-	i = 0;
 	size = ft_lstsize(pList);
 	result = ft_calloc((size + 1), sizeof(t_list));
 	if (result == NULL)
@@ -47,6 +50,17 @@ void **to_array(t_list *pList, int (*cpy)(void *, void **)) {
 	result[size] = NULL;
 	if (pList == NULL)
 		return (result);
+	if (do_stuff(pList, cpy, result, size) != 0)
+		return (NULL);
+	return (result);
+}
+
+int	do_stuff(\
+	t_list *pList, int (*cpy)(void *, void **), void **result, int size)
+{
+	int		i;
+
+	i = 0;
 	while (i < size)
 	{
 		if (pList->content == NULL)
@@ -58,7 +72,7 @@ void **to_array(t_list *pList, int (*cpy)(void *, void **)) {
 		if (cpy(pList->content, &result[i]))
 		{
 			free_2d_array(result);
-			return (NULL);
+			return (1);
 		}
 		if (result[i] == NULL)
 		{
@@ -68,6 +82,5 @@ void **to_array(t_list *pList, int (*cpy)(void *, void **)) {
 		i++;
 		pList = pList->next;
 	}
-	return (result);
+	return (0);
 }
-

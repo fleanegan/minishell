@@ -9,7 +9,7 @@ int	parse_exec_name(\
 
 	exec_name = &get_content(current_cmd)->exec_name;
 	raw_exec_name = parse_until(sub, ft_isspace);
-	path = get_value_by_key(env, "PATH");
+	path = get_entry_by_key(env, "PATH");
 	if (path != NULL)
 		*exec_name = get_path(raw_exec_name, path->value);
 	else

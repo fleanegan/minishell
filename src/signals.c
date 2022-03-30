@@ -1,11 +1,9 @@
 #include "minishell.h"
 
-extern int	g_is_ctrl_c;
 
 void	handle_ctrl_c(int signal_no, siginfo_t *info, void *hmm)
 {
 	printf("\n");
-	puts("in parenrt");
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();

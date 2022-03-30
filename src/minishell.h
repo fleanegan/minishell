@@ -18,6 +18,10 @@
 # define NOT_IN_QUOTE 0
 # define SINGLE_QUOTE '\''
 # define NB_BUILT_INS 7
+# define NO_ERR_BUT_QUIT (-2)
+
+extern int	g_is_ctrl_c;
+
 
 typedef enum e_token
 {
@@ -144,9 +148,8 @@ void			move_cursor_behind_whitespace(t_string_slice *sub);
 t_cmd			*new_cmd(void);
 char			*append_str(char *base, char *appendix, int appendix_size);
 int				calc_key_len(char *key);
-t_dict_entry	*get_value_by_key(t_list *lst, char *key);
+t_dict_entry	*get_entry_by_key(t_list *lst, char *key_without_dollar);
 char			*read_file(char *name);
-int				msh_strcmp(char *s1, char *s2);
 char			char_under_cursor(t_string_slice in);
 int				cpy_str(void *content, void **result);
 int				cpy_dict_to_str(void *content, void **result);
@@ -154,7 +157,8 @@ void			*free_list_and_return_null(t_list **lst, void (*del)(void *));
 int				parse_one_argument(\
 				t_list **arg_tmp, t_string_slice *sub, t_list **current_arg);
 t_string_slice	init_slice_at_start_of(char *input);
-int				append_str_to_env(t_list **env, char *input);
+void			remove_by_copying(char *first_quote, char *second_quote);
+int append_str_to_env(t_list **env, char *input);
 
 /*	Tear_down	*/
 void			free_cmd(void *cmd);
@@ -170,6 +174,7 @@ int				msh_echo(t_list **env, t_list **current_cmd, int index);
 int				msh_exit(t_list **env, t_list **cmd, int index);
 int				print_all_env_vars_with_prefix(\
 				t_list **env, char *prefix, t_print_env_mode mode);
+
 
 // utils debug
 void			print_cmd(t_list	*cmd);

@@ -13,7 +13,7 @@
 #include "libft_auxilliar.h"
 
 static t_list	*init(t_list *const *lst);
-void	swap(t_list *begin_of_comparison, t_list *current);
+void			swap(t_list *begin_of_comparison, t_list *current);
 
 void	ft_lstsort(t_list **lst, int (*comp_func)(void *, void *))
 {

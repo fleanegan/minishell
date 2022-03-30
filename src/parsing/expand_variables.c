@@ -59,7 +59,7 @@ void	expand_one_variable_if_possible(\
 	if (calc_key_len(&in[res->current]) != 0 \
 		&& mode != SINGLE_QUOTE && is_not_in_heredoc(in, res->current))
 	{
-		variable = get_value_by_key(env, &in[res->current]);
+		variable = get_entry_by_key(env, &in[res->current]);
 		if (variable == NULL)
 			res->src = append_str(res->src, "", 0);
 		else

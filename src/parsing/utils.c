@@ -1,29 +1,12 @@
 #include "minishell.h"
 
-static char	update_mode_for_type(const char *input, char mode, char quote_type)
+void	remove_by_copying(char *first_quote, char *second_quote)
 {
-	if (mode == 0 && *input == quote_type && ft_strchr(input + 1, quote_type))
+	if (*first_quote && *second_quote)
 	{
-		if (quote_type == SINGLE_QUOTE)
-			return (SINGLE_QUOTE);
-		else
-			return (DOUBLE_QUOTE);
+		ft_strlcpy(first_quote, first_quote + 1, ft_strlen(first_quote) + 1);
+		ft_strlcpy(second_quote - 1, second_quote, ft_strlen(second_quote) + 1);
 	}
-	else if (*input == mode)
-		return (NOT_IN_QUOTE);
-	return (mode);
-}
-
-char	update_mode(const char *input, char mode)
-{
-	char	res;
-
-	res = update_mode_for_type(input, mode, SINGLE_QUOTE);
-	if (res)
-	{
-		return (res);
-	}
-	return (update_mode_for_type(input, mode, DOUBLE_QUOTE));
 }
 
 char	*trim_result(char *result)
@@ -58,4 +41,17 @@ t_token	determine_redirection_type(t_string_slice *sub, t_list *current_cmd)
 		get_content(current_cmd)->intoken = result;
 	}
 	return (result);
+}
+
+int	is_token(int c)
+{
+	return (c == '>' || c == '<' || c == '|');
+}
+
+int	cpy_str(void *content, void **result)
+{
+	(*result) = ft_strdup((char *)content);
+	if (*result == NULL)
+		return (1);
+	return (0);
 }

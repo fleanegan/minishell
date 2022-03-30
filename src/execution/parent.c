@@ -15,8 +15,6 @@ int	execute_built_in_parent(t_list *cmd, t_list *env, int i, int **fd)
 	ret_builtin = exec_cmd(cmd, i, fd, env);
 	if (dup2(saved_stdout, 1) && ft_close(&saved_stdout))
 		return (errno);
-	if (ret_builtin != 0)
-		perror(get_content(cmd)->args[0]);
 	free_2d_array((void **) fd);
 	return (ret_builtin);
 }

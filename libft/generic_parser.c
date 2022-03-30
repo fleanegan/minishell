@@ -1,13 +1,24 @@
-#include <stdio.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   generic_parser.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By:  <fschlute>                                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/23 09:00:26 by                   #+#    #+#             */
+/*   Updated: 2022/02/05 11:34:48 by                  ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft.h"
 
 int		is_file_valid(int fd);
 void	*clean_up(void (*struct_destructor)(void *), \
 		void *container, void *line);
 
-void	*parse_file(char *file_name, void *(*struct_initializer)(const char *),
-				 int (*struct_populator)(const char *, void *, int),
-				 void (*struct_destructor)(void *))
+void	*parse_file(char *file_name, void *(*struct_initializer)(const char *), \
+		int (*struct_populator)(const char *, void *, int), \
+		void (*struct_destructor)(void *))
 {
 	void	*container;
 	int		fd;
@@ -30,7 +41,7 @@ void	*parse_file(char *file_name, void *(*struct_initializer)(const char *),
 	return (container);
 }
 
-int is_file_valid(int fd)
+int	is_file_valid(int fd)
 {
 	if (fd < 2)
 	{
@@ -41,7 +52,8 @@ int is_file_valid(int fd)
 	return (1);
 }
 
-void *clean_up(void (*struct_destructor)(void *), void *container, void *line)
+void	*clean_up(\
+		void (*struct_destructor)(void *), void *container, void *line)
 {
 	free(line);
 	gnl(-1, NULL);
@@ -49,12 +61,12 @@ void *clean_up(void (*struct_destructor)(void *), void *container, void *line)
 	return (NULL);
 }
 
-int	generic_split_line_parser(char *str, void *container, int line_no,
-							  int (*struct_populate_grid_wise) \
-							   (const char *, void *, int, int))
+int	generic_split_line_parser(char *str, void *container, int line_no, \
+	int (*struct_populate_grid_wise) \
+	(const char *, void *, int, int))
 {
-	char    **columns;
-	int     column_no;
+	char	**columns;
+	int		column_no;
 
 	columns = ft_split(str, ' ');
 	if (! columns)
@@ -62,7 +74,8 @@ int	generic_split_line_parser(char *str, void *container, int line_no,
 	column_no = 0;
 	while (columns[column_no])
 	{
-		if(struct_populate_grid_wise(columns[column_no], container, line_no, column_no))
+		if (struct_populate_grid_wise(columns[column_no], \
+			container, line_no, column_no))
 		{
 			free_2d_array((void **) columns);
 			return (1);

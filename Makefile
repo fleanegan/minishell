@@ -24,6 +24,7 @@ SRC_NAME =	init.c \
 			execution/parent.c \
 			execution/execute_redirections.c \
 			execution/utils.c \
+			built_in/utils.c \
 			built_in/export.c \
 			built_in/echo.c \
 			built_in/exit.c \

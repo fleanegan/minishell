@@ -36,6 +36,7 @@ size_t			ft_strlcat(char *dst, const char *src, size_t size);
 size_t			ft_strlcpy(char *dst, const char *src, size_t size);
 size_t			ft_strlen(const char *s);
 int				ft_strncmp(const char *s1, const char *s2, size_t n);
+int				ft_strcmp(char *s1, char *s2);
 char			*ft_strnstr(const char *haystack, \
 				const char *needle, size_t len);
 char			*ft_strrchr(const char *s, int c);
@@ -86,7 +87,7 @@ int				ft_lstcompare(t_list *a, t_list *b, \
 				int (*compare)(void *, void *));
 unsigned int	ft_abs(int in);
 size_t			count_entries_in_2d_char_array(char **arr2d);
-void * free_2d_array(void **mem);
+void			*free_2d_array(void **mem);
 char			*char_list_to_char_array(t_list *lst);
 void			*parse_file(char *file_name, \
 				void *(*struct_initializer)(const char *), \
@@ -99,9 +100,6 @@ int				generic_split_line_parser(char *str, void *container, \
 void			**ft_lsttoarray(t_list *in, size_t content_size);
 void			ft_lstrmnode(\
 				t_list **lst, t_list *node_to_delete, void (*del)(void *));
-void			**to_array(t_list *pList, int(cpy)(void *, void **));
-
-
-
+void			**to_array(t_list *pList, int (cpy)(void *, void **));
 
 #endif

@@ -11,7 +11,7 @@ Test(test_unset, basic_test_unset)
 
 	execution(cmd, env, 1);
 
-	t_dict_entry *tmp = get_value_by_key(env, "V1");
+	t_dict_entry *tmp = get_entry_by_key(env, "V1");
 	cr_assert_null(tmp);
 	ft_lstclear(&cmd, free_cmd);
 	ft_lstclear(&env, free_dict_entry);
@@ -28,8 +28,8 @@ Test(test_unset, unset_multiple_vars)
 
 	execution(cmd, env, 1);
 
-	cr_assert_null(get_value_by_key(env, "V1"));
-	cr_assert_null(get_value_by_key(env, "V2"));
+	cr_assert_null(get_entry_by_key(env, "V1"));
+	cr_assert_null(get_entry_by_key(env, "V2"));
 	ft_lstclear(&cmd, free_cmd);
 	ft_lstclear(&env, free_dict_entry);
 }
@@ -44,7 +44,7 @@ Test(test_unset, no_args)
 
 	execution(cmd, env, 1);
 
-	cr_assert_not_null(get_value_by_key(env, "V1"));
+	cr_assert_not_null(get_entry_by_key(env, "V1"));
 	ft_lstclear(&cmd, free_cmd);
 	ft_lstclear(&env, free_dict_entry);
 }
@@ -72,7 +72,7 @@ Test(test_unset, cannot_unset_internal_env)
 
 	execution(cmd, env, 1);
 
-	cr_assert_not_null(get_value_by_key(env, "?"));
+	cr_assert_not_null(get_entry_by_key(env, "?"));
 	ft_lstclear(&cmd, free_cmd);
 	ft_lstclear(&env, free_dict_entry);
 }

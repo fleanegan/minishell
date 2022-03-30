@@ -31,6 +31,7 @@ unsigned char	are_arguments_ok(int i, const t_cmd *current_cmd)
 		return (1);
 	}
 	else
+	{
 		while (current_cmd->args[1][i])
 		{
 			if (ft_strlen(current_cmd->args[1]) >= 20 \
@@ -43,5 +44,6 @@ unsigned char	are_arguments_ok(int i, const t_cmd *current_cmd)
 			}
 			i++;
 		}
+	}
 	return (0);
 }

@@ -10,11 +10,11 @@ int	msh_echo(t_list **env, t_list **cmd, int index)
 	current_cmd = get_content(ft_lstget_element_by_index(*cmd, index));
 	nl_flag = 1;
 	is_behind_options = 0;
-	i = 1;
-	while (current_cmd->args[0] && current_cmd->args[i] && *env)
+	i = 0;
+	while (current_cmd->args[0] && current_cmd->args[++i] && *env)
 	{
 		if (current_cmd->args[i][0] == '-' && is_behind_options == 0 \
-			&& msh_strcmp(current_cmd->args[i], "-n\0") == 0)
+			&& ft_strcmp(current_cmd->args[i], "-n\0") == 0)
 				nl_flag = 0;
 		else
 		{
@@ -23,7 +23,6 @@ int	msh_echo(t_list **env, t_list **cmd, int index)
 			ft_putstr_fd(current_cmd->args[i], 1);
 			is_behind_options = 1;
 		}
-		i++;
 	}
 	if (nl_flag)
 		ft_putstr_fd("\n", 1);

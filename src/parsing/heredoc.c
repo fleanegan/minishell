@@ -100,7 +100,7 @@ char	*fetch_heredoc_input(\
 		line = line_reader(">");
 		if (line == NULL)
 			return (handle_events_inside_fetch_heredoc(string, result));
-		if (msh_strcmp(line, string) == 0)
+		if (ft_strcmp(line, string) == 0)
 		{
 			free(line);
 			return (result);

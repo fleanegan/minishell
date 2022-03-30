@@ -16,7 +16,7 @@ int	msh_unset(t_list **env, t_list **cmd, int index)
 		current = *env;
 		while (current != NULL)
 		{
-			if (msh_strcmp((((t_dict_entry *)(current->content))->key), \
+			if (ft_strcmp((((t_dict_entry *)(current->content))->key), \
 				current_cmd->args[i]) == 0 && current_cmd->args[i][0] != '?')
 			{
 				ft_lstrmnode(env, current, free_dict_entry);
