@@ -1,8 +1,11 @@
 #include "minishell.h"
 
+extern int g_is_ctrl_c;
+
 void handle_ctrl_c(int signal_no, siginfo_t *info, void *hmm)
 {
 	printf("\n");
+	puts("in parenrt");
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
@@ -20,9 +23,9 @@ void handle_ctrl_c_parent(int signal_no, siginfo_t *info, void *hmm)
 
 void handle_ctrl_c_heredoc(int signal_no, siginfo_t *info, void *hmm)
 {
-	printf("heredoc child handler active\n");
+	g_is_ctrl_c = 1;
 	close(STDIN_FILENO);
-//	exit(0);
+	printf("\n");
 	(void) signal_no;
 	(void) info;
 	(void) hmm;

@@ -7,20 +7,18 @@ int	execution(t_list *cmd, t_list *env, int nb_cmd)
 	int		**fd;
 
 	set_sa_handler(SIGINT, SIG_IGN);
+	i = 0;
+	fd = NULL;
+	if (nb_cmd == 1 && get_built_in_function_pointer(cmd->content) != NULL)
+		return (execute_built_in_parent(cmd, env, i, fd));
+	pid = -2;
 	fd = ft_tabnew_two(nb_cmd, 2);
 	init_pipes(nb_cmd, fd);
-	i = 0;
-	pid = -2;
 	while (i < nb_cmd)
 	{
-		if (nb_cmd == 1 && get_built_in_function_pointer(cmd->content) != NULL)
-			return (execute_built_in_parent(cmd, env, i, fd));
-		else
-		{
-			pid = execute_cmd_in_fork(cmd, env, i, fd);
-			if (pid == -1)
-				return (errno);
-		}
+		pid = execute_cmd_in_fork(cmd, env, i, fd);
+		if (pid == -1)
+			return (errno);
 		i++;
 	}
 	return (tear_down_parent(nb_cmd, fd, pid));

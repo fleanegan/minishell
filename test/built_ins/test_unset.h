@@ -9,9 +9,7 @@ Test(test_unset, basic_test_unset)
 	update_env(&env, "V1", "TEST", ENV_REPLACE_VAR);
 	t_list	*cmd = parse(ft_strdup("unset V1"), env);
 
-	print_cmd(cmd);
 	execution(cmd, env, 1);
-	puts("done");
 
 	t_dict_entry *tmp = get_value_by_key(env, "V1");
 	cr_assert_null(tmp);

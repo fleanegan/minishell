@@ -37,6 +37,8 @@ int close_before_exit_process(int **fd)
 	int	i;
 
 	i = 0;
+	if (fd == NULL)
+		return (0);
 	while (fd[i] != NULL)
 	{
 		if (fd[i][0] != -1)

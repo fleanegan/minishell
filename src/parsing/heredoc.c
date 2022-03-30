@@ -3,6 +3,8 @@
 void	exec_child_heredoc(t_list *env, const char *delimiter, \
 		char *(*line_reader)(const char *), const char *file_name);
 
+int	g_is_ctrl_c = 0;
+
 char	*new_enumerated_empty_file(char *prefix_file_name, int sequence)
 {
 	int		fd;
@@ -45,6 +47,11 @@ char	*generate_heredoc(\
 	pid = fork();
 	if (pid == 0)
 		exec_child_heredoc(env, delimiter, line_reader, file_name);
+	if (pid == -1 || set_sa_handler(SIGINT, SIG_IGN) || last_result)
+	{
+		free(file_name);
+		return (NULL);
+	}
 	if (pid > 0)
 	{
 		waitpid(pid, &wait_result_buffer, 0);
@@ -53,11 +60,7 @@ char	*generate_heredoc(\
 		if (WIFEXITED(wait_result_buffer))
 			last_result = WEXITSTATUS(wait_result_buffer);
 	}
-	if (pid == -1 || set_sa_handler(SIGINT, SIG_IGN) || last_result)
-	{
-		free(file_name);
-		return (NULL);
-	}
+
 	return (file_name);
 }
 
@@ -70,6 +73,8 @@ void	exec_child_heredoc(t_list *env, const char *delimiter, \
 	if (set_signal_handler(SIGINT, handle_ctrl_c_heredoc))
 		exit(errno);
 	heredoc = fetch_heredoc_input(env, delimiter, line_reader);
+	if (heredoc == NULL)
+		exit (1);
 	fd = open(file_name, O_WRONLY);
 	if (fd >= 3)
 	{
@@ -92,10 +97,15 @@ char	*fetch_heredoc_input(\
 	while (42)
 	{
 		line = line_reader(">");
-		if (line == NULL)
+		if (line == NULL) // && g_var
 		{
+			if (g_is_ctrl_c == 0)
+			{
+				printf("\nExpected %s as delimiter, but got ctrl-D\n", string);
+				return (result);
+			}
 			free(result);
-			return (0);
+			return (NULL);
 		}
 		if (ft_strncmp(line, string, \
 		calc_max_unsigned(ft_strlen(line), ft_strlen(string))) == 0)

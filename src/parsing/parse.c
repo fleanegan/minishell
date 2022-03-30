@@ -10,10 +10,7 @@ t_list	*parse(char *input, t_list *env)
 	move_cursor_behind_whitespace(&current_substr);
 	while (current_substr.src[current_substr.current] != 0)
 		if (parse_one_command(&current_substr, &result_cmd, env))
-		{
-			ft_putendl_fd("parsing error1", 2);
 			return (free_list_and_return_null(&result_cmd, free_cmd));
-		}
 	if (result_cmd != NULL \
 		&& get_content(ft_lstlast(result_cmd))->pipe == PIPE)
 	{
@@ -36,7 +33,10 @@ int	parse_one_command(t_string_slice *sub, t_list **result_cmd, t_list *env)
 	(get_content(current_cmd))->args = (char **) to_array(arg_tmp, cpy_str);
 	if ((sub->src[sub->start] == '|' && parse_pipe(sub, current_cmd)) \
 		|| get_content(current_cmd)->exec_name == NULL)
+	{
+		ft_putendl_fd("parsing error1", 2);
 		return (free_list_and_return_null(&arg_tmp, free) == NULL);
+	}
 	ft_lstclear(&arg_tmp, free);
 	return (0);
 }
