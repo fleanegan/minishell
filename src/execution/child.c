@@ -36,7 +36,7 @@ pid_t	execute_cmd_in_fork(t_list *cmd, t_list *env, int i, int **fd)
 	if (pid == 0)
 	{
 		if (exec_cmd(cmd, i, fd, env))
-			perror(get_content(cmd)->args[0]); // getelement...
+			perror(get_content(cmd)->args[0]);
 		exit(errno);
 	}
 	return (pid);

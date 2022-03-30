@@ -7,7 +7,8 @@ int	msh_unset(t_list **env, t_list **cmd, int index)
 	t_cmd	*current_cmd;
 
 	current_cmd = get_content(ft_lstget_element_by_index(*cmd, index));
-	if (current_cmd == NULL || current_cmd->args == NULL || current_cmd->args[0] == NULL)
+	if (current_cmd == NULL || current_cmd->args == NULL \
+		|| current_cmd->args[0] == NULL)
 		return (0);
 	i = 1;
 	while (current_cmd->args[i] != NULL)
