@@ -215,7 +215,7 @@ Test(test_export, invalid_entry_no_equal_sign_returns_one)
 	int result = execution(cmd, env, 1);
 
 //	puts("test");
-	cr_assert_eq(result, 1);
+	cr_assert_eq(result, 1, "act: %d", result);
 	ft_lstclear(&cmd, free_cmd);
 	ft_lstclear(&env, free_dict_entry);
 }
@@ -231,6 +231,42 @@ Test(test_export, no_args_prints_special_env)
 	execution(cmd, env, 1);
 
 	cr_bugfix_assert_str_stdout("declare -x key=\"val\"\n");
+	ft_lstclear(&cmd, free_cmd);
+	ft_lstclear(&env, free_dict_entry);
+}
+
+Test(test_export, multiple_exports)
+{
+	cr_redirect_stdout();
+	cr_redirect_stderr();
+	t_list	*env = init(NULL);
+	t_list	*cmd = parse(ft_strdup("export a=1 b=2"), env);
+
+	execution(cmd, env, 1);
+
+	t_dict_entry *search_query = get_entry_by_key(env, "a");
+	cr_assert_not_null(search_query);
+	cr_assert_str_eq(search_query->value, "1");
+	search_query = get_entry_by_key(env, "b");
+	cr_assert_not_null(search_query);
+	cr_assert_str_eq(search_query->value, "2");
+	ft_lstclear(&cmd, free_cmd);
+	ft_lstclear(&env, free_dict_entry);
+}
+
+Test(test_export, multiple_exports_keep_first_error_value_but_do_all_exports)
+{
+	cr_redirect_stdout();
+	cr_redirect_stderr();
+	t_list	*env = init(NULL);
+	t_list	*cmd = parse(ft_strdup("export a#4 b=2"), env);
+
+	int result = execution(cmd, env, 1);
+
+	t_dict_entry *search_query = get_entry_by_key(env, "b");
+	cr_assert_not_null(search_query);
+	cr_assert_str_eq(search_query->value, "2");
+	cr_assert_eq(result, 1);
 	ft_lstclear(&cmd, free_cmd);
 	ft_lstclear(&env, free_dict_entry);
 }

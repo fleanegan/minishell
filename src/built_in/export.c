@@ -1,12 +1,11 @@
 #include "minishell.h"
 
-int	is_invalid_input(char *input);
+static int	is_invalid_input(char *input);
+static int	export_query(t_list **env, const t_cmd *current_cmd);
 
 int	msh_export(t_list **env, t_list **cmd, int index)
 {
-	char	*input;
 	t_cmd	*current_cmd;
-	int		tmp;
 
 	current_cmd = get_content(ft_lstget_element_by_index(*cmd, index));
 	if (current_cmd == NULL || current_cmd->args[0] == NULL)
@@ -14,13 +13,33 @@ int	msh_export(t_list **env, t_list **cmd, int index)
 	if (current_cmd->args[1] == NULL)
 		return (print_all_env_vars_with_prefix(env, "declare -x ",
 				PRINT_EXPORT));
-	input = current_cmd->args[1];
-	tmp = is_invalid_input(input);
-	if (tmp == NO_ERR_BUT_QUIT)
-		return (0);
-	if (tmp == 1)
-		return (1);
-	return (append_str_to_env(env, input));
+	return (export_query(env, current_cmd));
+}
+
+int	export_query(t_list **env, const t_cmd *current_cmd)
+{
+	char	*input;
+	int		i;
+	int		result;
+	int		is_invalid;
+	int		is_malloc_failure;
+
+	i = 1;
+	result = 0;
+	is_malloc_failure = 0;
+	while (current_cmd->args[i])
+	{
+		input = current_cmd->args[i];
+		is_invalid = is_invalid_input(input);
+		if (is_invalid == 0)
+			is_malloc_failure = append_str_to_env(env, input);
+		if (is_invalid == 1)
+			result = 1;
+		if (is_malloc_failure != 0)
+			return (is_malloc_failure);
+		i++;
+	}
+	return (result);
 }
 
 int	is_invalid_input(char *input)
@@ -30,7 +49,7 @@ int	is_invalid_input(char *input)
 	pos_of_eq = ft_strchr(input, '=');
 	if (pos_of_eq == NULL)
 	{
-		if (calc_key_len(input) == (int) ft_strlen(input))
+		if (input[0] != 0 && calc_key_len(input) == (int) ft_strlen(input))
 			return (NO_ERR_BUT_QUIT);
 		else
 		{
