@@ -206,15 +206,15 @@ Test(test_export, update_var_if_already_in_env)
 
 Test(test_export, invalid_entry_no_equal_sign_returns_one)
 {
-//	cr_redirect_stdout();
-//	cr_redirect_stderr();
+	cr_redirect_stdout();
+	cr_redirect_stderr();
 	t_list	*env = init(NULL);
 	t_list	*cmd = parse(ft_strdup("export ab#"), env);
-	puts("before ");
+//	puts("before ");
 
 	int result = execution(cmd, env, 1);
 
-	puts("test");
+//	puts("test");
 	cr_assert_eq(result, 1);
 	ft_lstclear(&cmd, free_cmd);
 	ft_lstclear(&env, free_dict_entry);

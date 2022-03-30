@@ -6,7 +6,7 @@ int	init_env(t_list **env, char **envp)
 		return (0);
 	while (*envp)
 	{
-		if (append_str_to_env(env, NULL))
+		if (append_str_to_env(env, *envp))
 		{
 			ft_putendl_fd("error while parsing envp", 2);
 			ft_lstclear(env, free_dict_entry);
