@@ -93,7 +93,7 @@ int				append_new_arg(t_list **tmp_args, char	*arg_str);
 char			*trim_result(char *result);
 int				is_token(int c);
 char			*fetch_heredoc_input(\
-				t_list *env, char *string, char *(*line_reader)(const char *));
+				t_list *env, char *delimiter, char *(*line_reader)(const char *));
 char			*generate_heredoc(t_list *env, const char *delimiter, \
 				char *(line_reader)(const char *));
 char			*parse_until(t_string_slice *sub, int (*stop_condition)(int));

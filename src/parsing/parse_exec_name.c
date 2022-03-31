@@ -15,9 +15,8 @@ int	parse_exec_name(\
 	else
 		*exec_name = ft_strdup(raw_exec_name);
 	if (*exec_name == NULL)
-		return (1);
-	append_new_arg(arg_tmp, raw_exec_name);
-	return (0);
+		return (ENOMEM);
+	return (append_new_arg(arg_tmp, raw_exec_name));
 }
 
 int	len_path(char *path)
@@ -49,7 +48,7 @@ char	*get_path(char *exec_name, char *path)
 		res = NULL;
 		res = ft_calloc(len_path(path + i) + 2, sizeof(char));
 		if (res == NULL)
-			return (ft_strdup(exec_name));
+			return (NULL);
 		ft_strlcpy(res, path + i, len_path(path + i) + 1);
 		res[len_path(path + i)] = '/';
 		res = append_str(res, exec_name, ft_strlen(exec_name));

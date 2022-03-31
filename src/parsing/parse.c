@@ -8,13 +8,13 @@ t_list	*parse(char *input, t_list *env)
 	current_substr = init_slice_at_start_of(input);
 	result_cmd = NULL;
 	move_cursor_behind_whitespace(&current_substr);
-	while (current_substr.src[current_substr.current] != 0)
+	while (char_under_cursor(current_substr) != 0)
 		if (parse_one_command(&current_substr, &result_cmd, env))
 			return (free_list_and_return_null(&result_cmd, free_cmd));
 	if (result_cmd != NULL \
 		&& get_content(ft_lstlast(result_cmd))->pipe == PIPE)
 	{
-		ft_putendl_fd("parsing error2", 2);
+		ft_putendl_fd("parsing error: cannot end with pipe", 2);
 		return (free_list_and_return_null(&result_cmd, free_cmd));
 	}
 	return (result_cmd);
@@ -27,14 +27,16 @@ int	parse_one_command(t_string_slice *sub, t_list **result_cmd, t_list *env)
 
 	arg_tmp = NULL;
 	append_new_cmd(result_cmd, &current_cmd);
-	while (char_under_cursor(*sub) && char_under_cursor(*sub) != '|')
+	while (char_under_cursor(*sub) != 0 && char_under_cursor(*sub) != '|')
 		if (parse_next_attribute(env, current_cmd, &arg_tmp, sub))
 			return (free_list_and_return_null(&arg_tmp, free) == NULL);
 	(get_content(current_cmd))->args = (char **) to_array(arg_tmp, cpy_str);
-	if ((sub->src[sub->start] == '|' && parse_pipe(sub, current_cmd)) \
+	if ((get_content(current_cmd))->args == NULL)
+		return (ENOMEM);
+	if ((char_under_cursor(*sub) == '|' && parse_pipe(sub, current_cmd)) \
 		|| get_content(current_cmd)->exec_name == NULL)
 	{
-		ft_putendl_fd("parsing error1", 2);
+		ft_putendl_fd("Error in parsing", 2);
 		return (free_list_and_return_null(&arg_tmp, free) == NULL);
 	}
 	ft_lstclear(&arg_tmp, free);
@@ -50,8 +52,8 @@ int	parse_next_attribute(\
 		return (parse_redirection(env, current_cmd, sub) != 0);
 	if (get_content(current_cmd)->exec_name == NULL)
 		return (parse_exec_name(env, current_cmd, arg_tmp, sub) != 0);
-	if (is_token(char_under_cursor(*sub)) == 0)
-		return (parse_one_argument(arg_tmp, sub, &current_arg) != 0);
+	if (! is_token(char_under_cursor(*sub)))
+		return (parse_one_argument(arg_tmp, sub, &current_arg));
 	return (0);
 }
 
@@ -73,7 +75,7 @@ int	parse_one_argument(\
 	if ((*current_arg) == NULL)
 	{
 		free(tmp_arg_content);
-		return (1);
+		return (ENOMEM);
 	}
 	ft_lstadd_back(arg_tmp, (*current_arg));
 	return (0);
@@ -84,14 +86,14 @@ char	*parse_until(t_string_slice *sub, int (*stop_condition)(int))
 	char	*result;
 	char	mode;
 
-	mode = 0;
+	mode = NOT_IN_QUOTE;
 	move_cursor_behind_whitespace(sub);
-	while (sub->src[(sub->current)])
+	while (char_under_cursor(*sub))
 	{
 		mode = update_mode((char *)&sub->src[sub->current], mode);
 		if (mode == NOT_IN_QUOTE \
-			&& (is_token(sub->src[(sub->current)]) \
-				|| stop_condition(sub->src[(sub->current)])))
+			&& (is_token(char_under_cursor(*sub)) \
+				|| stop_condition(char_under_cursor(*sub))))
 			break ;
 		(sub->current)++;
 	}
