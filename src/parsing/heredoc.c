@@ -6,9 +6,30 @@ char	*handle_events_inside_fetch_heredoc(const char *string, char *result);
 
 int	g_is_ctrl_c = 0;
 
+int is_file_created_successfully(char **file_name)
+{
+	int	fd;
+
+	if (access(*file_name, W_OK) != 0)
+	{
+		fd = open(*file_name, O_WRONLY | O_CREAT, 0666);
+		if (fd >= 3)
+		{
+			if (close(fd) == -1)
+			{
+				free(*file_name);
+				file_name = NULL;
+				return (1);
+			}
+			return (1);
+		}
+	}
+	free(*file_name);
+	return (0);
+}
+
 char	*new_enumerated_empty_file(char *prefix_file_name, int sequence)
 {
-	int		fd;
 	char	*file_name;
 	char	*suffix_name;
 
@@ -20,17 +41,8 @@ char	*new_enumerated_empty_file(char *prefix_file_name, int sequence)
 		free(suffix_name);
 		if (file_name == NULL)
 			break ;
-		if (access(file_name, W_OK) != 0)
-		{
-			fd = open(file_name, O_WRONLY | O_CREAT, 0666);
-			if (fd >= 3)
-			{
-				if (close(fd) == -1)
-					break ;
-				return (file_name);
-			}
-		}
-		free(file_name);
+		if (is_file_created_successfully(&file_name))
+			return (file_name);
 	}
 	return (NULL);
 }
