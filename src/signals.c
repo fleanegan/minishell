@@ -1,6 +1,5 @@
 #include "minishell.h"
 
-
 void	handle_ctrl_c(int signal_no, siginfo_t *info, void *hmm)
 {
 	printf("\n");

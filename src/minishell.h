@@ -179,8 +179,4 @@ int				msh_exit(t_list **env, t_list **cmd, int index);
 int				print_all_env_vars_with_prefix(\
 				t_list **env, char *prefix, t_print_env_mode mode);
 
-
-// utils debug
-void			print_cmd(t_list	*cmd);
-
 #endif //MINISHELL_H

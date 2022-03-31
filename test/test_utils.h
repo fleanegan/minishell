@@ -41,5 +41,27 @@ void cr_bugfix_assert_str_stdout(char *compare_string)
 	cr_assert(replacement_for_broken_criterion_stdout_matcher(compare_string, cr_get_redirected_stdout()));
 }
 
+void	print_cmd(t_list	*cmd)
+{
+	int	i;
+
+	while (cmd != NULL)
+	{
+		printf("-----------------------------------------------------------\n");
+		i = 0;
+		printf("execname : %s\ninfile : %s\noutfile : %s\nintoken : %d\nouttoken : %d\npipe : %d\n", \
+			get_content(cmd)->exec_name, get_content(cmd)->infile, \
+			get_content(cmd)->outfile, get_content(cmd)->intoken, \
+			get_content(cmd)->outtoken, get_content(cmd)->pipe);
+		while (get_content(cmd)->args[i] != NULL)
+		{
+			printf("arg[%d] = %s\n", i, get_content(cmd)->args[i]);
+			i++;
+		}
+		cmd = cmd->next;
+	}
+	printf("-----------------------------------------------------------\n");
+}
+
 
 #endif	 // TEST_UTILS_H

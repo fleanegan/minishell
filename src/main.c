@@ -1,74 +1,77 @@
 #include "minishell.h"
 
-void	print_cmd(t_list	*cmd)
-{
-	int	i;
-
-	while (cmd != NULL)
-	{
-		printf("-----------------------------------------------------------\n");
-		i = 0;
-		printf("execname : %s\ninfile : %s\noutfile : %s\nintoken : %d\nouttoken : %d\npipe : %d\n", \
-			get_content(cmd)->exec_name, get_content(cmd)->infile, \
-			get_content(cmd)->outfile, get_content(cmd)->intoken, \
-			get_content(cmd)->outtoken, get_content(cmd)->pipe);
-		while (get_content(cmd)->args[i] != NULL)
-		{
-			printf("arg[%d] = %s\n", i, get_content(cmd)->args[i]);
-			i++;
-		}
-		cmd = cmd->next;
-	}
-	printf("-----------------------------------------------------------\n");
-}
+static int	user_input_to_cmd_list(t_list **env, t_list **cmd);
+static int	write_pipe_line_result_into_env(\
+			t_list **env, t_list **cmd, int pipe_line_result);
 
 #ifndef IS_TEST
 
 int	main(int argc, char **argv, char **envp)
 {
-	char	*line;
-	char	*line_expanded;
 	t_list	*env;
 	t_list	*cmd;
-	t_list	*tmp;
+	int		pipe_line_result;
 
-	(void) tmp;
 	env = init(envp);
 	cmd = NULL;
 	if (env == NULL)
 		return (1);
 	while (1)
 	{
-		line = readline("minishell$ ");
-		if (! line)
-		{
-			ft_lstclear(&cmd, free_cmd);
-			ft_lstclear(&env, free_dict_entry);
-			printf("exit\n");
-			return (0);
-		}
-		add_history(line);
-		line_expanded = expand_all_variables(env, line);
-		cmd = parse(line_expanded, env);
-//		print_cmd(cmd);
-		free(line_expanded);
-		if (cmd != NULL)
-		{
-			char *tmp1 = ft_itoa(execution(cmd, env, ft_lstsize(cmd)));
-			if (tmp1 == NULL)
-			{
-				ft_lstclear(&cmd, free_cmd);
-				ft_lstclear(&env, free_dict_entry);
-				free(line);
-				return (1);
-			}
-			update_env(&env, "?", tmp1, ENV_REPLACE_VAR);
-			free(tmp1);
-		}
+		if (user_input_to_cmd_list(&env, &cmd))
+			continue ;
+		pipe_line_result = execution(cmd, env, ft_lstsize(cmd));
+		if (write_pipe_line_result_into_env(&env, &cmd, pipe_line_result))
+			return (ENOMEM);
 		ft_lstclear(&cmd, free_cmd);
 	}
 	(void) argc;
 	(void) argv;
+}
+
+int	write_pipe_line_result_into_env(\
+	t_list **env, t_list **cmd, int pipe_line_result)
+{
+	char	*pipe_line_result_as_char;
+
+	pipe_line_result_as_char = ft_itoa(pipe_line_result);
+	if (pipe_line_result_as_char == NULL)
+	{
+		ft_lstclear(cmd, free_cmd);
+		ft_lstclear(env, free_dict_entry);
+		free(pipe_line_result_as_char);
+		return (1);
+	}
+	update_env(env, "?", pipe_line_result_as_char, ENV_REPLACE_VAR);
+	free(pipe_line_result_as_char);
+	return (0);
+}
+
+int	user_input_to_cmd_list(t_list **env, t_list **cmd)
+{
+	char	*line;
+	char	*line_expanded;
+	int		result;
+
+	line = readline("minishell$ ");
+	if (! line)
+	{
+		result = ft_atoi(get_entry_by_key(*env, "?")->value);
+		ft_lstclear(cmd, free_cmd);
+		ft_lstclear(env, free_dict_entry);
+		printf("exit\n");
+		exit (result);
+	}
+	add_history(line);
+	line_expanded = expand_all_variables((*env), line);
+	(*cmd) = parse(line_expanded, (*env));
+	if (*cmd == NULL)
+	{
+		update_env(env, "?", "1", ENV_REPLACE_VAR);
+		return (1);
+	}
+	free(line_expanded);
+	return (0);
 }
 
 #endif
