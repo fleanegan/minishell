@@ -6,7 +6,7 @@
 /*   By: tsiguenz <tsiguenz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 21:01:38 by tsiguenz          #+#    #+#             */
-/*   Updated: 2022/03/31 21:01:48 by tsiguenz         ###   ########.fr       */
+/*   Updated: 2022/03/31 21:44:56 by tsiguenz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ int	user_input_to_cmd_list(t_list **env, t_list **cmd)
 	(*cmd) = parse(line_expanded, (*env));
 	if (*cmd == NULL)
 	{
+		free(line_expanded);
 		update_env(env, "?", "1", ENV_REPLACE_VAR);
 		return (1);
 	}
