@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "../../inc/minishell.h"
 
 char	*get_first_quote(char *in)
 {

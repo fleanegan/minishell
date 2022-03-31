@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../../inc/minishell.h"
 
 int	execution(t_list *cmd, t_list *env, int nb_cmd)
 {

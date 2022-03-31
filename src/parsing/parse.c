@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../../inc/minishell.h"
 
 t_list	*parse(char *input, t_list *env)
 {

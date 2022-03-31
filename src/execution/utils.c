@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../../inc/minishell.h"
 
 int	**ft_tabnew_two(int col, int line)
 {

@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "../../inc/minishell.h"
 
 int	parse_exec_name(\
 	t_list *env, t_list *current_cmd, t_list **arg_tmp, t_string_slice *sub)

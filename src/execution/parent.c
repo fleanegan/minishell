@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "../../inc/minishell.h"
 
 int	execute_built_in_parent(t_list *cmd, t_list *env, int i, int **fd)
 {

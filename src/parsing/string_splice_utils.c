@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "../../inc/minishell.h"
 
 void	move_cursor_behind_whitespace(t_string_slice *sub)
 {

@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "../../inc/minishell.h"
 
 int	is_file_created_successfully(char **file_name)
 {

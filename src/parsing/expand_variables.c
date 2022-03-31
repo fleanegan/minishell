@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../../inc/minishell.h"
 
 void	copy_regular_text(char *in, t_string_slice *res);
 void	expand_one_variable_if_possible(\

@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "../../inc/minishell.h"
 
 static int	cmp_dict_entry_on_key(void *first, void *second)
 {

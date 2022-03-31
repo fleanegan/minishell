@@ -1,4 +1,4 @@
-# include "../src/minishell.h"
+# include "../inc/minishell.h"
 
 void	ft_lstput_env(t_list *lst)
 {

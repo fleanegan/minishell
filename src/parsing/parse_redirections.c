@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "../../inc/minishell.h"
 
 int	parse_pipe(t_string_slice *sub, t_list *current_cmd)
 {

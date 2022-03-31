@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "../../inc/minishell.h"
 
 int	msh_pwd(t_list **env, t_list **cmd, int index)
 {

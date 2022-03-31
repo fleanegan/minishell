@@ -5,8 +5,8 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdio.h>
-# include "minishell.h"
-# include "../src/minishell.h"
+# include "../inc/minishell.h"
+# include "../inc/minishell.h"
 #include "../criterion-v2.3.3/include/criterion/assert.h"
 #include "../criterion-v2.3.3/include/criterion/criterion.h"
 #include "../criterion-v2.3.3/include/criterion/redirect.h"

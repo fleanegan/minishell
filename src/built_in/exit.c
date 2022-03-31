@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "../../inc/minishell.h"
 
 unsigned char	are_arguments_ok(int i, const t_cmd *current_cmd);
 

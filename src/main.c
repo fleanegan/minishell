@@ -1,10 +1,10 @@
-#include "minishell.h"
+#include "../inc/minishell.h"
+
+#ifndef IS_TEST
 
 static int	user_input_to_cmd_list(t_list **env, t_list **cmd);
 static int	write_pipe_line_result_into_env(\
 			t_list **env, t_list **cmd, int pipe_line_result);
-
-#ifndef IS_TEST
 
 int	main(int argc, char **argv, char **envp)
 {

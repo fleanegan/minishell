@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../../inc/minishell.h"
 
 void	remove_by_copying(char *first_quote, char *second_quote)
 {

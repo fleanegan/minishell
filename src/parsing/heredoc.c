@@ -1,4 +1,4 @@
-#include "../minishell.h"
+#include "../../inc/minishell.h"
 
 char	*handle_events_inside_fetch_heredoc(const char *string, char *result);
 
@@ -56,7 +56,6 @@ void	write_heredoc_into_tmp_file(t_list *env, const char *delimiter, \
 	free(heredoc);
 	exit(0);
 }
-// Todo: does not work with errno...
 
 char	*fetch_heredoc_input(\
 		t_list *env, char *delimiter, char *(line_reader)(const char *))

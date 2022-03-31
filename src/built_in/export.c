@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../../inc/minishell.h"
 
 static int	is_invalid_input(char *input);
 static int	export_query(t_list **env, const t_cmd *current_cmd);
