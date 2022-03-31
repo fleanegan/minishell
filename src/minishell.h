@@ -113,6 +113,10 @@ int				parse_one_command(\
 int				parse_exec_name(t_list *env, t_list *current_cmd, \
 				t_list **arg_tmp,	t_string_slice *sub);
 char			*get_path(char *exec_name, char *path);
+char			*new_enumerated_empty_file(\
+				char *prefix_file_name, int sequence);
+void			write_heredoc_into_tmp_file(t_list *env, const char *delimiter, \
+				char *(*line_reader)(const char *), const char *file_name);
 
 /* Signal handling */
 void			handle_ctrl_c(int signal_no, siginfo_t *info, void *hmm);

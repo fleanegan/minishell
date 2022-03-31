@@ -17,6 +17,7 @@ SRC_NAME =	init.c \
 			parsing/init.c \
 			parsing/string_splice_utils.c \
 			parsing/utils.c \
+			parsing/IO.c \
 			parsing/delete_quotes.c \
 			parsing/parse_exec_name.c \
 			execution/execution.c \
