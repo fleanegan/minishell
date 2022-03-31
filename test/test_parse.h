@@ -282,6 +282,17 @@ Test(test_parse, double_angle_brackets_are_append_token)
 	ft_lstclear(&result, free_cmd);
 }
 
+Test(test_parse, double_pipe_is_error)
+{
+	cr_redirect_stdout();
+	cr_redirect_stderr();
+	t_list *result = parse("A || b", NULL);
+
+	cr_assert_null(result);
+	remove("b");
+	ft_lstclear(&result, free_cmd);
+}
+
 Test(test_parse, three_angle_brackets_are_error)
 {
 	cr_redirect_stdout();

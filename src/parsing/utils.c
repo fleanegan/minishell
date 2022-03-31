@@ -26,17 +26,17 @@ t_token	determine_redirection_type(t_string_slice *sub, t_list *current_cmd)
 	t_token	result;
 
 	result = EMPTY;
-	if (sub->src[sub->current] == '>')
+	if (char_under_cursor(*sub) == '>')
 	{
 		result = REDIR_OUT_REPLACE;
-		if (sub->src[sub->start + 1] == sub->src[sub->start])
+		if (sub->src[sub->current + 1] == char_under_cursor(*sub))
 			result = REDIR_OUT_APPEND;
 		get_content(current_cmd)->outtoken = result;
 	}
-	else if (sub->src[sub->start] == '<')
+	else if (char_under_cursor(*sub) == '<')
 	{
 		result = REDIR_IN_FILE;
-		if (sub->src[sub->start + 1] == sub->src[sub->start])
+		if (sub->src[sub->current + 1] == char_under_cursor(*sub))
 			result = REDIR_IN_HERE_DOC;
 		get_content(current_cmd)->intoken = result;
 	}

@@ -3,14 +3,17 @@
 int	parse_pipe(t_string_slice *sub, t_list *current_cmd)
 {
 	get_content(current_cmd)->pipe = PIPE;
-	while (1)
+	if (char_under_cursor(*sub) == '|')
 	{
-		if (sub->src[sub->start] != '|' \
-			&& ! ft_isspace(sub->src[sub->start]))
-			return (0);
 		(sub->start)++;
 		(sub->current)++;
 	}
+	while (ft_isspace(char_under_cursor(*sub)))
+	{
+		(sub->start)++;
+		(sub->current)++;
+	}
+	return (0);
 }
 
 int	parse_redirection(t_list *env, t_list *current_cmd, t_string_slice *sub)
@@ -19,7 +22,10 @@ int	parse_redirection(t_list *env, t_list *current_cmd, t_string_slice *sub)
 
 	type = determine_redirection_type(sub, current_cmd);
 	if (move_cursor_behind_token(sub))
+	{
+		ft_putendl_fd("Error: Redirection without filename!", 2);
 		return (1);
+	}
 	if ((type == REDIR_OUT_APPEND || type == REDIR_OUT_REPLACE) \
 		&& parse_redir_out(sub, current_cmd))
 		return (1);
@@ -47,7 +53,10 @@ int	parse_redir_out(t_string_slice *sub, t_list *current_cmd)
 	if (get_content(current_cmd)->outfile == NULL)
 		return (1);
 	if (create_file_for_redir_out((get_content(current_cmd))->outfile) != 0)
+	{
+		ft_putendl_fd("Error: Could not open or create outfile!", 2);
 		return (1);
+	}
 	return (0);
 }
 
@@ -63,7 +72,10 @@ int	parse_redir_in(t_string_slice *sub, t_list *current_cmd, t_list *env)
 		(get_content(current_cmd))->infile = \
 		generate_heredoc(env, parsed_infile, readline);
 		if ((get_content(current_cmd))->infile == NULL)
+		{
+			ft_putendl_fd("Error: Could not create heredoc!", 2);
 			return (1);
+		}
 		free(parsed_infile);
 	}
 	return (0);

@@ -210,11 +210,9 @@ Test(test_export, invalid_entry_no_equal_sign_returns_one)
 	cr_redirect_stderr();
 	t_list	*env = init(NULL);
 	t_list	*cmd = parse(ft_strdup("export ab#"), env);
-//	puts("before ");
 
 	int result = execution(cmd, env, 1);
 
-//	puts("test");
 	cr_assert_eq(result, 1, "act: %d", result);
 	ft_lstclear(&cmd, free_cmd);
 	ft_lstclear(&env, free_dict_entry);

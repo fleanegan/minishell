@@ -35,7 +35,6 @@ char	*new_enumerated_empty_file(char *prefix_file_name, int sequence)
 	return (NULL);
 }
 
-// TODO: check if last_result condition has effect since moved above pid > 0
 char	*generate_heredoc(\
 		t_list *env, const char *delimiter, char *(line_reader)(const char *))
 {
@@ -45,13 +44,13 @@ char	*generate_heredoc(\
 
 	file_name = new_enumerated_empty_file("/tmp/.minishell_heredoc", 0);
 	pid = fork();
-	if (pid == 0)
-		write_heredoc_into_tmp_file(env, delimiter, line_reader, file_name);
-	if (pid == -1 || set_sa_handler(SIGINT, SIG_IGN))
+	if (pid == -1 || set_sa_handler(SIGINT, SIG_IGN) || file_name == NULL)
 	{
 		free(file_name);
 		return (NULL);
 	}
+	if (pid == 0)
+		write_heredoc_into_tmp_file(env, delimiter, line_reader, file_name);
 	if (pid > 0)
 	{
 		waitpid(pid, &wait_result_buffer, 0);
@@ -80,15 +79,18 @@ void	write_heredoc_into_tmp_file(t_list *env, const char *delimiter, \
 	if (fd >= 3)
 	{
 		ft_putstr_fd(heredoc, fd);
+		free(heredoc);
+		heredoc = NULL;
 		if (close(fd) != 0)
 			exit(errno);
 	}
 	free(heredoc);
 	exit(0);
 }
+// Todo: does not work with errno...
 
 char	*fetch_heredoc_input(\
-		t_list *env, char *string, char *(line_reader)(const char *))
+		t_list *env, char *delimiter, char *(line_reader)(const char *))
 {
 	char	*result;
 	char	*line;
@@ -99,8 +101,8 @@ char	*fetch_heredoc_input(\
 	{
 		line = line_reader(">");
 		if (line == NULL)
-			return (handle_events_inside_fetch_heredoc(string, result));
-		if (ft_strcmp(line, string) == 0)
+			return (handle_events_inside_fetch_heredoc(delimiter, result));
+		if (ft_strcmp(line, delimiter) == 0)
 		{
 			free(line);
 			return (result);
@@ -116,7 +118,9 @@ char	*handle_events_inside_fetch_heredoc(const char *string, char *result)
 {
 	if (g_is_ctrl_c == 0)
 	{
-		printf("\nExpected %s as delimiter, but got ctrl-D\n", string);
+		ft_putstr_fd("Expected '", 2);
+		ft_putstr_fd((char *) string, 2);
+		ft_putstr_fd("' as delimiter, but got ctrl-D\n", 2);
 		return (result);
 	}
 	free(result);

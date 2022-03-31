@@ -5,7 +5,6 @@ int	execute_built_in_parent(t_list *cmd, t_list *env, int i, int **fd)
 	int	saved_stdout;
 	int	ret_builtin;
 
-	ret_builtin = 0;
 	get_content(cmd)->intoken = EMPTY;
 	free(get_content(cmd)->infile);
 	get_content(cmd)->infile = NULL;
@@ -13,8 +12,12 @@ int	execute_built_in_parent(t_list *cmd, t_list *env, int i, int **fd)
 	if (saved_stdout < 0)
 		return (errno);
 	ret_builtin = exec_cmd(cmd, i, fd, env);
-	if (dup2(saved_stdout, 1) && ft_close(&saved_stdout))
+	if (dup2(saved_stdout, 1) == -1)
+	{
+		ft_close(&saved_stdout);
+		free_2d_array((void **) fd);
 		return (errno);
+	}
 	free_2d_array((void **) fd);
 	return (ret_builtin);
 }
