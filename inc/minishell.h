@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tsiguenz <tsiguenz@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/03/31 21:07:37 by tsiguenz          #+#    #+#             */
+/*   Updated: 2022/03/31 21:09:26 by tsiguenz         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # include "unistd.h"
@@ -30,8 +42,8 @@ int				append_new_cmd(t_list **result_cmd, t_list **current_cmd);
 int				append_new_arg(t_list **tmp_args, char	*arg_str);
 char			*trim_result(char *result);
 int				is_token(int c);
-char			*fetch_heredoc_input(\
-				t_list *env, char *delimiter, char *(*line_reader)(const char *));
+char			*fetch_heredoc_input(t_list *env, \
+						char *delimiter, char *(*line_reader)(const char *));
 char			*generate_heredoc(t_list *env, const char *delimiter, \
 				char *(line_reader)(const char *));
 char			*parse_until(t_string_slice *sub, int (*stop_condition)(int));
@@ -49,7 +61,7 @@ int				parse_next_attribute(t_list *env, t_list *current_cmd, \
 int				parse_one_command(\
 				t_string_slice *sub, t_list **result_cmd, t_list *env);
 int				parse_exec_name(t_list *env, t_list *current_cmd, \
-				t_list **arg_tmp,	t_string_slice *sub);
+				t_list **arg_tmp, t_string_slice *sub);
 char			*get_path(char *exec_name, char *path);
 char			*new_enumerated_empty_file(\
 				char *prefix_file_name, int sequence);
@@ -100,7 +112,7 @@ int				parse_one_argument(\
 				t_list **arg_tmp, t_string_slice *sub, t_list **current_arg);
 t_string_slice	init_slice_at_start_of(char *input);
 void			remove_by_copying(char *first_quote, char *second_quote);
-int append_str_to_env(t_list **env, char *input);
+int				append_str_to_env(t_list **env, char *input);
 
 /*	Tear_down	*/
 void			free_cmd(void *cmd);
