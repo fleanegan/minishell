@@ -48,7 +48,8 @@ int	execute_execve(t_list *env, t_list *cmd, int index)
 	target = get_built_in_function_pointer(current_cmd);
 	if (target == NULL)
 	{
-		if (access(current_cmd->exec_name, X_OK) != 0)
+		if (ft_strchr(current_cmd->exec_name, '/') == NULL \
+			|| access(current_cmd->exec_name, X_OK) != 0)
 			return (errno);
 		env_char = (char **) to_array(env, cpy_dict_to_str);
 		set_sa_handler(SIGINT, NULL);

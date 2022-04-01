@@ -73,5 +73,6 @@ int	redirect_stdout_to_outfile(char *outfile, t_token mode)
 		fd = open(outfile, O_WRONLY | O_APPEND | O_CREAT, 0644);
 	if (fd == -1 || dup2(fd, 1) == -1)
 		return (errno);
+	ft_close(&fd);
 	return (0);
 }
