@@ -20,7 +20,6 @@ int	execute_built_in_parent(t_list *cmd, t_list *env, int i, int **fd)
 	int	saved_stdout;
 	int	ret_builtin;
 
-	puts("entering [armetal exe");
 	get_content(cmd)->intoken = EMPTY;
 	free(get_content(cmd)->infile);
 	get_content(cmd)->infile = NULL;
