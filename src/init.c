@@ -37,13 +37,13 @@ t_list	*init(char **envp)
 	if (set_signal_handler(SIGINT, handle_ctrl_c) \
 		|| set_signal_handler(SIGQUIT, NULL))
 	{
-		puts("error in init");
+		ft_putendl_fd("error in init", 2);
 		return (NULL);
 	}
 	if (update_env(&result, "?", "0", ENV_REPLACE_VAR) \
 		|| init_env(&result, envp) == 1)
 	{
-		puts("error initiating msh_env");
+		ft_putendl_fd("error initiating msh_env", 2);
 		ft_lstclear(&result, free_dict_entry);
 		return (NULL);
 	}
