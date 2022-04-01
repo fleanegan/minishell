@@ -6,7 +6,7 @@
 /*   By: tsiguenz <tsiguenz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 21:02:32 by tsiguenz          #+#    #+#             */
-/*   Updated: 2022/03/31 21:02:34 by tsiguenz         ###   ########.fr       */
+/*   Updated: 2022/04/01 15:09:35 by tsiguenz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,15 @@ int	msh_cd(t_list **env, t_list **cmd, int index)
 		dest_path = current_cmd->args[1];
 	if (dest_path == NULL)
 		return (1);
+	if (current_cmd->args[2] != NULL)
+	{
+		printf("cd: too many arguments\n");
+		return (1);
+	}
 	if (chdir(dest_path) == -1)
 	{
 		perror(dest_path);
-		return (errno);
+		return (1);
 	}
 	if (update_env(env, "PWD", getcwd(s, 2048), ENV_REPLACE_VAR))
 		return (1);
