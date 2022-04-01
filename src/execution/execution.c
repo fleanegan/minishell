@@ -53,6 +53,7 @@ int	execute_execve(t_list *env, t_list *cmd, int index)
 			return (errno);
 		env_char = (char **) to_array(env, cpy_dict_to_str);
 		set_sa_handler(SIGINT, NULL);
+		set_sa_handler(SIGQUIT, NULL);
 		execve(current_cmd->exec_name, current_cmd->args, env_char);
 		free_2d_array((void **) env_char);
 		return (errno);

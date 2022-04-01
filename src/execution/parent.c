@@ -58,7 +58,5 @@ int	tear_down_parent(int nb_processes, int **fd, int pid_of_last_cmd)
 		i++;
 	}
 	free_2d_array((void **) fd);
-	if (set_signal_handler(SIGINT, handle_ctrl_c))
-		return (errno);
 	return (last_result);
 }
