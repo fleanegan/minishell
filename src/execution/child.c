@@ -6,7 +6,7 @@
 /*   By: tsiguenz <tsiguenz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/31 21:04:56 by tsiguenz          #+#    #+#             */
-/*   Updated: 2022/03/31 21:05:00 by tsiguenz         ###   ########.fr       */
+/*   Updated: 2022/04/01 16:03:44 by tsiguenz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,9 @@ int	exec_cmd(t_list *cmd, int i, int **fd, t_list *env)
 pid_t	execute_cmd_in_fork(t_list *cmd, t_list *env, int i, int **fd)
 {
 	pid_t	pid;
+	t_cmd	*current_cmd;
 
+	current_cmd = get_content(ft_lstget_element_by_index(cmd, i));
 	pid = fork();
 	if (pid == -1)
 	{
@@ -48,7 +50,7 @@ pid_t	execute_cmd_in_fork(t_list *cmd, t_list *env, int i, int **fd)
 	if (pid == 0)
 	{
 		if (exec_cmd(cmd, i, fd, env))
-			perror(get_content(cmd)->args[0]);
+			perror(current_cmd->args[0]);
 		exit(errno);
 	}
 	return (pid);
