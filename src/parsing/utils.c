@@ -12,12 +12,14 @@
 
 #include "../../inc/minishell.h"
 
-void	remove_by_copying(char *first_quote, char *second_quote)
+void	remove_by_copying(char *first_quote, char **second_quote)
 {
 	if (*first_quote && *second_quote)
 	{
 		ft_strlcpy(first_quote, first_quote + 1, ft_strlen(first_quote) + 1);
-		ft_strlcpy(second_quote - 1, second_quote, ft_strlen(second_quote) + 1);
+		ft_strlcpy(\
+		*(second_quote) - 1, *second_quote, ft_strlen(*second_quote) + 1);
+		(*second_quote)--;
 	}
 }
 

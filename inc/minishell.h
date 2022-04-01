@@ -115,7 +115,7 @@ void			*free_list_and_return_null(t_list **lst, void (*del)(void *));
 int				parse_one_argument(\
 				t_list **arg_tmp, t_string_slice *sub, t_list **current_arg);
 t_string_slice	init_slice_at_start_of(char *input);
-void			remove_by_copying(char *first_quote, char *second_quote);
+void			remove_by_copying(char *first_quote, char **second_quote);
 int				append_str_to_env(t_list **env, char *input);
 
 /*	Tear_down	*/

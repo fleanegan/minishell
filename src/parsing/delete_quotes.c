@@ -82,7 +82,7 @@ char	*delete_quotes(char *in)
 		delete_quotes(first_quote + 1), ft_strlen(first_quote) + 1);
 		return (in);
 	}
-	remove_by_copying(first_quote, second_quote);
+	remove_by_copying(first_quote, &second_quote);
 	ft_strlcpy(second_quote, \
 	delete_quotes(second_quote), ft_strlen(second_quote) + 1);
 	return (in);

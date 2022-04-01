@@ -27,6 +27,16 @@ Test(test_delete_quotes, without_quotes_returns_string)
 	free(result);
 }
 
+Test(test_delete_quotes, adjacent_quotes)
+{
+	char	*in = "a\"b\"'c'";
+
+	char	*result = delete_quotes(ft_strdup(in));
+
+	cr_assert_str_eq(result, "abc");
+	free(result);
+}
+
 Test(test_delete_quotes, two_quotes_returns_string_without_them)
 {
 	char	*in = "'abc'";
