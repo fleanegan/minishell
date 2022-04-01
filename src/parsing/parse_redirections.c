@@ -86,6 +86,7 @@ int	parse_redir_in(t_string_slice *sub, t_list *current_cmd, t_list *env)
 		if ((get_content(current_cmd))->infile == NULL)
 		{
 			ft_putendl_fd("Error: Could not create heredoc!", 2);
+			free(parsed_infile);
 			return (1);
 		}
 		free(parsed_infile);
