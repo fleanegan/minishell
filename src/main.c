@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
+#include <sys/types.h>
 
 #ifndef IS_TEST
 
@@ -77,8 +78,9 @@ int	user_input_to_cmd_list(t_list **env, t_list **cmd)
 	add_history(line);
 	line_expanded = expand_all_variables((*env), line);
 	(*cmd) = parse(line_expanded, (*env));
-	if (*cmd == NULL)
+	if (*cmd == NULL || ft_lstsize(*cmd) > 512)
 	{
+		ft_lstclear(cmd, free_cmd);
 		free(line_expanded);
 		update_env(env, "?", "1", ENV_REPLACE_VAR);
 		return (1);

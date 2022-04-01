@@ -12,16 +12,18 @@
 
 #include "../../inc/minishell.h"
 
-void	init_pipes(int nb_processes, int **fd)
+int	init_pipes(int nb_processes, int **fd)
 {
 	int	i;
 
 	i = 0;
 	while (i < nb_processes)
 	{
-		pipe(fd[i]);
+		if (pipe(fd[i]) == -1)
+			return (1);
 		i++;
 	}
+	return (0);
 }
 
 int	redirect_stdout_into_pipe(int *fd_of_pipe)

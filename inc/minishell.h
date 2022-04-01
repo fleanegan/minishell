@@ -86,7 +86,7 @@ int				exec_cmd(t_list *cmd, int i, int **fd, t_list *env);
 int				tear_down_parent(\
 				int nb_processes, int **fd, int pid_of_last_cmd);
 int				redirect_stdout_to_outfile(char *outfile, t_token mode);
-void			init_pipes(int nb_processes, int **fd);
+int init_pipes(int nb_processes, int **fd);
 int				redirect_infile_to_stdin(char *infile);
 int				redirect_stdout_into_pipe(int *fd_of_pipe);
 int				redirect_stdin_into_pipe(int *fd_of_pipe);

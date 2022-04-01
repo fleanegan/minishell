@@ -25,7 +25,10 @@ int	execution(t_list *cmd, t_list *env, int nb_cmd)
 		return (execute_built_in_parent(cmd, env, i, fd));
 	pid = -2;
 	fd = ft_tabnew_two(nb_cmd, 2);
-	init_pipes(nb_cmd, fd);
+	if (fd == NULL)
+		return (ENOMEM);
+	if (init_pipes(nb_cmd, fd) && close_before_exit_process(fd))
+		return (errno);
 	while (i < nb_cmd)
 	{
 		pid = execute_cmd_in_fork(cmd, env, i, fd);
