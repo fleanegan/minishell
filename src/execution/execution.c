@@ -18,7 +18,6 @@ int	execution(t_list *cmd, t_list *env, int nb_cmd)
 	int		i;
 	int		**fd;
 
-	set_sa_handler(SIGINT, SIG_IGN);
 	i = 0;
 	fd = NULL;
 	if (nb_cmd == 1 && get_built_in_function_pointer(cmd->content) != NULL)

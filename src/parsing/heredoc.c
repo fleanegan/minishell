@@ -101,8 +101,10 @@ char	*handle_events_inside_fetch_heredoc(const char *string, char *result)
 		ft_putstr_fd("Expected '", 2);
 		ft_putstr_fd((char *) string, 2);
 		ft_putstr_fd("' as delimiter, but got ctrl-D\n", 2);
+		g_is_ctrl_c = 0;
 		return (result);
 	}
+	g_is_ctrl_c = 0;
 	free(result);
 	return (NULL);
 }

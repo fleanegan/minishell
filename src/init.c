@@ -35,7 +35,7 @@ t_list	*init(char **envp)
 
 	result = NULL;
 	if (set_signal_handler(SIGINT, handle_ctrl_c) \
-		|| set_signal_handler(SIGQUIT, NULL))
+		|| set_signal_handler(SIGQUIT, handle_ctrl_bs))
 	{
 		ft_putendl_fd("error in init", 2);
 		return (NULL);

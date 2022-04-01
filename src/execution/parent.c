@@ -54,6 +54,11 @@ int	tear_down_parent(int nb_processes, int **fd, int pid_of_last_cmd)
 		{
 			if (WIFEXITED(wait_result_buffer))
 				last_result = WEXITSTATUS(wait_result_buffer);
+			if (g_is_ctrl_c == 1)
+				last_result = EOWNERDEAD;
+			if (g_is_ctrl_c == 2)
+				last_result = ENOTRECOVERABLE;
+			g_is_ctrl_c = 0;
 		}
 		i++;
 	}
