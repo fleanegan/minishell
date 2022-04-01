@@ -56,6 +56,20 @@ Test(test_echo, options_other_than_n_get_printed)
 	ft_lstclear(&cmd, free_cmd);
 }
 
+Test(test_echo, multiple_n_are_valid_option_wtf_bash)
+{
+	cr_redirect_stdout();
+	cr_redirect_stderr();
+	t_list	*env = init(NULL);
+	t_list	*cmd = parse(ft_strdup("echo -nnnnnnnnnnn test"), env);
+
+	execution(cmd, env, 1);
+
+	cr_bugfix_assert_str_stdout("test");
+	ft_lstclear(&env, free_dict_entry);
+	ft_lstclear(&cmd, free_cmd);
+}
+
 Test(test_echo, options_after_text_are_printed_like_text)
 {
 	cr_redirect_stdout();

@@ -12,6 +12,22 @@
 
 #include "../../inc/minishell.h"
 
+int	is_valid_option(char *in)
+{
+	int	i;
+
+	i = 1;
+	if (in[0] != '-')
+		return (0);
+	while (in[i])
+	{
+		if (in[i] != 'n')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 int	msh_echo(t_list **env, t_list **cmd, int index)
 {
 	int		i;
@@ -25,8 +41,7 @@ int	msh_echo(t_list **env, t_list **cmd, int index)
 	i = 0;
 	while (current_cmd->args[0] && current_cmd->args[++i] && *env)
 	{
-		if (current_cmd->args[i][0] == '-' && is_behind_options == 0 \
-			&& ft_strcmp(current_cmd->args[i], "-n\0") == 0)
+		if (is_behind_options == 0 && is_valid_option(current_cmd->args[i]))
 				nl_flag = 0;
 		else
 		{
