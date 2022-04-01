@@ -75,9 +75,11 @@ int				set_signal_handler(int signal_no, \
 void			handle_ctrl_c_heredoc(\
 				int signal_no, siginfo_t *info, void *hmm);
 void			handle_ctrl_bs(int signal_no, siginfo_t *info, void *hmm);
-
-		void			handle_ctrl_c_parent(int signal_no, siginfo_t *info, void *hmm);
+void			handle_ctrl_c_parent(\
+				int signal_no, siginfo_t *info, void *hmm);
 int				set_sa_handler(int signal_no, __sighandler_t test);
+void			handle_ctrl_c_no_redisplay(\
+				int signal_no, siginfo_t *info, void *hmm);
 
 /*	Execution	*/
 int				execution(t_list *cmd, t_list *env, int nb_cmd);

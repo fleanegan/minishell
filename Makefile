@@ -8,7 +8,8 @@ TEST_PATH = test/
 # Names
 SRC_NAME =	init.c \
 			utils.c \
-			signals.c \
+			signals/set_signals.c \
+			signals/signal_handler.c \
 			tear_down.c \
 			parsing/expand_variables.c \
 			parsing/parse.c \
@@ -34,7 +35,6 @@ SRC_NAME =	init.c \
 			built_in/unset.c \
 			built_in/env.c \
 			main.c \
-#			../test/main_gdb.c \
 
 TEST_SRC_NAME = test_main.c \
 
